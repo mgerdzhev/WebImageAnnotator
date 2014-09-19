@@ -1,0 +1,17 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_mysql
+    database_host: localhost
+    database_port: null
+    database_name: image_annotator
+    database_user: image_annotator_user
+    database_password: tDS2G7aXvwGVQDRZ
+    mailer_transport: gmail
+    mailer_host: localhost
+    mailer_user: image_annotator
+    mailer_password: null
+    locale: en
+    secret: 7c21e2f982644a4db7ef6b7d7d9d0775
+    debug_toolbar: true
+    debug_redirects: false
+    use_assetic_controller: true
