@@ -2,4 +2,4 @@ _assetic:
     resource: .
     type: assetic
 _app:
-    resource: /home/martin/workspace/WebImageAnnotator/app/config/routing_dev.yml
+    resource: /home/martin/git/WebImageAnnotator/WebImageAnnotator/app/config/routing_dev.yml
