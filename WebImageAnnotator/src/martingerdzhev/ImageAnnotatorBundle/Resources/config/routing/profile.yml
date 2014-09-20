@@ -1,20 +1,16 @@
-imdc_profile_me:
+image_annotator_profile_me:
   pattern: /
-  defaults: { _controller: IMDCTerpTubeBundle:Profile:show }
+  defaults: { _controller: ImageAnnotatorBundle:Profile:show }
 
-imdc_profile_user:
+image_annotator_profile_user:
   pattern: /{userName}
-  defaults: { _controller: IMDCTerpTubeBundle:Profile:showSpecific }
+  defaults: { _controller: ImageAnnotatorBundle:Profile:showSpecific }
 
-imdc_profile_edit:
+image_annotator_profile_edit:
   pattern: /{userName}/edit
-  defaults: { _controller: IMDCTerpTubeBundle:Profile:edit }
+  defaults: { _controller: ImageAnnotatorBundle:Profile:edit }
 
-imdc_profile_edit_avatar:
-  pattern: /{userName}/edit/avatar
-  defaults: { _controller: IMDCTerpTubeBundle:Profile:updateAvatar }
-
-imdc_profile_edit_password:
+image_annotator_profile_edit_password:
   pattern: /{userName}/edit/password
   defaults: { _controller: FOSUserBundle:ChangePassword:changePassword }
   requirements:
