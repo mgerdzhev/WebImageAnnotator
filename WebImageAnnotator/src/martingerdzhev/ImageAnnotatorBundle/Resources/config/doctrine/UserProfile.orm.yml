@@ -1,0 +1,20 @@
+martingerdzhev\ImageAnnotatorBundle\Entity\UserProfile:
+    type:   entity
+    table:  user_profile
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+     
+    fields: 
+        firstName:
+            type: string
+            length: 255
+        lastName:
+            type: string
+            length: 255
+        middleName:
+            type: string
+            length: 255
+            nullable: true

@@ -1,0 +1,7 @@
+parameters:
+#    image_annotator.example.class: martingerdzhev\ImageAnnotatorBundle\Example
+
+services:
+#    image_annotator.example:
+#        class: %image_annotator.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -1,0 +1,71 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block fos_user_content %}
+	<div class="container-fluid">
+		{% if error %}
+		    <div class="row">
+				<div class="col-md-2">
+		    		<p class="bg-danger" style="padding: 10px;">{{ error|trans }}</p>
+				</div>
+			</div>
+		{% endif %}
+	
+		<div class="row">
+			<div class="col-md-3">
+				<p>
+				    <div class="not-registered">
+				    	<span>{{ 'security.login.not_registered' |trans({}, 'IMDCTerpTubeBundle') }} </span><a class="btn btn-default" href="{{ path('fos_user_registration_register') }}">{{ 'security.login.register_here' |trans({}, 'IMDCTerpTubeBundle') }}</a>
+				    </div>
+				</p>
+			</div>
+		</div>
+	
+		<div class="row">
+			<div class="col-md-2">
+				<form role="form" action="{{ path("fos_user_security_check") }}" method="post">
+				    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+				
+					<div class="form-group">
+				    	<label for="username"><i class="fa fa-user"></i> {{ 'security.login.username'|trans }}</label>
+				    	<input class="form-control" type="text" id="username" name="_username" value="{{ last_username }}" required="required" placeholder="Username" />
+					</div>
+				
+					<div class="form-group">
+				    	<label for="password"><i class="fa fa-key"></i> {{ 'security.login.password'|trans }}</label>
+				    	<input class="form-control" type="password" id="password" name="_password" required="required" placeholder="Secret Password" />
+					</div>
+				
+					<div class="checkbox">
+				    	<label>
+				    		<input type="checkbox" name="_remember_me" value="on" /> {{ 'security.login.remember_me'|trans }}
+						</label>
+					</div>
+				
+				    <input type="submit" class="btn btn-success col-md-12" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
+				</form>
+			</div>
+		</div>
+	
+		<div class="row">
+			<div class="col-md-3">
+				<p>
+			        <div class="forgot-password">
+			    		<span>{{ 'security.login.forgot_password' |trans({}, 'IMDCTerpTubeBundle') }} </span><a href="{{ path('fos_user_resetting_request') }}">{{ 'security.login.password_reset' |trans({}, 'IMDCTerpTubeBundle') }}</a>
+			    	</div>
+				</p>
+			</div>
+		</div>
+	</div>
+{% endblock fos_user_content %}
+
+{% block javascripts %}
+	{{ parent() }}
+	
+	<script>
+		$(document).ready(function() {
+		    $("input#username").focus();
+		});
+	</script>
+{% endblock javascripts %}

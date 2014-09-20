@@ -4,7 +4,7 @@ parameters:
     database_host: localhost
     database_port: null
     database_name: image_annotator
-    database_user: image_annotator_user
+    database_user: image_annotator
     database_password: tDS2G7aXvwGVQDRZ
     mailer_transport: gmail
     mailer_host: localhost

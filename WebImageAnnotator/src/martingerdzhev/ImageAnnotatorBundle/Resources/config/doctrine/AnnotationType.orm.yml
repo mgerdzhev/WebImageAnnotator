@@ -1,0 +1,11 @@
+martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType:
+    type: entity
+    table: null
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string

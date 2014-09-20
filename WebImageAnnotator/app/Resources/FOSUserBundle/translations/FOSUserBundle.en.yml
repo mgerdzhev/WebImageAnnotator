@@ -1,0 +1,33 @@
+# Global strings
+layout:
+    user_inbox: Inbox
+
+# Form field labels
+form:
+    password_confirmation: "Retype password:"
+    new_password_confirmation: "Retype password:"
+    firstName: "First name:"
+    lastName: "Last name:"
+
+# Page Titles
+title:
+    fos_user_security_login: "Log in"
+    fos_user_security_check: "Checking your login"
+    fos_user_security_logout: "Logging out"
+    fos_user_registration_register: Register
+    fos_user_registration_check_email: "Check your email"
+    fos_user_registration_confirm: "Confirm registration"
+    fos_user_registration_confirmed: "Registration confirmed"
+    fos_user_resetting_request: "Reset your password"
+    fos_user_resetting_send_email: "Email sent"
+    fos_user_resetting_check_email: "Check your email"
+    fos_user_resetting_reset: "Pasword has been reset"
+    fos_user_change_password: "Change your password"
+    fos_user_group_list: "List Groups"
+    fos_user_group_new: "New Group"
+    fos_user_group_show: "Show Group"
+    fos_user_group_edit: "Edit Group"
+    fos_user_group_delete: "Delete Group"
+    fos_user_profile_show: "My Profile"
+    fos_user_profile_edit: "Edit My Profile"
+    imdc_terp_tube_user_profile_change-password: "Change your Password"

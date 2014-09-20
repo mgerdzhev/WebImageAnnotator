@@ -1,0 +1,26 @@
+martingerdzhev\ImageAnnotatorBundle\Entity\User:
+    type:  entity
+    table: fos_user
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        joinDate:
+            type: datetime
+    lifecycleCallbacks: 
+        prePersist: [setJoinDateToNow]
+    oneToMany:
+        annotations:
+            targetEntity: Annotation
+            mappedBy: editedBy
+            orderBy:
+                dateCreated: DESC
+    oneToOne:
+        profile:
+            targetEntity: UserProfile
+            joinColumn:
+                name: profile_id
+                referencedColumnName: id
+            cascade: ["all"]

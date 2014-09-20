@@ -1,0 +1,10 @@
+{% extends "IMDCTerpTubeBundle:_Base:base.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %}{{ ('title.' ~ app.request.attributes.get('_route'))|trans }}{% endblock title %}
+
+{% block content %}
+	{% block fos_user_content %}
+	{% endblock fos_user_content %}
+{% endblock content %}
