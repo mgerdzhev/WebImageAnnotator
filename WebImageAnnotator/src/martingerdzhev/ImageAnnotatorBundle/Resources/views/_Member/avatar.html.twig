@@ -1,0 +1,9 @@
+{#
+included by:
+_Post:post.html.twig
+_Thread:thumbnail.html.twig
+#}
+
+<a href="{{ path('image_annotator_profile_user', {'userName': member.userName}) }}">
+    <img class="img-responsive center-block ia-avatar" src="{{ member.getProfile.avatar ? asset(member.getProfile.avatar.getResource.getWebPath) : asset('bundles/martingerdzhevimageannotator/img/no_avatar.jpg')}}" />
+</a>

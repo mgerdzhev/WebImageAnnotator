@@ -10,6 +10,10 @@ image_annotator_profile_edit:
   pattern: /{userName}/edit
   defaults: { _controller: ImageAnnotatorBundle:Profile:edit }
 
+image_annotator_profile_edit_avatar:
+  pattern: /{userName}/edit/avatar
+  defaults: { _controller: ImageAnnotatorBundle:Profile:updateAvatar }
+
 image_annotator_profile_edit_password:
   pattern: /{userName}/edit/password
   defaults: { _controller: FOSUserBundle:ChangePassword:changePassword }

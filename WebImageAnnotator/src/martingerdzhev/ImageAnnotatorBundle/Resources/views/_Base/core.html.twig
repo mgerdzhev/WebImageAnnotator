@@ -1,0 +1,141 @@
+{% trans_default_domain 'ImageAnnotatorBundle' %}
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <title>{% block title %}{% endblock %} | TerpTube</title>
+
+        <!--  Bootstrap has to come before font awesome for everything to work right -->
+        <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}">
+
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
+
+        <script src="{{ asset('js/jquery.js') }}"></script>
+        <script src="{{ asset('js/jquery-ui.js') }}"></script>
+
+        {# <link rel="stylesheet" href="{{ asset('css/jquery-ui.min.css') }}"> #}
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/sonatajquery/themes/flick/jquery-ui-1.10.4.custom.css') }}">
+
+        <!-- jQuery autosize textboxes script -->
+        <script src="{{ asset('bundles/martingerdzhevimageannotator/js/autosize/jquery.autosize.min.js') }}"></script>
+
+   <!--      <script src="{{ asset('js/tag-it.min.js') }}"></script> -->
+  <!--  <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.tagit.css') }}"> -->
+
+        {{ require_js_initialize() }}
+
+        <script type="text/javascript">require(['main'])</script>
+        <!--  FOS js routing script -->
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+        <!--[if lt IE 9]>
+        <script src="../assets/js/html5shiv.js"></script>
+        <![endif]-->
+
+        {% block header %}
+         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/martingerdzhevimageannotator/_css/image_annotator.css') }}">
+<!--
+            {% if app.environment == 'dev' %}
+                <script type="text/javascript">
+                    requirejs.config({
+                        baseUrl: '{{ app.request.basePath }}/bundles/martingerdzhevimageannotator/_js/app',
+                        paths: {
+                            extra: 'lib/extra',
+                        },
+                        shim: {
+                            main: {
+                                deps: ['extra']
+                            }
+                        }
+                    });
+
+                    require(['main']);
+                </script>
+            {% else %}
+                <script src="{{ asset('bundles/martingerdzhevimageannotator/_js/imageannotator.js') }}"></script>
+            {% endif %} -->
+        {% endblock header %}
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="navbar navbar-inverse navbar-fixed-top ia-navbar-top">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-1">
+                                <div class="navbar-header ia-navbar-header">
+                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#ia-navbar-collapse-1">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                    </button>
+                                    <a href="{{ path('image_annotator_homepage') }}">
+                                        {{ 'home.name' |trans }}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-lg-11" style="padding-left: 0;">
+                                <div class="collapse navbar-collapse" id="ia-navbar-collapse-1">
+                                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                        <ul class="nav navbar-nav ia-navbar-nav-top">
+                                            <li {% block nav_ul_authenticated_my_annotations %}{% endblock %}>
+                                                <a class="navbar-link" data-placement="bottom" data-content="<img src='{{ asset('bundles/martingerdzhevimageannotator/img/info.gif') }}'/>" href="{{ path('image_annotator_myannotations_list') }}"><i class="fa fa-folder-open fa-2x"></i></a>
+                                            </li>
+                                            <li {% block nav_ul_authenticated_my_annotations_create %}{% endblock %}>
+                                                <a class="navbar-link" data-placement="bottom" data-content="<img src='{{ asset('bundles/martingerdzhevimageannotator/img/create.gif') }}'/>" href="{{ path('image_annotator_myannotations_create') }}"><i class="fa fa-film fa-2x"></i></a>
+                                            </li>
+                                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                                <li {% block nav_ul_authenticated_admin %}{% endblock %}>
+                                                    <a class="navbar-link" href="{{ path('image_annotator_admin') }}"><i class="fa fa-cogs fa-2x"></i></a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                        <ul class="nav navbar-nav navbar-right ia-navbar-nav-top ia-navbar-right-top">
+                                            <li>
+                                                <a class="navbar-link" href="{{ path('image_annotator_profile_me') }}">
+                                                    <i class="fa fa-user fa-lg"></i> {{ app.user.username }}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="navbar-link" href="{{ path('fos_user_security_logout') }}">
+                                                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }} <i class="fa fa-sign-out fa-lg"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    {% else %}
+                                        {% render controller('ImageAnnotatorBundle:Security:login') %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <div class="row">
+                        {% block base_content %}
+                        {% endblock base_content %}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="navbar navbar-inverse navbar-fixed-bottom ia-navbar-bottom">
+                    <div class="container-fluid">
+                        <div class="text-center ia-copyright">
+                            &copy; Martin Gerdzhev 2014
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% block javascripts %}
+            <script src="{{ asset('js/bootstrap.js') }}"></script>
+        {% endblock javascripts %}
+    </body>
+    {% block outside_body %}
+    {% endblock outside_body %}
+</html>

@@ -1,0 +1,25 @@
+{% extends 'ImageAnnotatorBundle:_Base:core.html.twig' %}
+
+{% trans_default_domain 'ImageAnnotatorBundle' %}
+
+{% block base_content %}
+    <div class="col-lg-offset-1 col-lg-11">
+        {% block flashmessages %}
+            {% for type, messages in app.session.flashbag.all %}
+                <div class="row">
+                    <div class="col-md-12 ia-flash-message-container">
+                        {% for key, message in messages %}
+                            <span class="label label-{{ type }}">
+                                {{ message|trans({}, 'FOSUserBundle') }}
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endblock flashmessages %}
+        <div class="row">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </div>
+{% endblock base_content %}

@@ -1,6 +1,7 @@
 security:
     encoders:
         Symfony\Component\Security\Core\User\User: plaintext
+        FOS\UserBundle\Model\UserInterface: sha512
 
     role_hierarchy:
         ROLE_ADMIN:       ROLE_USER
@@ -12,20 +13,23 @@ security:
                 users:
                     user:  { password: userpass, roles: [ 'ROLE_USER' ] }
                     admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+                    
+        fos_userbundle:
+            id: fos_user.user_provider.username
 
     firewalls:
         dev:
             pattern:  ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        demo_login:
+        login:
             pattern:  ^/demo/secured/login$
             security: false
 
-        demo_secured_area:
+        secured_area:
             pattern:    ^/demo/secured/
             form_login:
-                check_path: _demo_security_check
+                check_path: _security_check
                 login_path: _demo_login
             logout:
                 path:   _demo_logout
@@ -33,6 +37,27 @@ security:
             #anonymous: ~
             #http_basic:
             #    realm: "Secured Demo Area"
+            
+        main:
+            pattern: ^/
+            form_login:
+                provider: fos_userbundle
+                csrf_provider: form.csrf_provider
+                login_path: /login
+                use_forward: false
+                check_path: /login_check
+                success_handler: image_annotator.component.authentication.handler.login_success_handler
+                failure_path: null
+            logout:       
+                path: /logout
+                target: /
+                success_handler: image_annotator.component.authentication.handler.logout_success_handler
+            anonymous:    true
 
     access_control:
-        #- { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY, requires_channel: https }
+        - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin/, role: ROLE_ADMIN }
+    acl:
+        connection: default

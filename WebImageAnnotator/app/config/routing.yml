@@ -2,7 +2,6 @@ image_annotator:
     resource: "@ImageAnnotatorBundle/Resources/config/routing.yml"
     prefix:   /
 
-
 fos_user_security:
     resource: "@ImageAnnotatorBundle/Resources/config/routing/security.xml"
 

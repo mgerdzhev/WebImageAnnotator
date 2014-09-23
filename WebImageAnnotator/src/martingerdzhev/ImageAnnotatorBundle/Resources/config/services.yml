@@ -1,7 +1,32 @@
 parameters:
-#    image_annotator.example.class: martingerdzhev\ImageAnnotatorBundle\Example
+    image_annotator.component.authentication.handler.login_success_handler.class: martingerdzhev\ImageAnnotatorBundle\Component\Authentication\Handler\LoginSuccessHandler
+    image_annotator.component.authentication.handler.logout_success_handler.class: martingerdzhev\ImageAnnotatorBundle\Component\Authentication\Handler\LogoutSuccessHandler
 
 services:
-#    image_annotator.example:
-#        class: %image_annotator.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    image_annotator.authentication_manager:
+        class: martingerdzhev\ImageAnnotatorBundle\Utils\AuthenticationManager
+        arguments: ["@security.context"]
+    
+    image_annotator_user.registration.form.type:
+        class: martingerdzhev\ImageAnnotatorBundle\Form\Type\RegistrationFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: image_annotator_user_registration }
+              
+    image_annotator_user.profile.form.type:
+        class: martingerdzhev\ImageAnnotatorBundle\Form\Type\ProfileFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: image_annotator_user_profile }
+              
+    image_annotator.component.authentication.handler.login_success_handler:
+        class: %image_annotator.component.authentication.handler.login_success_handler.class%
+        arguments: ["@router", "@security.context"]
+        tags:
+            - {name: 'monolog.logger', channel: 'security' }
+              
+    image_annotator.component.authentication.handler.logout_success_handler:
+        class: %image_annotator.component.authentication.handler.logout_success_handler.class%
+        arguments: ["@router", "@security.context"]
+        tags:
+            - {name: 'monolog.logger', channel: 'security' }

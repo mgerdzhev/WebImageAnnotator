@@ -14,7 +14,16 @@ martingerdzhev\ImageAnnotatorBundle\Entity\UserProfile:
         lastName:
             type: string
             length: 255
-        middleName:
+        institution:
             type: string
             length: 255
             nullable: true
+        city:
+            type: string
+            length: 255
+            nullable: true
+        country:
+            type: string
+            length: 255
+            nullable: true
+            

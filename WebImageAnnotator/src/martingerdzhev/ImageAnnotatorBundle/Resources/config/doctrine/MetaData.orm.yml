@@ -1,0 +1,23 @@
+martingerdzhev\ImageAnnotatorBundle\Entity\MetaData:
+    type:  entity
+    table: meta_data
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        size:
+            type: bigint
+        width:
+            type: integer
+            nullable: true
+        height:
+            type: integer
+            nullable: true
+        timeUploaded:
+            type: datetime
+            
+        
+
+                

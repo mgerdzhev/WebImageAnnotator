@@ -32,13 +32,13 @@ class ProfileController extends Controller
 	{
 	    $request = $this->container->get('request'); //edited to match fosuserbundle declaration
 		$user = $this->container->get('security.context')->getToken()->getUser();
-		if (!$this->container->get('imdc_terptube.authentication_manager')->isAuthenticated($request))
+		if (!$this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
 		{
 			return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
 		}
 		$response = new RedirectResponse(
 				$this->container->get('router')
-						->generate('imdc_profile_user', array('userName' => $user->getUsername())));
+						->generate('image_annotator_profile_user', array('userName' => $user->getUsername())));
 		return $response;
 
 	}
@@ -52,7 +52,7 @@ class ProfileController extends Controller
 	public function showSpecificAction(Request $request, $userName)
 	{
 		$user = $this->container->get('security.context')->getToken()->getUser();
-		if (!$this->container->get('imdc_terptube.authentication_manager')->isAuthenticated($request))
+		if (!$this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
 		{
 			return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
 		}
@@ -62,12 +62,6 @@ class ProfileController extends Controller
 		{
 			throw new NotFoundHttpException("This user does not exist");
 		}
-		//$profile = $userObject->getProfile();
-		/*8return $this->container->get('templating')
-				->renderResponse(
-						'IMDCTerpTubeBundle:Profile:show.html.'
-								. $this->container->getParameter('fos_user.template.engine'),
-						array('user' => $userObject, 'profile' => $profile));*/
         return $this->render('ImageAnnotatorBundle:_Profile:view.html.twig', array(
             'user' => $userObject,
             'profile' => $userObject->getProfile()
@@ -81,21 +75,10 @@ class ProfileController extends Controller
 	public function editAction(Request $request) //edit to match fosuserbundle declaration
 	{
 		$user = $this->container->get('security.context')->getToken()->getUser();
-		if (!$this->container->get('imdc_terptube.authentication_manager')->isAuthenticated($request))
+		if (!$this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
 		{
 			return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
 		}
-		
-		/*
-		$userName = $request->query->get('userName');
-		if ($user->getUsername() != $userName)
-		{
-			$response = new RedirectResponse(
-					$this->container->get('router')
-							->generate('imdc_profile_user', array('userName' => $userName)));
-			return $response;
-		}
-		*/
 		
 		$userManager = $this->container->get('fos_user.user_manager');
 		$userObject = $userManager->findUserByUsername($user->getUsername());
@@ -133,7 +116,7 @@ class ProfileController extends Controller
 
 				if (null === $response = $event->getResponse())
 				{
-					$url = $this->container->get('router')->generate('imdc_profile_me');
+					$url = $this->container->get('router')->generate('image_annotator_profile_me');
 					$response = new RedirectResponse($url);
 				}
 
@@ -145,13 +128,70 @@ class ProfileController extends Controller
 			}
 		}
 
-		/*return $this->container->get('templating')
-				->renderResponse(
-						'IMDCTerpTubeBundle:Profile:edit.html.'
-								. $this->container->getParameter('fos_user.template.engine'),
-						array('form' => $form->createView()));*/
         return $this->render('ImageAnnotatorBundle:_Profile:edit.html.twig', array(
             'form' => $form->createView()
         ));
 	}
+	
+	public function updateAvatarAction(Request $request, $userName)
+	{
+		$user = $this->container->get('security.context')->getToken()->getUser();
+		if (!$this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
+		{
+			return new RedirectResponse($this->container->get('router')->generate('fos_user_security_login'));
+		}
+		if ($user->getUsername() != $userName)
+		{
+			$response = new RedirectResponse(
+					$this->container->get('router')
+					->generate('image_annotator_profile_user', array('userName' => $userName)));
+			return $response;
+		}
+		$userManager = $this->container->get('fos_user.user_manager');
+		$userObject = $userManager->findUserByUsername($user->getUsername());
+		$profile = $userObject->getProfile();
+	
+		$avatar = new Image();
+		$avatar
+		->setTitle(
+				$this->container->get('translator')
+				->trans('profile.show.avatar', array(), 'ImageAnnotatorBundle'));
+	
+		$formFactory = $this->container->get('form.factory');
+	
+		$form = $formFactory->create(new ImageMediaFormType(), $avatar, array());
+	
+		if ('POST' === $request->getMethod())
+		{
+			$form->bind($request);
+	
+			if ($form->isValid())
+			{
+				$avatar->setOwner($userObject);
+				// flush object to database
+				$em = $this->container->get('doctrine')->getManager();
+				$em->persist($avatar);
+				// Remove old avatar from DB:
+				if (($oldAvatar = $profile->getAvatar()) !== null)
+					$em->remove($profile->getAvatar());
+				$profile->setAvatar($avatar);
+	
+				$em->flush();
+	
+				$this->container->get('session')->getFlashBag()->add('info', 'Avatar updated successfully!');
+	
+				$eventDispatcher = $this->container->get('event_dispatcher');
+				$uploadedEvent = new UploadEvent($avatar);
+				$eventDispatcher->dispatch(UploadEvent::EVENT_UPLOAD, $uploadedEvent);
+	
+				$url = $this->container->get('router')->generate('image_annotator_profile_me');
+				$response = new RedirectResponse($url);
+				return $response;
+			}
+		}
+		return $this->render('ImageAnnotatorBundle:_Profile:editAvatar.html.twig', array(
+				'form' => $form->createView()
+		));
+	}
+	
 }

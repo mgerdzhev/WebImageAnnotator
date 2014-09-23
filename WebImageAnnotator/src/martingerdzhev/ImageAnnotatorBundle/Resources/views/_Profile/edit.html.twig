@@ -1,0 +1,42 @@
+{% extends 'martingerdzhevImageAnnotatorBundle:_Base:base.html.twig' %}
+
+{% trans_default_domain 'martingerdzhevImageAnnotatorBundle' %}
+
+{% block title %}Edit Profile{% endblock title %}
+
+{% block header %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            require(['main'], function() {
+                var profile = new $tt.Controller.Profile();
+                profile.bindUIEvents($tt.Controller.Profile.Page.EDIT);
+            });
+        });
+    </script>
+{% endblock header %}
+
+{% block content %}
+    <div class="col-md-12">
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-offset-2 col-md-4">
+                {{ form_errors(form) }}
+                {{ form_row(form.firstName) }}
+                {{ form_row(form.lastName) }}
+                {{ form_row(form.institution) }}
+                {{ form_row(form.city) }}
+                {{ form_row(form.country) }}
+                {{ form_row (form._token) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <button class="btn btn-success"><i class="fa fa-check"></i> {{ 'profile.edit.submit'|trans }}</button>
+                <a class="btn btn-danger" href="{{ path('image_annotator_profile_me') }}"><i class="fa fa-times"></i> Cancel</a>
+            </div>
+        </div>
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+{% endblock content %}

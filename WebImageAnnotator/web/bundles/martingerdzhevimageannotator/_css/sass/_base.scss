@@ -1,0 +1,141 @@
+@import "bootstrap/variables";
+
+$line-height-base-top: 2; // FontAwesome fa-2x font size (em)
+$line-height-computed-top: floor(($font-size-base * $line-height-base-top));
+
+$navbar-text-color: white;
+
+$navbar-top-height: 70px;
+$navbar-top-padding-vertical: (($navbar-top-height - $line-height-computed-top) / 2);
+
+$navbar-bottom-height: 25px;
+$navbar-bottom-padding-vertical: (($navbar-bottom-height - $line-height-computed) / 2);
+
+$body-extra-padding: 15px;
+
+$eku-primary: #5e213b;
+
+
+
+body {
+  padding-top: $navbar-top-height + $body-extra-padding;
+  padding-bottom: $navbar-bottom-height + $body-extra-padding;
+  /* background-color: #eeeeee; */
+
+  @media (max-width: 1200px) {
+    padding-top: $navbar-top-height;
+  }
+}
+
+.ia-navbar-header {
+  float: none;
+}
+
+@media (max-width: 1200px) and (min-width: 768px) {
+  .ia-navbar-header {
+    float: left;
+  }
+}
+
+.ia-navbar-logo {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  min-height: $navbar-top-height;
+}
+
+.ia-navbar-top {
+  min-height: $navbar-top-height;
+  color: $navbar-text-color;
+  /* background-color: $eku-primary; */
+}
+
+.ia-navbar-nav-top > li > a {
+  padding-top: $navbar-top-padding-vertical;
+  padding-bottom: $navbar-top-padding-vertical;
+}
+
+.ia-navbar-right-top > li > a {
+  line-height: $line-height-base-top;
+}
+
+.ia-navbar-bottom {
+  min-height: $navbar-bottom-height;
+  color: $navbar-text-color;
+}
+
+.ia-copyright {
+  padding-top: $navbar-bottom-padding-vertical;
+  padding-bottom: $navbar-bottom-padding-vertical;
+}
+
+.ia-navbar-side {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  position: fixed;
+  top: $navbar-top-height;
+  left: 0;
+  bottom: $navbar-bottom-height;
+  background-color: #888888;
+
+  a {
+    color: #000000;
+    font-size: 1.2em;
+  }
+
+  div {
+    padding-bottom: 10px;
+
+    img {
+      max-width: 50px;
+      max-height: 50px;
+    }
+  }
+
+  @media (max-width: 1200px) {
+    position: relative;
+    top: 0;
+    right: 0;
+    bottom: inherit;
+    margin-bottom: $body-extra-padding;
+
+    div {
+      padding-bottom: 0;
+      display: inline-block;
+    }
+  }
+}
+
+.ia-flash-message-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.ia-separator-top {
+  border-top: 1px solid #000000;
+}
+
+.ia-separator-bottom {
+  @extend .ia-separator-top;
+
+  margin-top: 0;
+}
+
+.ia-date {
+  color: #aaa;
+  font-size: 0.9em;
+}
+
+.ia-avatar {
+  max-height: 150px;
+}
+
+.ia-table {
+  > thead {
+    background-color: white;
+  }
+}
+
+.ia-popup-dialog {
+	position: fixed !important;
+	z-index: 5000;
+}

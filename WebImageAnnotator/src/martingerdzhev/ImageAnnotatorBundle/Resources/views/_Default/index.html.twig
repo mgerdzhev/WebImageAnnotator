@@ -1,0 +1,13 @@
+{% extends 'ImageAnnotatorBundle:_Base:core.html.twig' %}
+
+{% block title %}Welcome!{% endblock title %}
+
+{% block base_content %}
+    <div class="col-md-12">
+        <div class="row ia-default-intro">
+            <div class="col-md-3 ia-default-register">
+                {% include 'ImageAnnotatorBundle:_Member:register.html.twig' %}
+            </div>
+        </div>
+    </div>
+{% endblock base_content %}

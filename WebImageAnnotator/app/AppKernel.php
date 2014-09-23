@@ -23,6 +23,7 @@ class AppKernel extends Kernel
         	new Bmatzner\FontAwesomeBundle\BmatznerFontAwesomeBundle(),
         	new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         	new Sonata\jQueryBundle\SonatajQueryBundle(),
+        	new Hearsay\RequireJSBundle\HearsayRequireJSBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

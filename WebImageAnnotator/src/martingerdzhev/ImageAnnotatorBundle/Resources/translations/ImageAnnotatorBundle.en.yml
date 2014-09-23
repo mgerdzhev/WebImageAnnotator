@@ -1,0 +1,156 @@
+# Security
+"Bad credentials": Invalid username or password
+
+security:
+    login:
+        username: "Username:"
+        password: "Password:"
+        remember_me: Remember me
+        submit: Login
+        not_registered: "Not registered?"
+        register_here: "Click here to register!"
+        forgot_password: "Forgot your password?"
+        password_reset: "Click here to reset it!"
+
+# Profile
+profile:
+    show:
+        username: Username
+        email: Email
+    edit:
+        submit: Update
+    flash:
+        updated: The profile has been updated
+
+# Password change
+change_password:
+    submit: Change password
+    flash:
+        success: The password has been changed
+
+# Registration
+registration:
+    check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
+    confirmed: Congrats %username%, your account is now activated.
+    back: Back to the originating page.
+    submit: Register
+    flash:
+        user_created: The user has been created successfully
+    email:
+        subject: Welcome %username%!
+        message: |
+            Hello %username%!
+
+            To finish activating your account - please visit %confirmationUrl%
+
+            Regards,
+            the Team.
+
+# Password resetting
+resetting:
+    password_already_requested: The password for this user has already been requested within the last 24 hours.
+    check_email: An email has been sent to %email%. It contains a link you must click to reset your password.
+    request:
+        invalid_username: The username or email address "%username%" does not exist.
+        username: "Username or email address:"
+        submit: Reset password
+    reset:
+        submit: Change password
+    flash:
+        success: The password has been reset successfully
+    email:
+        subject: Reset Password
+        message: |
+            Hello %username%!
+
+            To reset your password - please visit %confirmationUrl%
+
+            Regards,
+            the Team.
+
+home:
+    name: "Home"
+
+nav:
+    my_files: "My Annotations"
+    my_interpretations: "Create new Annotations"
+    admin: "Admin Dashboard"
+# Global strings
+layout:
+    logout: Logout
+    login: Login/Register
+    register: Register
+    logged_in_as: Logged in as %username%
+    user_inbox: Inbox
+
+filesGateway:
+    title: "My Files"
+    add:
+        title: "Select from My Files"
+    buttons:
+        upload: "Upload a new file"
+        audio: "Audio"
+        video: "Video"
+        image: "Image"
+        other: "Other"
+        record: "Record a new video"
+    type:
+        0: "Image"
+    noFiles: "You have not added any files yet. Use the above buttons to add files."
+    deleteLink: "Delete"
+    deleteConfirmMessage: "Are you sure you want to remove this image's annotations?"
+    previewLink: "Preview"
+# Form field labels
+form:
+    username: "Username:"
+    email: "Email:"
+    current_password: "Current password:"
+    password: "Password:"
+    password_confirmation: "Verification:"
+    new_password: "New password:"
+    new_password_confirmation: "Verification:"
+    
+    media:
+        title: "Name your file"
+        upload: "Upload"
+        
+    
+    profile:
+        firstName: "First name:"
+        lastName: "Last name:" 
+        city: "City:"
+        country: "Country:"
+        institution: "Institution:"
+            
+    generic:
+        allFieldsRequired: 'All fields are required!'
+        empty: 'Not set'
+        yes: 'Yes'
+        no: 'No'
+        1: 'Yes'
+        0: 'No'
+        null: 'Not set'
+        cancel: "Cancel"
+        submit: "Submit"
+    
+profile:
+    show:
+        userName:   "User name"
+        firstName: "First name"
+        lastName: "Last name" 
+        city: "City"
+        country: "Country"
+        ownAvatar: "Edit profile picture"
+        avatar: "Profile picture"
+        institution: "Institution"
+            
+    edit:
+        submit: "Edit"
+        changePassword: "Change your password"
+        avatar:
+            submit: "Update profile picture"
+            cancel: "Cancel"
+            title: "Choose a new profile picture"  
+        generic:
+            cancel: "Cancel"
+

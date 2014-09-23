@@ -1,0 +1,12 @@
+{#
+included by:
+FOSUserBundle:Registration:register.html.twig
+_Default:index.html.twig
+#}
+
+<div class="col-md-offset-2 col-md-8">
+    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
+        {{ form_widget(form) }}
+        <button class="btn btn-success"><i class="fa fa-check"></i> {{ 'registration.submit'|trans({}, 'FOSUserBundle') }}</button>
+    </form>
+</div>

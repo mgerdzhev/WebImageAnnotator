@@ -1,0 +1,16 @@
+.ia-default-intro {
+  margin-top: 100px;
+  min-height: 500px;
+
+  & div.thumbnail {
+    height: 500px;
+  }
+}
+
+.ia-default-register > div {
+  background-color: #5a5a5a;
+  color: #fff;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-radius: 4px;
+}
