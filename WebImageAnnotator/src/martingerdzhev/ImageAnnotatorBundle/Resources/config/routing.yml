@@ -2,10 +2,18 @@ image_annotator_homepage:
     path:     /
     defaults: { _controller: ImageAnnotatorBundle:Default:index }
 
-image_annotator_user_home:
-    path:     /
-    defaults: { _controller: ImageAnnotatorBundle:Default:index }
+ImageAnnotatorBundle_home:
+  resource: "@ImageAnnotatorBundle/Resources/config/routing/home.yml"
+  prefix: /home
     
-image_annotator_profile:
+ImageAnnotatorBundle_profile:
   resource: "@ImageAnnotatorBundle/Resources/config/routing/profile.yml"
   prefix: /profile
+  
+ImageAnnotatorBundle_annotations:
+  resource: "@ImageAnnotatorBundle/Resources/config/routing/annotations.yml"
+  prefix: /annotations
+  
+ImageAnnotatorBundle_images:
+  resource: "@ImageAnnotatorBundle/Resources/config/routing/images.yml"
+  prefix: /images

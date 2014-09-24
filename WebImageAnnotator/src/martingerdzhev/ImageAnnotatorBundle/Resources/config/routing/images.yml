@@ -1,0 +1,40 @@
+image_annotator_image_preview:
+  pattern: /preview/{imageId}
+  defaults: { _controller: ImageAnnotatorBundle:ImageGateway:previewImage }
+  requirements:
+    imageId: \d+
+  options:
+    expose: true
+
+image_annotator_image_remove:
+  pattern: /delete/{imageId}
+  defaults: { _controller: ImageAnnotatorBundle:ImageGateway:deleteImage }
+  requirements:
+    _method:  POST
+    imageId: \d+
+  options:
+    expose: true
+
+image_annotator_image_add_image:
+  pattern: /add
+  defaults: { _controller: ImageAnnotatorBundle:ImageGateway:addImage, url: null }
+  options:
+    expose: true
+
+image_annotator_image_add_image_upload:
+  pattern: /add/upload
+  defaults: { _controller: ImageAnnotatorBundle:ImageGateway:addImageUpload, url: null }
+  options:
+    expose: true
+
+image_annotator_image_add_image_google:
+  pattern: /add/google
+  defaults: { _controller: ImageAnnotatorBundle:ImageGateway:addImageGoogle, url: null }
+  options:
+    expose: true
+
+image_annotator_image_add_image_flickr:
+  pattern: /add/flickr
+  defaults: { _controller: ImageAnnotatorBundle:ImageGateway:addImageFlickr, url: null }
+  options:
+    expose: true

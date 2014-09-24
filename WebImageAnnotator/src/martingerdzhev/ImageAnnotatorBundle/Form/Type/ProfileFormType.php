@@ -10,7 +10,7 @@ class ProfileFormType extends BaseType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
-//		parent::buildForm($builder, $options);
+// 		parent::buildForm($builder, $options);
 		$builder->add('firstName', null, array('label' => 'form.profile.firstName', 'translation_domain' => 'ImageAnnotatorBundle'));
 		$builder->add('lastName', null, array('label' => 'form.profile.lastName', 'translation_domain' => 'ImageAnnotatorBundle'));
 		$builder->add('institution', null, array('label' => 'form.profile.institution', 'translation_domain' => 'ImageAnnotatorBundle'));

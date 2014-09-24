@@ -1,6 +1,6 @@
-{% extends 'martingerdzhevImageAnnotatorBundle:_Base:base.html.twig' %}
+{% extends 'ImageAnnotatorBundle:_Base:base.html.twig' %}
 
-{% trans_default_domain 'martingerdzhevImageAnnotatorBundle' %}
+{% trans_default_domain 'ImageAnnotatorBundle' %}
 
 {% block title %}Edit Profile{% endblock title %}
 
@@ -10,8 +10,8 @@
     <script type="text/javascript">
         $(document).ready(function() {
             require(['main'], function() {
-                var profile = new $tt.Controller.Profile();
-                profile.bindUIEvents($tt.Controller.Profile.Page.EDIT);
+                var profile = new $ia.Controller.Profile();
+                profile.bindUIEvents($ia.Controller.Profile.Page.EDIT);
             });
         });
     </script>

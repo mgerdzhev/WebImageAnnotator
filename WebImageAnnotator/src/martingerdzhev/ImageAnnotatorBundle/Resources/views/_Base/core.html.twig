@@ -64,28 +64,18 @@
                 <div class="navbar navbar-inverse navbar-fixed-top ia-navbar-top">
                     <div class="container-fluid">
                         <div class="row">
-                            <div class="col-lg-1">
-                                <div class="navbar-header ia-navbar-header">
-                                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#ia-navbar-collapse-1">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                    </button>
-                                    <a href="{{ path('image_annotator_homepage') }}">
-                                        {{ 'home.name' |trans }}
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col-lg-11" style="padding-left: 0;">
+                            <div class="col-lg-111" style="padding-left: 0;">
                                 <div class="collapse navbar-collapse" id="ia-navbar-collapse-1">
                                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                                         <ul class="nav navbar-nav ia-navbar-nav-top">
+                                        	<li>
+                                        		<a class="navbar-link" data-placement="bottom" title="{{ 'nav.home' |trans }}" href="{{ path('image_annotator_homepage') }}"><i class="fa fa-home fa-2x"></i></a>
+                                        	</li>
                                             <li {% block nav_ul_authenticated_my_annotations %}{% endblock %}>
-                                                <a class="navbar-link" data-placement="bottom" data-content="<img src='{{ asset('bundles/martingerdzhevimageannotator/img/info.gif') }}'/>" href="{{ path('image_annotator_myannotations_list') }}"><i class="fa fa-folder-open fa-2x"></i></a>
+                                                <a class="navbar-link" data-placement="bottom" title="{{ 'nav.my_annotations_list' |trans }}" href="{{ path('image_annotator_annotations_list') }}"><i class="fa fa-folder-open fa-2x"></i></a>
                                             </li>
                                             <li {% block nav_ul_authenticated_my_annotations_create %}{% endblock %}>
-                                                <a class="navbar-link" data-placement="bottom" data-content="<img src='{{ asset('bundles/martingerdzhevimageannotator/img/create.gif') }}'/>" href="{{ path('image_annotator_myannotations_create') }}"><i class="fa fa-film fa-2x"></i></a>
+                                                <a class="navbar-link" data-placement="bottom" title="{{ 'nav.my_annotations_create' |trans }}"href="{{ path('image_annotator_annotations_create') }}"><i class="fa fa-edit fa-2x"></i></a>
                                             </li>
                                             {% if is_granted('ROLE_SUPER_ADMIN') %}
                                                 <li {% block nav_ul_authenticated_admin %}{% endblock %}>

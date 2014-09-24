@@ -12,16 +12,6 @@ security:
         forgot_password: "Forgot your password?"
         password_reset: "Click here to reset it!"
 
-# Profile
-profile:
-    show:
-        username: Username
-        email: Email
-    edit:
-        submit: Update
-    flash:
-        updated: The profile has been updated
-
 # Password change
 change_password:
     submit: Change password
@@ -68,12 +58,10 @@ resetting:
             Regards,
             the Team.
 
-home:
-    name: "Home"
-
 nav:
-    my_files: "My Annotations"
-    my_interpretations: "Create new Annotations"
+    home: "Home"
+    my_annotations_list: "My Annotations"
+    my_annotations_create: "Create new Annotations"
     admin: "Admin Dashboard"
 # Global strings
 layout:
@@ -132,7 +120,8 @@ form:
         null: 'Not set'
         cancel: "Cancel"
         submit: "Submit"
-    
+
+# Profile
 profile:
     show:
         userName:   "User name"
@@ -140,17 +129,15 @@ profile:
         lastName: "Last name" 
         city: "City"
         country: "Country"
-        ownAvatar: "Edit profile picture"
-        avatar: "Profile picture"
         institution: "Institution"
+        edit: "Edit Profile"
+        email: "Email"
             
     edit:
-        submit: "Edit"
+        submit: "Update"
         changePassword: "Change your password"
-        avatar:
-            submit: "Update profile picture"
-            cancel: "Cancel"
-            title: "Choose a new profile picture"  
         generic:
             cancel: "Cancel"
+    flash:
+        updated: The profile has been updated
 
