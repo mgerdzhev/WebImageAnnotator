@@ -24,6 +24,7 @@ class AppKernel extends Kernel
         	new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         	new Sonata\jQueryBundle\SonatajQueryBundle(),
         	new Hearsay\RequireJSBundle\HearsayRequireJSBundle(),
+        	new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(), 
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

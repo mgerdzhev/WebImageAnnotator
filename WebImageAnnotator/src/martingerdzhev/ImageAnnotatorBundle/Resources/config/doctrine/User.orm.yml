@@ -14,7 +14,7 @@ martingerdzhev\ImageAnnotatorBundle\Entity\User:
     oneToMany:
         annotations:
             targetEntity: Annotation
-            mappedBy: editedBy
+            mappedBy: creator
             orderBy:
                 dateCreated: DESC
     oneToOne:
