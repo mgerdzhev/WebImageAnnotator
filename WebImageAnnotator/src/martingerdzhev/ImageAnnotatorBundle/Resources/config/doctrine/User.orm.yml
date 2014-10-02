@@ -1,6 +1,7 @@
 martingerdzhev\ImageAnnotatorBundle\Entity\User:
     type:  entity
     table: fos_user
+    repositoryClass: martingerdzhev\ImageAnnotatorBundle\Entity\UserRepository
     id:
         id:
             type: integer

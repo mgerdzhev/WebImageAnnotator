@@ -13,7 +13,7 @@ class SecurityController extends FOSUserBundleSecurityController
 
         return $route == "fos_user_security_login"
             ? parent::renderLogin($data)
-            : $this->container->get('templating')->renderResponse('ImageAnnotatorBundle:_Member:navbarLogin.html.twig', $data);
+            : $this->container->get('templating')->renderResponse('ImageAnnotatorBundle:Member:navbarLogin.html.twig', $data);
     }
 
 }

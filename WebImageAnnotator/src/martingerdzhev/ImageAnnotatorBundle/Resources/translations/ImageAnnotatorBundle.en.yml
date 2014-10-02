@@ -62,6 +62,7 @@ nav:
     home: "Home"
     my_annotations_list: "My Annotations"
     my_annotations_create: "Create new Annotations"
+    images_gateway: "Image Datasets"
     admin: "Admin Dashboard"
 # Global strings
 layout:
@@ -71,17 +72,31 @@ layout:
     logged_in_as: Logged in as %username%
     user_inbox: Inbox
 
-filesGateway:
-    title: "My Files"
+annotationGateway:
+    title: "My Annotations"
     add:
         title: "Select from My Files"
     buttons:
-        upload: "Upload a new file"
-        audio: "Audio"
-        video: "Video"
-        image: "Image"
-        other: "Other"
-        record: "Record a new video"
+        upload: "Upload a new image"
+        google: "Search images from google"
+        flickr: "Search images from flickr"
+        createDataset: "Create a new Dataset"
+    type:
+        0: "Image"
+    noFiles: "You have not added any files yet. Use the above buttons to add files."
+    deleteLink: "Delete"
+    deleteConfirmMessage: "Are you sure you want to remove this image's annotations?"
+    previewLink: "Preview"
+
+imageGateway:
+    title: "Images"
+    add:
+        title: "Select from My Files"
+    buttons:
+        upload: "Upload a new image"
+        google: "Search images from google"
+        flickr: "Search images from flickr"
+        createDataset: "Create a new Dataset"
     type:
         0: "Image"
     noFiles: "You have not added any files yet. Use the above buttons to add files."

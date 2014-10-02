@@ -1,0 +1,24 @@
+{#
+included by:
+_Forum:edit.html.twig
+_Forum:new.html.twig
+_Group:edit.html.twig
+_Group:new.html.twig
+_MyFiles:index.html.twig
+_Post:ajax.edit.html.twig
+_Post:ajax.reply.html.twig
+_Thread:new.html.twig
+_Thread:view.html.twig
+#}
+
+{% if isPost is not defined %}
+    {% set isPost = false %}
+{% endif %}
+
+<div id="uploadForms{% if isPost %}Post{{ postId }}{% endif %}" style="display: none;">
+    {% for form in uploadForms %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+    {% endfor %}
+</div>

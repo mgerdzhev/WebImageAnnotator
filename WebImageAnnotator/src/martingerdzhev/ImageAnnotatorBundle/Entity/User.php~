@@ -3,37 +3,39 @@
 namespace martingerdzhev\ImageAnnotatorBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\User as BaseUser;
 
 /**
  * User
  */
-class User
+class User extends BaseUser
 {
     /**
      * @var integer
      */
-    private $id;
+    protected $id;
 
     /**
      * @var \DateTime
      */
-    private $joinDate;
+    protected $joinDate;
 
     /**
      * @var \martingerdzhev\ImageAnnotatorBundle\Entity\UserProfile
      */
-    private $profile;
+    protected $profile;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $annotations;
+    protected $annotations;
 
     /**
      * Constructor
      */
     public function __construct()
     {
+    	parent::__construct();
         $this->annotations = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -128,8 +130,10 @@ class User
     /**
      * @ORM\PrePersist
      */
-    public function setJoinDateToNow()
+	public function setJoinDateToNow()
     {
-        // Add your code here
+        $this->joinDate = new \DateTime('NOW');
+        
+        return $this;
     }
 }

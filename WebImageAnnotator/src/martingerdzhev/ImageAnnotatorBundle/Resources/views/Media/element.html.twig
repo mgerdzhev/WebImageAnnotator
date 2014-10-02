@@ -1,0 +1,40 @@
+{#
+included by:
+_Forum:delete.html.twig
+_Forum:edit.html.twig
+_Forum:thumbnail.html.twig
+_Group:edit.html.twig
+_Message:new.html.twig
+_Message:view.html.twig
+_Post:ajax.edit.html.twig
+_Thread:delete.html.twig
+_Thread:edit.html.twig
+_Thread:thumbnail.html.twig
+#}
+
+{% if enableControls is not defined %}
+    {% set enableControls = true %}
+{% endif %}
+
+{% block media %}
+    {# mediatype 0 = image 1 = video 2 = audio 9 = other #}
+    {% if mediaFile.type == 0 %}
+        {% block mediaimagetype %}
+            <img class="img-responsive center-block ia-media-img" src="{{ asset(mediaFile.getResource.getWebPath) }}" alt="{{ mediaFile.title }}" title="{{ mediaFile.title }}" />
+        {% endblock mediaimagetype %}
+    {% elseif mediaFile.type == 1 %}
+        {% block mediavideotype %}
+            <video class="ia-media-video" id="{{ mediaFile.getID }}" {% if enableControls %}controls{% endif %} preload="auto">
+                <source src="{{ asset(mediaFile.getResource.getWebPathWebm) }}" />
+                <source src="{{ asset(mediaFile.getResource.getWebPath) }}" />
+            </video>
+        {% endblock mediavideotype %}
+    {% elseif mediaFile.type == 2 %}
+        {% block mediaaudiotype %}
+            <audio class="ia-media-audio" {% if enableControls %}controls{% endif %}>
+                <source src="{{ asset(mediaFile.getResource.getWebPath) }}" />
+                Your browser does not support the audio element, please upgrade to Google Chrome
+            </audio>
+        {% endblock mediaaudiotype %}
+    {% endif %}
+{% endblock media %}

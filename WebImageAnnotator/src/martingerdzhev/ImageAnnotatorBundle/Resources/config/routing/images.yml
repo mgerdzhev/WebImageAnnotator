@@ -1,3 +1,9 @@
+image_annotator_image_gateway:
+  pattern: /
+  defaults: { _controller: ImageAnnotatorBundle:ImageGateway:gateway }
+  options:
+    expose: true
+    
 image_annotator_image_preview:
   pattern: /preview/{imageId}
   defaults: { _controller: ImageAnnotatorBundle:ImageGateway:previewImage }

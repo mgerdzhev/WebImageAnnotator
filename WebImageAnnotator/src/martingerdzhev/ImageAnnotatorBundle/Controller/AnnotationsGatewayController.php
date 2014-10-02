@@ -55,7 +55,7 @@ class AnnotationsGatewayController extends Controller
             25 /*limit per page*/
         );
 
-        return $this->render('ImageAnnotatorBundle:_MyImages:index.html.twig', array (
+        return $this->render('ImageAnnotatorBundle:Annotations:index.html.twig', array (
             'resourceFiles' => $resourceFiles,
             'uploadForms' => MediaChooserGatewayController::getUploadForms($this)
 		));
@@ -144,7 +144,7 @@ class AnnotationsGatewayController extends Controller
 		// form not valid, show the basic form
 		if ($media !== null)
 		{
-			$responseURL = 'ImageAnnotatorBundle:_Media:' . $prefix . 'previewImage.html.twig';
+			$responseURL = 'ImageAnnotatorBundle:Media:' . $prefix . 'previewImage.html.twig';
 		}
 		else
 		{

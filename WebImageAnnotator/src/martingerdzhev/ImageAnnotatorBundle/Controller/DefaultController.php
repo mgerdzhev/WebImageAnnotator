@@ -35,7 +35,7 @@ class DefaultController extends Controller
 		$formFactory = $this->container->get('fos_user.registration.form.factory');
 		$form = $formFactory->createForm();
 		
-		return $this->render('ImageAnnotatorBundle:_Default:index.html.twig', array (
+		return $this->render('ImageAnnotatorBundle:Default:index.html.twig', array (
 				'form' => $form->createView() 
 		));
 	}

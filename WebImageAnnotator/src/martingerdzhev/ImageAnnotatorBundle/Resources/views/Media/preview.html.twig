@@ -1,0 +1,12 @@
+{% trans_default_domain 'ImageAnnotatorBundle' %}
+
+<div class="ia-media-preview">
+    <div class="ia-media-preview-title">
+        <input type="text" id="mediaPreviewTitle" value="{{ mediaFile.title }}" />
+    </div>
+
+    {% include 'ImageAnnotatorBundle:Media:element.html.twig' with {'enableControls': false} %}
+
+    {% block preview %}
+    {% endblock preview %}
+</div>

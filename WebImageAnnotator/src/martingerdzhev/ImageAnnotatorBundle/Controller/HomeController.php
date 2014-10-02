@@ -27,6 +27,6 @@ class HomeController extends Controller
 			return $this->redirect($this->generateUrl('image_annotator_homepage'));
 		}
 
-		return $this->render('ImageAnnotatorBundle:_Home:index.html.twig');
+		return $this->render('ImageAnnotatorBundle:Home:index.html.twig');
 	}
 }

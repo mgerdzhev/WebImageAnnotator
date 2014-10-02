@@ -47,15 +47,14 @@ class ImageGatewayController extends Controller
 		}
 
 		$user = $this->getUser();
-
         $paginator = $this->get('knp_paginator');
         $resourceFiles = $paginator->paginate(
-            $user->getResourceFiles(),
+            $this->getDoctrine()->getRepository('ImageAnnotatorBundle:User')->getAnnotatedImages($user),
             $this->get('request')->query->get('page', 1), /*page number*/
             25 /*limit per page*/
         );
 
-        return $this->render('ImageAnnotatorBundle:_MyImages:index.html.twig', array (
+        return $this->render('ImageAnnotatorBundle:MyImages:index.html.twig', array (
             'resourceFiles' => $resourceFiles,
             'uploadForms' => MediaChooserGatewayController::getUploadForms($this)
 		));
@@ -144,7 +143,7 @@ class ImageGatewayController extends Controller
 		// form not valid, show the basic form
 		if ($media !== null)
 		{
-			$responseURL = 'ImageAnnotatorBundle:_Media:' . $prefix . 'previewImage.html.twig';
+			$responseURL = 'ImageAnnotatorBundle:Media:' . $prefix . 'previewImage.html.twig';
 		}
 		else
 		{

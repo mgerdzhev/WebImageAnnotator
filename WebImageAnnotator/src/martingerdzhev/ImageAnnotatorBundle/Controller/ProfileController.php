@@ -62,7 +62,7 @@ class ProfileController extends Controller
 		{
 			throw new NotFoundHttpException("This user does not exist");
 		}
-        return $this->render('ImageAnnotatorBundle:_Profile:view.html.twig', array(
+        return $this->render('ImageAnnotatorBundle:Profile:view.html.twig', array(
             'user' => $userObject,
             'profile' => $userObject->getProfile()
         ));
@@ -128,7 +128,7 @@ class ProfileController extends Controller
 			}
 		}
 
-        return $this->render('ImageAnnotatorBundle:_Profile:edit.html.twig', array(
+        return $this->render('ImageAnnotatorBundle:Profile:edit.html.twig', array(
             'form' => $form->createView()
         ));
 	}
@@ -189,7 +189,7 @@ class ProfileController extends Controller
 				return $response;
 			}
 		}
-		return $this->render('ImageAnnotatorBundle:_Profile:editAvatar.html.twig', array(
+		return $this->render('ImageAnnotatorBundle:Profile:editAvatar.html.twig', array(
 				'form' => $form->createView()
 		));
 	}

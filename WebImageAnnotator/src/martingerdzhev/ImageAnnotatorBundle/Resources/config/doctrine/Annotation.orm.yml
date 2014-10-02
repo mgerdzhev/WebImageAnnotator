@@ -24,4 +24,9 @@ martingerdzhev\ImageAnnotatorBundle\Entity\Annotation:
             joinColumn:
                 name: type_id
                 referencedColumnName: id
+        image:
+            targetEntity: Image
+            joinColumn:
+                name: image_id
+                referencedColumnName: id
     lifecycleCallbacks: {  }

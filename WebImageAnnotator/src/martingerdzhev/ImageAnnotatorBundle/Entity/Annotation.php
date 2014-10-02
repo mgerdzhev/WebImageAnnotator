@@ -136,4 +136,32 @@ class Annotation
     {
         return $this->type;
     }
+    /**
+     * @var \martingerdzhev\ImageAnnotatorBundle\Entity\Image
+     */
+    private $image;
+
+
+    /**
+     * Set image
+     *
+     * @param \martingerdzhev\ImageAnnotatorBundle\Entity\Image $image
+     * @return Annotation
+     */
+    public function setImage(\martingerdzhev\ImageAnnotatorBundle\Entity\Image $image = null)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return \martingerdzhev\ImageAnnotatorBundle\Entity\Image 
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
 }

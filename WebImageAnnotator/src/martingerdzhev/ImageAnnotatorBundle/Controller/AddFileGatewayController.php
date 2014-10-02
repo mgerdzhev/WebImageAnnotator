@@ -49,7 +49,7 @@ class AddFileGatewayController extends Controller {
 			$prefix = "ajax.";
 		}
 		
-		$response = $this->render('ImageAnnotator:_MyFiles:'.$prefix.'index.html.twig', array(
+		$response = $this->render('ImageAnnotator:MyFiles:'.$prefix.'index.html.twig', array(
 		    'resourceFiles' => $resourceFiles
 		));
 		
