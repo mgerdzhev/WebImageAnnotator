@@ -43,9 +43,8 @@
                         <thead>{{ 'imageGateway.title'|trans }}
                             <th><i class="fa fa-wrench"></i> Tools</th>
                             <th>Name</th>
-                            <th>Type</th>
                             <th>Created</th>
-                            <th>Size</th>
+                            <th>Number of Annotations</th>
                         </thead>
                         <tbody>
                             {% if resourceFiles|length > 0 %}
@@ -70,17 +69,6 @@
                                         </td>
                                         <!-- name -->
                                         <td>{{ resourceFile.title }}</td>
-                                        <!-- type -->
-                                        <td>
-                                            {% if resourceFile.type == 0 %}
-                                                <i class="fa fa-picture-o"></i>
-                                            {% elseif resourceFile.type == 1 %}
-                                                <i class="fa fa-film"></i>
-                                            {% elseif resourceFile.type == 2 %}
-                                                <i class="fa fa-headphones"></i>
-                                            {% endif %}
-                                            &nbsp;{{ ('filesGateway.type.'~resourceFile.type)|trans }}
-                                        </td>
                                         <!-- created -->
                                         <td>{{ resourceFile.getMetaData.getTimeUploaded|date('g:ia M j') }}</td>
                                         <!-- size -->
@@ -95,7 +83,7 @@
                                 {% endfor %}
                             {% else %}
                                 <tr colspan="5">
-                                    <div class="text-center"><div class="text-center">No invitations</div></div>
+                                    <div class="text-center"><div class="text-center">{{ 'imageGateway.empty'|trans }}</div></div>
                                 </tr>
                             {% endif %}
                         </tbody>

@@ -1,9 +1,9 @@
 ({
-    mainConfigFile: 'config.js',
+//    mainConfigFile: 'config.js',
     baseUrl: 'app',
     optimize: "uglify",
     //optimize: "none",
     insertRequire: ['main'],
     name: 'main',
-    out: 'terptube.js'
+    out: 'image_annotator.js'
 })

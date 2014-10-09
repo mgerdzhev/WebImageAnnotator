@@ -25,6 +25,7 @@ class AppKernel extends Kernel
         	new Sonata\jQueryBundle\SonatajQueryBundle(),
         	new Hearsay\RequireJSBundle\HearsayRequireJSBundle(),
         	new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(), 
+        	new Knp\Bundle\TimeBundle\KnpTimeBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -24,12 +24,11 @@ _Thread:view.html.twig
 <div class="row" id="chooseFile">
 	<div class="col-md-12">
 		<div class="form-group">
-			<a class="btn btn-primary" id="create-dataset-link" href="#"><i class="fa fa-folder"></i> {{ 'imageGateway.buttons.createDataset'|trans }}</a>
 			<a class="btn btn-primary" id="upload-image-link" href="#"><i class="fa fa-upload"></i> {{ 'imageGateway.buttons.upload'|trans }}</a>
 			<a class="btn btn-primary" id="search-images-google-link" href="#"><i class="fa fa-google"></i> {{ 'imageGateway.buttons.google'|trans }}</a>
 			<a class="btn btn-primary" id="search-images-flickr-link" href="#"><i class="fa fa-flickr"></i> {{ 'imageGateway.buttons.flickr'|trans }}</a>
 			{% if isFileSelection %}
-				<a class="btn btn-primary" id="selectFile" href="#"><i class="fa fa-folder-open"></i> {{ 'filesGateway.add.title'|trans }}</a>
+				<a class="btn btn-primary" id="selectFile" href="#"><i class="fa fa-folder-open"></i> {{ 'imageGateway.add.title'|trans }}</a>
 			{% endif %}
 		</div>
 	</div>
@@ -55,7 +54,7 @@ _Thread:view.html.twig
 			{{ form_errors(form.mediatextarea) }}
 			<div class="form-group">
 				<label>Selected File</label>
-				<div><span id="selectedFileTitle" style="margin-right: 5px;"></span><a id="removeFile{% if isPost %}Post{{ postId }}{% endif %}" title="Remove File"><i class="fa fa-times-circle"></i></a></div>
+				<div><span id="selectedFileTitle" style="margin-right: 5px;"></span><a id="removeFile" title="Remove File"><i class="fa fa-times-circle"></i></a></div>
 			</div>
 		</div>
 	</div>

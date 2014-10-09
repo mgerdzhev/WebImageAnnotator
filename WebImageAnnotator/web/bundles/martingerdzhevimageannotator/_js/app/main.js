@@ -2,8 +2,9 @@ define(function(require) {
     var ImageAnnotator = {};
 
     ImageAnnotator.Controller = {};
-    ImageAnnotator.Controller.MyFiles = require('controller/myFiles');
-    ImageAnnotator.Controller.Profile = require('controller/profile');
+    ImageAnnotator.Controller.Images = require('controller/images');
+    ImageAnnotator.Controller.Datasets = require('controller/datasets');
+    ImageAnnotator.Controller.Annotations = require('controller/annotations');
 
     ImageAnnotator.Core = {};
     ImageAnnotator.Core.MediaChooser = require('core/mediaChooser');

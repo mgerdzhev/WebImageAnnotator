@@ -31,7 +31,8 @@
 		"bmatzner/fontawesome-bundle" : "*",
 		"symfony/filesystem" : "dev-master",
 		"hearsay/require-js-bundle" : "2.0.*@dev",
-		"knplabs/knp-paginator-bundle" : "2.4.*"
+		"knplabs/knp-paginator-bundle" : "2.4.*",
+		"knplabs/knp-time-bundle" : "1.1.*@dev"
 	},
 	"require-dev" : {
 		"sensio/generator-bundle" : "~2.3"

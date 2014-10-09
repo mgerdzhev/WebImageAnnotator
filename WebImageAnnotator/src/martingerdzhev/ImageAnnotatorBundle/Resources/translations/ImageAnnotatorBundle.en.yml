@@ -83,10 +83,19 @@ annotationGateway:
         createDataset: "Create a new Dataset"
     type:
         0: "Image"
-    noFiles: "You have not added any files yet. Use the above buttons to add files."
+    empty: "You have not made any annotations yet. Use the above buttons to make annotations."
     deleteLink: "Delete"
     deleteConfirmMessage: "Are you sure you want to remove this image's annotations?"
     previewLink: "Preview"
+    
+datasetGateway:
+    title: "Datasets"
+    name: "Dataset"
+    buttons:
+        createDataset: "Create a new Dataset"
+    empty: "There are no datasets yet. Use the above button to create a dataset."
+    create:
+        submit: "Create dataset"
 
 imageGateway:
     title: "Images"
@@ -99,7 +108,7 @@ imageGateway:
         createDataset: "Create a new Dataset"
     type:
         0: "Image"
-    noFiles: "You have not added any files yet. Use the above buttons to add files."
+    empty: "You have not added any images yet. Use the above buttons to add images."
     deleteLink: "Delete"
     deleteConfirmMessage: "Are you sure you want to remove this image's annotations?"
     previewLink: "Preview"
@@ -135,6 +144,8 @@ form:
         null: 'Not set'
         cancel: "Cancel"
         submit: "Submit"
+    dataset:
+        name: "Dataset name:"
 
 # Profile
 profile:

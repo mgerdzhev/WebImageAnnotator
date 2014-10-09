@@ -103,7 +103,12 @@ hearsay_require_js:
     shim: 
         main: 
             deps: ['lib/extra']
-        
+  
+knp_time: ~ # Enable the helper for use in templates
+      
+knp_paginator:
+    template:
+        pagination: KnpPaginatorBundle:Pagination:twitter_bootstrap_v3_pagination.html.twig
 
 # Swiftmailer Configuration
 swiftmailer:

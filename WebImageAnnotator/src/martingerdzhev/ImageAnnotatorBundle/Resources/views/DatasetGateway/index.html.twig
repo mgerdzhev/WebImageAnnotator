@@ -1,0 +1,104 @@
+{% extends 'ImageAnnotatorBundle:Base:base.html.twig' %}
+
+{% trans_default_domain 'ImageAnnotatorBundle' %}
+
+{% block title %}{{ 'datasetGateway.title'|trans }}{% endblock title %}
+
+{% block header %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            require(['main'], function() {
+                var dataSets = new $ia.Controller.Datasets();
+                //FIXME context
+                context = dataSets;
+
+                dataSets.bindUIEvents($ia.Controller.Datasets.Page.INDEX);
+            });
+        });
+    </script>
+{% endblock header %}
+
+{% block nav_ul_authenticated_my_files %}class="active"{% endblock %}
+
+{% block content %}
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <hr class="ia-separator-top" />
+                <img class="img-responsive center-block" src="" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+            	<div class="row" id="chooseFile">
+					<div class="col-md-12">
+						<div class="form-group">
+							<a class="btn btn-primary" id="create-dataset-link" href="{{ path('image_annotator_dataset_create') }}"><i class="fa fa-folder"></i> {{ 'imageGateway.buttons.createDataset'|trans }}</a>
+						</div>
+					</div>
+				</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover ia-myFiles-table">
+                        <thead>{{ 'datasetGateway.title'|trans }}
+                            <th><i class="fa fa-wrench"></i> Tools</th>
+                            <th>Title</th>
+                            <th>Created</th>
+                            <th>Number of Images</th>
+                        </thead>
+                        <tbody>
+                            {% if datasets|length > 0 %}
+                                {% for resourceFile in datasets %}
+                                    <tr>
+                                        <!-- tools -->
+                                        <td>
+                                            <div class="text-center">
+                                            </div>
+                                        </td>
+                                        <!-- name -->
+                                        <td>
+                                        	<a 
+                                                   href="{{ path('image_annotator_dataset_browse', {'datasetId': resourceFile.id}) }}"
+                                                    <i class="fa fa-folder"></i> {{ resourceFile.name }}
+                                            </a>
+                                        </td>
+                                        <!-- created -->
+                                        <td>{{ resourceFile.getCreatedDate|date('g:ia M j Y') }}</td>
+                                        <!-- size -->
+                                        <td>
+                                        	{{ resourceFile.getImages|length }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr colspan="5">
+                                    <div class="text-center"><div class="text-center">{{ 'datasetGateway.empty'|trans }}</div></div>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                {{ knp_pagination_render(datasets) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <hr class="ia-separator-bottom" />
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block outside_body %}
+    {{ parent() }}
+
+    <script type="text/html" id="mediaDeleteConfirmMessage">
+        {{ 'datasetGateway.deleteConfirmMessage'|trans }}
+    </script>
+
+{% endblock outside_body %}

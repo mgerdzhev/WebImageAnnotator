@@ -17,3 +17,7 @@ ImageAnnotatorBundle_annotations:
 ImageAnnotatorBundle_images:
   resource: "@ImageAnnotatorBundle/Resources/config/routing/images.yml"
   prefix: /image
+  
+ImageAnnotatorBundle_datasets:
+  resource: "@ImageAnnotatorBundle/Resources/config/routing/datasets.yml"
+  prefix: /datasets

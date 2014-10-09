@@ -1,6 +1,6 @@
 martingerdzhev\ImageAnnotatorBundle\Entity\Annotation:
     type: entity
-    table: null
+    table: annotation
     fields:
         id:
             type: integer
@@ -26,7 +26,5 @@ martingerdzhev\ImageAnnotatorBundle\Entity\Annotation:
                 referencedColumnName: id
         image:
             targetEntity: Image
-            joinColumn:
-                name: image_id
-                referencedColumnName: id
+            inversedBy: annotations
     lifecycleCallbacks: {  }

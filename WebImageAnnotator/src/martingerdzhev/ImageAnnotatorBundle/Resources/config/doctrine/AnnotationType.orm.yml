@@ -1,6 +1,6 @@
 martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType:
     type: entity
-    table: null
+    table: annotation_type
     fields:
         id:
             type: integer

@@ -1,0 +1,37 @@
+image_annotator_dataset_gateway:
+  pattern: /
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:gateway }
+  options:
+    expose: true
+    
+image_annotator_dataset_browse:
+  pattern: /{datasetId}/browse
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:browse }
+  requirements:
+    datasetId: \d+
+  options:
+    expose: true
+
+image_annotator_dataset_create:
+  pattern: /create
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:create }
+  options:
+    expose: true
+
+image_annotator_dataset_delete:
+  pattern: /{datasetId}/delete
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:delete, url: null }
+  requirements:
+    _method:  POST
+    datasetId: \d+
+  options:
+    expose: true
+
+image_annotator_dataset_update:
+  pattern: /{datasetId}/update
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:update, url: null }
+  requirements:
+    _method:  POST
+    datasetId: \d+
+  options:
+    expose: true

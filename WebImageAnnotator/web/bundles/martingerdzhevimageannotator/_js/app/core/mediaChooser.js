@@ -2,24 +2,10 @@ define(['core/mediaManager'], function(MediaManager) {
     var MediaChooser = function(options) {
         this.element = options.element.dialog({ autoOpen: false });
         this.isPopUp = options.isPopUp;
-        this.isFileSelection = typeof options.isFileSelection != "undefined" ? options.isFileSelection : true;
-        this.isPost = typeof options.isPost != "undefined" ? options.isPost : false;
-        this.isNewPost = typeof options.isNewPost != "undefined" ? options.isNewPost : false;
         this.postId = options.postId;
 
-        this.postSuffix = (this.isPost ? "Post" + this.postId : "");
-        this.recorder = null;
-        this.player = null;
         this.mediaManager = new MediaManager();
         this.media = null;
-
-        this.bind__onRecordingSuccess = this._onRecordingSuccess.bind(this);
-        this.bind__onRecordingError = this._onRecordingError.bind(this);
-        //this.bind__onUploadProgress = this._onUploadProgress.bind(this);
-        this.bind__previewVideoForwardFunctionCut = this._previewVideoForwardFunctionCut.bind(this);
-        this.bind__previewVideoForwardFunctionDone = this._previewVideoForwardFunctionDone.bind(this);
-        this.bind__previewVideoForwardFunctionDoneAndPost = this._previewVideoForwardFunctionDoneAndPost.bind(this);
-        this.bind__previewVideoBackFunction = this._previewVideoBackFunction.bind(this);
     };
 
     MediaChooser.TAG = "MediaChooser";
@@ -32,40 +18,20 @@ define(['core/mediaManager'], function(MediaManager) {
         DIALOG_CLOSE: "dialogClose"
     };
 
-    MediaChooser.MEDIA_TYPES = ["audio", "video", "image", "other"];
+    MediaChooser.MEDIA_TYPES = ["image"];
 
     MediaChooser.TYPE_ALL = 0;
-    MediaChooser.TYPE_UPLOAD_AUDIO = 1;
     MediaChooser.TYPE_UPLOAD_IMAGE = 2;
-    MediaChooser.TYPE_UPLOAD_OTHER = 3;
-    MediaChooser.TYPE_RECORD_VIDEO = 4;
-    MediaChooser.TYPE_RECORD_AUDIO = 5;
-    MediaChooser.TYPE_UPLOAD_VIDEO = 6;
 
     MediaChooser.DIALOG_TITLE_SELECT = "Select from My Files";
     MediaChooser.DIALOG_TITLE_PREVIEW = "Preview";
-    MediaChooser.DIALOG_RECORD_VIDEO = "Record a new video";
-    MediaChooser.DIALOG_RECORD_AUDIO = "Record a new audio";
 
     MediaChooser.prototype.bindUIEvents = function() {
         console.log("%s: %s", MediaChooser.TAG, "bindUIEvents");
 
-        if (this.isPost) {
-            this._bindUIEventsPost();
-            return;
-        }
-
-        $("#recordVideo").on("click", (function(e) {
-            e.preventDefault();
-
-            this.chooseFile({
-                type: MediaChooser.TYPE_RECORD_VIDEO
-            });
-        }).bind(this));
-
         this._bindUIEventsUploadFile(
             $("#uploadForms"),
-            $("#uploadFile"));
+            $("#chooseFile"));
 
         $("#selectFile").on("click", (function(e) {
             e.preventDefault();
@@ -80,34 +46,6 @@ define(['core/mediaManager'], function(MediaManager) {
         }).bind(this));
     };
 
-    MediaChooser.prototype._bindUIEventsPost = function() {
-        console.log("%s: %s", MediaChooser.TAG, "_bindUIEventsPost");
-
-        $("#recordVideoPost" + this.postId).on("click", (function(e) {
-            e.preventDefault();
-
-            this.chooseFile({
-                type: MediaChooser.TYPE_RECORD_VIDEO
-            });
-        }).bind(this));
-
-        $("#selectFilePost" + this.postId).on("click", (function(e) {
-            e.preventDefault();
-
-            this.chooseFile({});
-        }).bind(this));
-
-        this._bindUIEventsUploadFile(
-            $("#uploadFormsPost" + this.postId),
-            $("#uploadFilePost" + this.postId));
-
-        $("#removeFilePost" + this.postId).on("click", (function(e) {
-            e.preventDefault();
-
-            this._invokeReset();
-        }).bind(this));
-    };
-
     /**
      * @param {object} formRootElement
      * @param {object} linkRootElement
@@ -115,10 +53,10 @@ define(['core/mediaManager'], function(MediaManager) {
     MediaChooser.prototype._bindUIEventsUploadFile = function(formRootElement, linkRootElement) {
         console.log("%s: %s", MediaChooser.TAG, "_bindUIEventsUploadFile");
 
-        $.each(MediaChooser.MEDIA_TYPES, (function(index, value) {
-            var resourceFile = formRootElement.find("#imdc_terptube_" + value + "_media_resource_file");
-            var title = formRootElement.find("#imdc_terptube_" + value + "_media_title");
-            var form = formRootElement.find("form[name=imdc_terptube_" + value + "_media]");
+        
+            var resourceFile = formRootElement.find("#image_annotator_image_media_resource_file");
+            var title = formRootElement.find("#image_annotator_image_media_title");
+            var form = formRootElement.find("form[name=image_annotator_image_media]");
 
             resourceFile.on("change", (function(e) {
                 if (resourceFile.val() == "") {
@@ -131,7 +69,7 @@ define(['core/mediaManager'], function(MediaManager) {
                 $("#chooseFile" + this.postSuffix).hide();
 
                 this.loadNextPage({
-                    url: Routing.generate("imdc_myfiles_add_" + value),
+                    url: Routing.generate("image_annotator_image_add_image"),
                     method: "POST",
                     data: new FormData(form[0]),
                     uploadProgress: true
@@ -140,48 +78,14 @@ define(['core/mediaManager'], function(MediaManager) {
                 resourceFile.val("");
                 title.val("");
             }).bind(this));
-        }).bind(this));
 
-        $.each(MediaChooser.MEDIA_TYPES, function(index, value) {
-            var link = linkRootElement.find("#upload-" + value + "-link");
-            var resourceFile = formRootElement.find("#imdc_terptube_" + value + "_media_resource_file");
+            var link = linkRootElement.find("#upload-image-link");
 
             link.on("click", function(e) {
                 e.preventDefault();
 
                 resourceFile.click();
             });
-        });
-    };
-
-    MediaChooser.prototype.bindUIEventsSelectFromMyFiles = function() {
-        console.log("%s: %s", MediaChooser.TAG, "bindUIEventsSelectFromMyFiles");
-
-        $(".preview-button").on("click", (function(e) {
-            e.preventDefault();
-
-            if ($(e.target).hasClass("disabled")) {
-                return false;
-            }
-
-            $("#preview").html("");
-
-            this.previewMedia({
-                mediaUrl: $(e.target).data("url"),
-                mediaId: $(e.target).data("val")
-            });
-        }).bind(this));
-
-        $(".select-button").on("click", (function(e) {
-            e.preventDefault();
-
-            this.setMedia({
-                id: $(e.target).data("val"),
-                title: $(e.target).data("title")
-            });
-            this._invokeSuccess();
-            this._terminatingFunction();
-        }).bind(this));
     };
 
     MediaChooser._dialogTitleForType = function(type) {
@@ -190,14 +94,8 @@ define(['core/mediaManager'], function(MediaManager) {
         switch (type) {
             case MediaChooser.TYPE_ALL:
                 return MediaChooser.DIALOG_TITLE_SELECT;
-            case MediaChooser.TYPE_RECORD_VIDEO:
-                return MediaChooser.DIALOG_RECORD_VIDEO;
-            case MediaChooser.TYPE_RECORD_AUDIO:
-                return MediaChooser.DIALOG_RECORD_AUDIO;
             case MediaChooser.TYPE_UPLOAD_AUDIO:
             case MediaChooser.TYPE_UPLOAD_IMAGE:
-            case MediaChooser.TYPE_UPLOAD_OTHER:
-            case MediaChooser.TYPE_UPLOAD_VIDEO:
             default:
                 return MediaChooser.DIALOG_TITLE_PREVIEW;
         }
@@ -209,59 +107,6 @@ define(['core/mediaManager'], function(MediaManager) {
         return (fileName.substr(0, fileName.lastIndexOf('.')) || fileName).replace(/[^a-z0-9\s]/gi, '').replace(/[_\s]/g, '-');
     };
 
-    /**
-     * @param {object} options
-     */
-    MediaChooser.prototype.createVideoRecorder = function(options) {
-        console.log("%s: %s", MediaChooser.TAG, "createVideoRecorder");
-
-        this.recorder = new Player(options.videoElement, {
-            areaSelectionEnabled: false,
-            updateTimeType: Player.DENSITY_BAR_UPDATE_TYPE_ABSOLUTE,
-            type: Player.DENSITY_BAR_TYPE_RECORDER,
-            audioBar: false,
-            volumeControl: false,
-            recordingSuccessFunction: this.bind__onRecordingSuccess,
-            recordingErrorFunction: this.bind__onRecordingError,
-            recordingPostURL: Routing.generate('imdc_myfiles_add_recording'),
-            forwardButtons: options.forwardButtons,
-            forwardFunctions: options.forwardFunctions
-        });
-
-        $(this.recorder).on(Player.EVENT_RECORDING_UPLOAD_PROGRESS, function(e, percentComplete) {
-            MediaChooser._updateUploadProgress($("#recordVideoUploadProgress"), percentComplete);
-        });
-
-        $(this.recorder).on(Player.EVENT_RECORDING_UPLOADED, function(data) {
-            $("#recordVideoUploadProgress").hide();
-        });
-
-        this.recorder.createControls();
-
-        //TODO revise
-        options.videoElement.parents(".ui-dialog").on("dialogbeforeclose", (function(event, ui) {
-            console.log("videoElement dialogbeforeclose");
-            if (this.recorder != null) {
-                this.recorder.destroyRecorder();
-            }
-        }).bind(this));
-    };
-
-    MediaChooser.prototype._onRecordingSuccess = function(data) {
-        console.log("%s: %s- mediaId=%d", MediaChooser.TAG, "_onRecordingSuccess", data.media.id);
-
-        this.setMedia(data.media);
-    };
-
-    MediaChooser.prototype._onRecordingError = function(e) {
-        console.log("%s: %s- e=%s", MediaChooser.TAG, "_onRecordingError", e);
-    };
-
-    MediaChooser.prototype.destroyVideoRecorder = function() {
-        console.log("%s: %s", MediaChooser.TAG, "destroyVideoRecorder");
-
-        this.recorder.destroyRecorder();
-    };
 
     MediaChooser.prototype._onUploadProgress = function(percentComplete) {
         console.log("%s: %s- percentComplete=%d", MediaChooser.TAG, "_onUploadProgress", percentComplete);
@@ -279,53 +124,6 @@ define(['core/mediaManager'], function(MediaManager) {
         progressBar.html(percentComplete + "%");
     };
 
-    /**
-     * @param {object} options
-     */
-    MediaChooser.prototype.chooseFile = function(options) {
-        console.log("%s: %s", MediaChooser.TAG, "chooseFile");
-
-        var type = (typeof options.type === "undefined") ? MediaChooser.TYPE_ALL : options.type;
-
-        if (this.isPopUp) {
-            this._popUp(
-                type,
-                function() {
-                    this._loadChooserPage(type, options.data);
-                });
-        } else {
-            this._loadChooserPage(type, options.data);
-        }
-    };
-
-    //TODO rename after merge with loadNextPage
-    MediaChooser.prototype._loadChooserPage = function(type, data) {
-        console.log("%s: %s", MediaChooser.TAG, "_loadChooserPage");
-
-        var request = {
-            url: Routing.generate('imdc_media_chooser_by_type', { type: type }),
-            type: "POST",
-            contentType: "application/x-www-form-urlencoded",
-            processData: true,
-            success: (function(data) {
-                console.log("%s: %s: %s", MediaChooser.TAG, "_loadChooserPage", "success");
-
-                this.element.html(data.page);
-            }).bind(this),
-            error: function(request) {
-                console.log("%s: %s: %s", MediaChooser.TAG, "_loadChooserPage", "error");
-
-                console.log(request.statusText);
-            }
-        };
-
-        data = (typeof data === "undefined") ? { type: type } : data;
-        data.type = (typeof data.type === "undefined") ? type : data.type;
-        data.isPost = this.isPost ? 1 : 0;
-        request.data = data;
-
-        $.ajax(request);
-    };
 
     MediaChooser.prototype.previewMedia = function(options) {
         console.log("%s: %s", MediaChooser.TAG, "previewMedia");
@@ -375,16 +173,8 @@ define(['core/mediaManager'], function(MediaManager) {
                     this._terminatingFunction();
                 } else {
                     this.element.html(data.page);
-
-                    if (options.preview) {
-                        $('#preview-media-title').blur((function(e) {
-                            console.log('updated title');
-                            this.media.title = $('#preview-media-title').val();
-                            this.mediaManager.updateMedia(this.media);
-                        }).bind(this));
                     }
-                }
-            }).bind(this),
+        	}).bind(this),
             error: (function(jqXHR, textStatus, errorThrown) {
                 console.log("%s: %s: %s", MediaChooser.TAG, "loadNextPage", "error");
 
@@ -424,7 +214,7 @@ define(['core/mediaManager'], function(MediaManager) {
             modal: true,
             draggable: false,
             closeOnEscape: true,
-            dialogClass: "tt-popup-dialog",
+            dialogClass: "ia-popup-dialog",
             open: (function(event, ui) {
                 console.log("%s: %s: %s", MediaChooser.TAG, "_popUp", "open");
 
@@ -456,104 +246,6 @@ define(['core/mediaManager'], function(MediaManager) {
         this.element.dialog("open");
     };
 
-    MediaChooser.prototype.previewVideo = function() {
-        console.log("%s: %s", MediaChooser.TAG, "previewVideo");
-
-        var forwardButtons = ["<button class='cutButton'></button>", "<button class='doneButton'></button>"];
-        var forwardFunctions = [this.bind__previewVideoForwardFunctionCut, this.bind__previewVideoForwardFunctionDone];
-        console.log("isPost: %s postID: %s", this.isPost, this.postId);
-        if (this.isPost || this.isNewPost) {
-            forwardButtons = ["<button class='cutButton'></button>", "<button class='doneButton'></button>", "<button class='doneAndPostButton'></button>"];
-            forwardFunctions = [this.bind__previewVideoForwardFunctionCut, this.bind__previewVideoForwardFunctionDone, this.bind__previewVideoForwardFunctionDoneAndPost];
-        }
-        var backButtons;
-        var backFunctions;
-        if (typeof this.recording != 'undefined' && this.recording)
-        {
-        	backButtons = ["<button class='backButton'></button>"];
-        	backFunctions = [this.bind__previewVideoBackFunction];
-    	}
-        
-        this.player = new Player($("#" + this.media.id), {
-            areaSelectionEnabled: true,
-            audioBar : false,
-            updateTimeType: Player.DENSITY_BAR_UPDATE_TYPE_RELATIVE,
-            //playHeadImage: "images/feedback_icons/round_plus.png",
-            //playHeadImageOnClick: function(){ alert("plus");},
-            forwardButtons: forwardButtons,
-            forwardFunctions: forwardFunctions,
-            backButtons: backButtons,
-            backFunctions: backFunctions,
-            selectedRegionColor : "#0000ff"
-        });
-        this.player.createControls();
-    };
-
-    MediaChooser.prototype._previewVideoBackFunction = function(data) {
-        console.log("%s: %s", MediaChooser.TAG, "_previewVideoBackFunction");
-
-        // delete the current media!
-        this.mediaManager.deleteMedia(this.media.id);
-
-        // Go back to recording
-        this.element.html("");
-        this.media = null;
-        this._loadChooserPage(MediaChooser.TYPE_RECORD_VIDEO);
-    };
-
-    MediaChooser.prototype._previewVideoForwardFunctionCut = function(data) {
-        console.log("%s: %s", MediaChooser.TAG, "_previewVideoForwardFunctionCut");
-
-        var previousMinMaxTimes = this.player.getCurrentMinMaxTime();
-        var currentMinMaxTimes = this.player.getAreaSelectionTimes();
-        this.player.setCurrentMinMaxTime(currentMinMaxTimes.minTime, currentMinMaxTimes.maxTime);
-
-        // console.log(recorderConfiguration);
-        // var fn = window[recorderConfiguration.forwardFunction]||null;
-        // fn(data);
-        // console.log('Cut!', data);
-
-        console.log("Current Min/Max Times %s %s", currentMinMaxTimes.minTime, currentMinMaxTimes.maxTime);
-        console.log("Cutting to Min/Max Times %s %s", currentMinMaxTimes.minTime - previousMinMaxTimes.minTime, currentMinMaxTimes.maxTime - previousMinMaxTimes.minTime);
-
-        this.mediaManager.trimMedia(this.media.id,
-            currentMinMaxTimes.minTime - previousMinMaxTimes.minTime,
-            currentMinMaxTimes.maxTime - previousMinMaxTimes.minTime);
-    };
-
-    MediaChooser.prototype._previewVideoForwardFunctionDone = function(data) {
-        console.log("%s: %s", MediaChooser.TAG, "_previewVideoForwardFunctionDone");
-
-        // console.log(recorderConfiguration);
-        // var fn = window[recorderConfiguration.forwardFunction]||null;
-        // fn(data);
-        // console.log('Done!', data);
-
-        if (this.media != null) {
-            // var mediaManager = new MediaManager();
-            // this.media.title = $('#preview-media-title').val();
-            // mediaManager.updateMedia(this.media);
-            this._invokeSuccess();
-        }
-        this._terminatingFunction();
-    };
-
-    MediaChooser.prototype._previewVideoForwardFunctionDoneAndPost = function(data) {
-        console.log("%s: %s", MediaChooser.TAG, "_previewVideoForwardFunctionDoneAndPost");
-
-        // console.log(recorderConfiguration);
-        // var fn = window[recorderConfiguration.forwardFunction]||null;
-        // fn(data);
-				// console.log('Done!', data);
-
-        if (this.media != null) {
-            // var mediaManager = new MediaManager();
-            // this.media.title = $('#preview-media-title').val();
-            // mediaManager.updateMedia(this.media);
-            this._invokeSuccess(true);
-        }
-        this._terminatingFunction();
-    };
 
     MediaChooser.prototype._terminatingFunction = function() {
         console.log("%s: %s", MediaChooser.TAG, "_terminatingFunction");

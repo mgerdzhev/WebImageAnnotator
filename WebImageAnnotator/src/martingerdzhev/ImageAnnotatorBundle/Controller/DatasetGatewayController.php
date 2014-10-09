@@ -5,10 +5,10 @@ namespace martingerdzhev\ImageAnnotatorBundle\Controller;
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Intl\Exception\NotImplementedException;
 use martingerdzhev\ImageAnnotatorBundle\Event\UploadEvent;
-use martingerdzhev\ImageAnnotatorBundle\Entity\Image;
+use martingerdzhev\ImageAnnotatorBundle\Entity\Dataset;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use martingerdzhev\ImageAnnotatorBundle\Filter\FileFilter;
-use martingerdzhev\ImageAnnotatorBundle\Form\Type\ImageMediaFormType;
+use martingerdzhev\ImageAnnotatorBundle\Form\Type\DatasetFormType;
 use martingerdzhev\ImageAnnotatorBundle\Controller\MediaChooserGatewayController;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -25,11 +25,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
 
-class ImageGatewayController extends Controller
+class DatasetGatewayController extends Controller
 {
 	
 	const FEEDBACK_MESSAGE_NOT_OWNER = "Not the rightful owner";
-	const FEEDBACK_MESSAGE_NOT_EXIST_MEDIA = "Media does not exist";
+	const FEEDBACK_MESSAGE_NOT_EXIST_MEDIA = "Dataset does not exist";
 	const FEEDBACK_MESSAGE_NOT_EXIST_USER = "User does not exist";
 	
 	/**
@@ -46,18 +46,59 @@ class ImageGatewayController extends Controller
 			return $this->redirect($this->generateUrl('fos_user_security_login'));
 		}
 
-		$user = $this->getUser();
+// 		$user = $this->getUser();
         $paginator = $this->get('knp_paginator');
         $resourceFiles = $paginator->paginate(
-            $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->getAnnotatedImages($user),
+            $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->findAll(),
             $this->get('request')->query->get('page', 1), /*page number*/
             25 /*limit per page*/
         );
 
-        return $this->render('ImageAnnotatorBundle:MyImages:index.html.twig', array (
-            'resourceFiles' => $resourceFiles,
-            'uploadForms' => MediaChooserGatewayController::getUploadForms($this)
+        return $this->render('ImageAnnotatorBundle:DatasetGateway:index.html.twig', array (
+            'datasets' => $resourceFiles,
 		));
+	}
+	
+	public function createAction(Request $request)
+	{
+		$user = $this->getUser ();
+		if (! $this->container->get ( 'image_annotator.authentication_manager' )->isAuthenticated ( $request )) {
+			return $this->redirect ( $this->generateUrl ( 'fos_user_security_login' ) );
+		}
+		$userManager = $this->container->get ( 'fos_user.user_manager' );
+		$userObject = $userManager->findUserByUsername ( $user->getUsername () );
+		if ($userObject == null) {
+			throw new NotFoundHttpException ( "This user does not exist" );
+		}
+		$dataset = new Dataset();
+		
+		$formFactory = $this->container->get ( 'form.factory' );
+		
+		$form = $formFactory->create ( new DatasetFormType (), $dataset, array () );
+		
+		if ('POST' === $request->getMethod ()) {
+			$form->bind ( $request );
+			
+			if ($form->isValid ()) {
+				// flush object to database
+				$em = $this->container->get ( 'doctrine' )->getManager ();
+				$dataset->setCreator($userObject);
+				$em->persist ( $dataset );
+				// Remove old avatar from DB:
+				$em->flush ();
+				
+				$this->container->get ( 'session' )->getFlashBag ()->add ( 'dataset', 'Dataset created successfully!' );
+				// $uploadedEvent->getResponse();
+				$response = new RedirectResponse ( $this->generateUrl ( 'image_annotator_dataset_browse', array('datasetId'=>$dataset->getId()) ) );
+				return $response;
+			}
+		}
+		$response = $this->render ( 'ImageAnnotatorBundle:DatasetGateway:' . 'create.html.twig', array (
+				'form' => $form->createView (),
+				'postUrl' => $this->generateUrl ( 'image_annotator_dataset_create' )
+		) );
+		// form not valid, show the basic form
+		return $response;
 	}
 	
 	/**
@@ -66,7 +107,7 @@ class ImageGatewayController extends Controller
 	 * @param Request $request        	
 	 * @param unknown_type $mediaId        	
 	 */
-	public function deleteMediaAction(Request $request, $mediaId)
+	public function deleteDatasetAction(Request $request, $datasetId)
 	{
 		if (! $this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
 		{
@@ -76,26 +117,22 @@ class ImageGatewayController extends Controller
 			throw new BadRequestHttpException('Only Ajax POST calls accepted');
 		$user = $this->getUser();
 		$em = $this->get('doctrine')->getManager();
-		/**
-		 *
-		 * @var $media martingerdzhev\ImageAnnotatorBundle\Entity\Image
-		 */
-		$media = $em->getRepository('ImageAnnotatorBundle:Image')->find($mediaId);
-		if ($media !== null)
+		$dataset = $em->getRepository('ImageAnnotatorBundle:Dataset')->find($datasetId);
+		if ($dataset !== null)
 		{
-			if ($media->getOwner() != $user)
+			if ($dataset->getCreator() != $user)
 			{
 				$return = array (
 						'responseCode' => 400,
-						'feedback' => ImageGatewayController::FEEDBACK_MESSAGE_NOT_OWNER
+						'feedback' => DatasetGatewayController::FEEDBACK_MESSAGE_NOT_OWNER
 				);
 			}
 			else {
-				$em->remove($media);
+				$em->remove($dataset);
 				$em->flush();
 				$return = array (
 						'responseCode' => 200,
-						'feedback' => 'Successfully removed media!' 
+						'feedback' => 'Successfully removed dataset!' 
 				);
 			}
 		}
@@ -103,7 +140,7 @@ class ImageGatewayController extends Controller
 		{
 			$return = array (
 					'responseCode' => 400,
-					'feedback' => ImageGatewayController::FEEDBACK_MESSAGE_NOT_EXIST_MEDIA
+					'feedback' => DatasetGatewayController::FEEDBACK_MESSAGE_NOT_EXIST_MEDIA
 			);
 		}
 		$return = json_encode($return); // json encode the array
@@ -118,52 +155,36 @@ class ImageGatewayController extends Controller
 	 * @param Request $request        	
 	 * @param unknown_type $mediaId        	
 	 */
-	public function previewMediaAction(Request $request, $mediaId)
+	public function browseAction(Request $request, $datasetId)
 	{
 		if (! $this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
 		{
 			return $this->redirect($this->generateUrl('fos_user_security_login'));
 		}
-		if (! $request->isXmlHttpRequest())
-			throw new BadRequestHttpException('Only Ajax POST calls accepted');
-		$user = $this->getUser();
 		$em = $this->get('doctrine')->getManager();
-		/**
-		 *
-		 * @var $media martingerdzhev\ImageAnnotatorBundle\Entity\Image
-		 */
-		$media = $em->getRepository('ImageAnnotatorBundle:Image')->find($mediaId);
+		$dataset = $em->getRepository('ImageAnnotatorBundle:Dataset')->find($datasetId);
 		
 		$responseURL = "";
 		
-		if ($request->isXmlHttpRequest())
+		if ($dataset !== null)
 		{
-			$prefix = "ajax.";
-		}
-		// form not valid, show the basic form
-		if ($media !== null)
-		{
-			$responseURL = 'ImageAnnotatorBundle:Media:' . $prefix . 'previewImage.html.twig';
+			$responseURL = 'ImageAnnotatorBundle:DatasetGateway:' .'browse.html.twig';
 		}
 		else
 		{
-			throw new EntityNotFoundException("Cannot find media with that ID");
+			throw new EntityNotFoundException("Cannot find dataset with that ID");
 		}
+		$paginator = $this->get('knp_paginator');
+		$resourceFiles = $paginator->paginate(
+				$dataset->getImages(),
+				$this->get('request')->query->get('page', 1), /*page number*/
+				25 /*limit per page*/
+				);
 		$response = $this->render($responseURL, array (
-				'mediaFile' => $media 
+				'dataset' => $dataset,
+				'resourceFiles' =>$resourceFiles,
+				'uploadForms' => MediaChooserGatewayController::getUploadForms($this) 
 		));
-		
-		if ($request->isXmlHttpRequest())
-		{
-			$return = array (
-					'page' => $response->getContent(),
-					'media' => JSEntities::getMediaObject($media) 
-			);
-			$return = json_encode($return); // json encode the array
-			$response = new Response($return, 200, array (
-					'Content-Type' => 'application/json' 
-			));
-		}
 		
 		return $response;
 	}
@@ -175,7 +196,7 @@ class ImageGatewayController extends Controller
 	 * @param Request $request        	
 	 * @param unknown_type $mediaId        	
 	 */
-	public function updateMediaAction(Request $request, $mediaId)
+	public function updateDatasetAction(Request $request, $datasetId)
 	{
 		if (! $this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
 		{
@@ -185,43 +206,39 @@ class ImageGatewayController extends Controller
 			throw new BadRequestHttpException('Only Ajax POST calls accepted');
 		$user = $this->getUser();
 		$em = $this->get('doctrine')->getManager();
-		/**
-		 *
-		 * @var $media martingerdzhev\ImageAnnotatorBundle\Entity\Image
-		 */
-		$mediaToUpdate = $em->getRepository('ImageAnnotatorBundle:Image')->find($mediaId);
+		$datasetToUpdate = $em->getRepository('ImageAnnotatorBundle:Dataset')->find($datasetId);
 		
-		if ($mediaToUpdate == null)
+		if ($datasetToUpdate == null)
 		{
 			$return = array (
 					'responseCode' => 400,
-					'feedback' => ImagesGatewayController::FEEDBACK_MESSAGE_NOT_EXIST_MEDIA
+					'feedback' => DatasetGatewayController::FEEDBACK_MESSAGE_NOT_EXIST_MEDIA
 			);
 		}
-		else if ($mediaToUpdate->getOwner() != $user)
+		else if ($datasetToUpdate->getOwner() != $user)
 		{
 			$return = array (
 					'responseCode' => 400,
-					'feedback' => ImagesGatewayController::FEEDBACK_MESSAGE_NOT_OWNER 
+					'feedback' => DatasetGatewayController::FEEDBACK_MESSAGE_NOT_OWNER 
 			);
 		}
 		else
 		{
-			$media = json_decode($request->get('media'), true);
-			if ($mediaToUpdate !== null && $media != null && $media ['title'] !== null)
+			$dataset = json_decode($request->get('dataset'), true);
+			if ($datasetToUpdate !== null && $dataset != null && $dataset ['name'] !== null)
 			{
-				$mediaToUpdate->setTitle($media ['title']);
+				$datasetToUpdate->setName($dataset ['name']);
 				$em->flush();
 				$return = array (
 						'responseCode' => 200,
-						'feedback' => 'Successfully Updated media!' 
+						'feedback' => 'Successfully Updated dataset!' 
 				);
 			}
 			else
 			{
 				$return = array (
 						'responseCode' => 400,
-						'feedback' => ImagesGatewayController::FEEDBACK_MESSAGE_NOT_EXIST_MEDIA
+						'feedback' => DatasetGatewayController::FEEDBACK_MESSAGE_NOT_EXIST_MEDIA
 				);
 			}
 		}

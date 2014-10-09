@@ -1,0 +1,29 @@
+martingerdzhev\ImageAnnotatorBundle\Entity\Dataset:
+    type:  entity
+    table: dataset
+    repositoryClass: martingerdzhev\ImageAnnotatorBundle\Entity\DatasetRepository
+    id:
+        id:
+            type: integer
+            generator:
+                strategy: AUTO
+    fields:
+        createdDate:
+            type: datetime
+        name:
+            type: string
+    lifecycleCallbacks: 
+        prePersist: [setCreatedDateToNow]
+    oneToMany:
+        images:
+            targetEntity: Image
+            mappedBy: dataset_id
+            orderBy:
+                id: DESC
+                
+    manyToOne:
+        creator:
+            targetEntity: User
+            joinColumn:
+                name: creator_id
+                referencedColumnName: id

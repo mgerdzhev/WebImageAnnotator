@@ -78,7 +78,7 @@
                                                 <a class="navbar-link" data-placement="bottom" title="{{ 'nav.my_annotations_create' |trans }}"href="{{ path('image_annotator_annotations_create') }}"><i class="fa fa-edit fa-2x"></i></a>
                                             </li>
                                             <li {% block nav_ul_authenticated_images_gateway %}{% endblock %}>
-                                                <a class="navbar-link" data-placement="bottom" title="{{ 'nav.images_gateway' |trans }}"href="{{ path('image_annotator_image_gateway') }}"><i class="fa fa-image fa-2x"></i></a>
+                                                <a class="navbar-link" data-placement="bottom" title="{{ 'nav.images_gateway' |trans }}"href="{{ path('image_annotator_dataset_gateway') }}"><i class="fa fa-image fa-2x"></i></a>
                                             </li>
                                             {% if is_granted('ROLE_SUPER_ADMIN') %}
                                                 <li {% block nav_ul_authenticated_admin %}{% endblock %}>

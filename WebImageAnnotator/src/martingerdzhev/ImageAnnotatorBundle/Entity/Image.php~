@@ -108,4 +108,77 @@ class Image
     {
         return $this->resource;
     }
+    /**
+     * @var \martingerdzhev\ImageAnnotatorBundle\Entity\Dataset
+     */
+    private $dataset_id;
+
+
+    /**
+     * Set dataset_id
+     *
+     * @param \martingerdzhev\ImageAnnotatorBundle\Entity\Dataset $datasetId
+     * @return Image
+     */
+    public function setDatasetId(\martingerdzhev\ImageAnnotatorBundle\Entity\Dataset $datasetId = null)
+    {
+        $this->dataset_id = $datasetId;
+
+        return $this;
+    }
+
+    /**
+     * Get dataset_id
+     *
+     * @return \martingerdzhev\ImageAnnotatorBundle\Entity\Dataset 
+     */
+    public function getDatasetId()
+    {
+        return $this->dataset_id;
+    }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $annotations;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->annotations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add annotations
+     *
+     * @param \martingerdzhev\ImageAnnotatorBundle\Entity\Annotation $annotations
+     * @return Image
+     */
+    public function addAnnotation(\martingerdzhev\ImageAnnotatorBundle\Entity\Annotation $annotations)
+    {
+        $this->annotations[] = $annotations;
+
+        return $this;
+    }
+
+    /**
+     * Remove annotations
+     *
+     * @param \martingerdzhev\ImageAnnotatorBundle\Entity\Annotation $annotations
+     */
+    public function removeAnnotation(\martingerdzhev\ImageAnnotatorBundle\Entity\Annotation $annotations)
+    {
+        $this->annotations->removeElement($annotations);
+    }
+
+    /**
+     * Get annotations
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAnnotations()
+    {
+        return $this->annotations;
+    }
 }
