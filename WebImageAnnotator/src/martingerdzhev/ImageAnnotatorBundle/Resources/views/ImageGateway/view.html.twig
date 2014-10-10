@@ -1,0 +1,57 @@
+{% extends 'ImageAnnotatorBundle:Base:base.html.twig' %}
+
+{% trans_default_domain 'ImageAnnotatorBundle' %}
+
+{% block title %}{{ 'imageGateway.title'|trans }}{% endblock title %}
+
+{% block header %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            require(['main'], function() {
+                var images = new $ia.Controller.Images();
+                //FIXME context
+                context = images;
+
+                images.bindUIEvents($ia.Controller.Images.Page.INDEX);
+            });
+        });
+    </script>
+{% endblock header %}
+
+{% block nav_ul_authenticated_my_files %}class="active"{% endblock %}
+{% block left_side_content %}
+ <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                {% include 'ImageAnnotatorBundle:Annotations:controlsForm.html.twig' %}
+            </div>
+</div>
+{% endblock left_side_content %}
+{% block content %}
+    <div class="col-lg-12">
+       
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <div id="preview"></div>
+                <div class="ia-media-preview">
+				    <div class="text-center ia-media-preview-title">
+				        <input type="text" id="mediaPreviewTitle" value="{{ mediaFile.title }}" />
+				    </div>
+			
+			    {% include 'ImageAnnotatorBundle:Media:element.html.twig' with {'enableControls': false} %}
+			
+			    {% block preview %}
+			    {% endblock preview %}
+				</div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block outside_body %}
+    {{ parent() }}
+
+{% endblock outside_body %}
+
+

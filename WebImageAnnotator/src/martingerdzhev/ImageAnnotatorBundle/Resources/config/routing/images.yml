@@ -6,7 +6,7 @@ image_annotator_image_gateway:
     
 image_annotator_image_preview:
   pattern: /preview/{imageId}
-  defaults: { _controller: ImageAnnotatorBundle:ImageGateway:previewImage }
+  defaults: { _controller: ImageAnnotatorBundle:ImageGateway:view }
   requirements:
     imageId: \d+
   options:

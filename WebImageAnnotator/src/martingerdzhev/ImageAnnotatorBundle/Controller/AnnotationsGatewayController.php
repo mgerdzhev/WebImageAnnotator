@@ -4,8 +4,9 @@ namespace martingerdzhev\ImageAnnotatorBundle\Controller;
 
 use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Intl\Exception\NotImplementedException;
-use martingerdzhev\ImageAnnotatorBundle\Event\UploadEvent;
 use martingerdzhev\ImageAnnotatorBundle\Entity\Image;
+use martingerdzhev\ImageAnnotatorBundle\Entity\Annotation;
+use martingerdzhev\ImageAnnotatorBundle\Form\Type\AnnotationFormType;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use martingerdzhev\ImageAnnotatorBundle\Filter\FileFilter;
 use martingerdzhev\ImageAnnotatorBundle\Form\Type\ImageMediaFormType;
@@ -230,5 +231,19 @@ class AnnotationsGatewayController extends Controller
 		return new Response($return, 200, array (
 				'Content-Type' => 'application/json' 
 		));
+	}
+	
+	/**
+	 * An Ajax function that deletes a media with a specific media ID
+	 * @param Request $request
+	 * @param unknown_type $mediaId
+	 */
+	
+	public static function getAnnotationForm(Controller $controller) {
+		$formImage = $controller->createForm(new AnnotationFormType(), new Annotation(), array());
+	
+		return array(
+				$formImage->createView(),
+		);
 	}
 }

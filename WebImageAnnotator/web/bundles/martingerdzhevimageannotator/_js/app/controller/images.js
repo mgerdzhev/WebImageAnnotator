@@ -4,6 +4,7 @@ define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaM
         this.mediaChooser = null;
         this.mediaManager = new MediaManager();
         this.forwardButton = "<button class='forwardButton'></button>";
+        this.datasetId = null;
 
         this.bind__onPreviewButtonClick = this.onPreviewButtonClick.bind(this);
         this.bind__onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
@@ -30,7 +31,8 @@ define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaM
                 return {
                     element: $("#preview"),
                     isPopUp: true,
-                    isFileSelection: false
+                    isFileSelection: false,
+                    datasetId:this.datasetId
                 };
             case Images.Page.PREVIEW:
                 return {};
@@ -59,11 +61,12 @@ define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaM
         console.log("%s: %s", Images.TAG, "_bindUIEventsIndex");
 
         this.mediaChooser = new MediaChooser(Images.mediaChooserOptions(Images.Page.INDEX));
+        this.mediaChooser.datasetId = this.datasetId;
         $(this.mediaChooser).on(MediaChooser.Event.SUCCESS, this.bind__onSuccess);
         $(this.mediaChooser).on(MediaChooser.Event.DIALOG_CLOSE, this.bind__onDialogClose);
         this.mediaChooser.bindUIEvents();
 
-        $(".preview-button").on("click", this.bind__onPreviewButtonClick);
+      //  $(".preview-button").on("click", this.bind__onPreviewButtonClick);
         $(".delete-button").on("click", this.bind__onDeleteButtonClick);
     };
 
@@ -131,7 +134,7 @@ define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaM
     Images.prototype._onSuccess = function(e) {
         switch (this.page) {
             case Images.Page.INDEX:
-                this._addMediaRow(e.media); //FIXME pagination makes this impractical
+                console.log("Image successfully uploaded"); 
                 break;
             case Images.Page.PREVIEW:
                 console.log("Done previewing");
@@ -145,7 +148,7 @@ define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaM
                 this.page = Images.Page.INDEX;
                 console.log("Terminating function called");
                 console.log(e.media);
-                this._updateMediaRow(e.media);
+//                this._updateMediaRow(e.media);
                 break;
         }
     };

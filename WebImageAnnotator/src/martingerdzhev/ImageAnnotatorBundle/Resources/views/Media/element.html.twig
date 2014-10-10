@@ -18,23 +18,7 @@ _Thread:thumbnail.html.twig
 
 {% block media %}
     {# mediatype 0 = image 1 = video 2 = audio 9 = other #}
-    {% if mediaFile.type == 0 %}
         {% block mediaimagetype %}
             <img class="img-responsive center-block ia-media-img" src="{{ asset(mediaFile.getResource.getWebPath) }}" alt="{{ mediaFile.title }}" title="{{ mediaFile.title }}" />
         {% endblock mediaimagetype %}
-    {% elseif mediaFile.type == 1 %}
-        {% block mediavideotype %}
-            <video class="ia-media-video" id="{{ mediaFile.getID }}" {% if enableControls %}controls{% endif %} preload="auto">
-                <source src="{{ asset(mediaFile.getResource.getWebPathWebm) }}" />
-                <source src="{{ asset(mediaFile.getResource.getWebPath) }}" />
-            </video>
-        {% endblock mediavideotype %}
-    {% elseif mediaFile.type == 2 %}
-        {% block mediaaudiotype %}
-            <audio class="ia-media-audio" {% if enableControls %}controls{% endif %}>
-                <source src="{{ asset(mediaFile.getResource.getWebPath) }}" />
-                Your browser does not support the audio element, please upgrade to Google Chrome
-            </audio>
-        {% endblock mediaaudiotype %}
-    {% endif %}
 {% endblock media %}

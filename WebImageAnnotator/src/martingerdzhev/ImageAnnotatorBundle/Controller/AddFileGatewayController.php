@@ -82,22 +82,19 @@ class AddFileGatewayController extends Controller {
 		
 		$form = $formFactory->create ( new ImageMediaFormType (), $imageMedia, array () );
 		
-		$prefix = "";
-		if ($request->isXmlHttpRequest ()) {
-			$prefix = "ajax.";
-		}
-		
+		$logger = $this->container->get('logger');
+// 		if ($request->isXmlHttpRequest ()) {
+// 			throw new BadRequestHttpException();
+// 		}
 		if ('POST' === $request->getMethod ()) {
 			$form->bind ( $request );
 			
+			$logger->info('method:' . $request->getMethod ());
 			if ($form->isValid ()) {
-				$imageMedia->setOwner ( $userObject );
+				$logger->info('Form is valid');
 				// flush object to database
 				$em = $this->container->get ( 'doctrine' )->getManager ();
 				$em->persist ( $imageMedia );
-				// Remove old avatar from DB:
-				$userObject->addResourceFile ( $imageMedia );
-				
 				$em->flush ();
 				
 				$this->container->get ( 'session' )->getFlashBag ()->add ( 'media', 'Image file uploaded successfully!' );
@@ -124,20 +121,28 @@ class AddFileGatewayController extends Controller {
 				}
 				return $response;
 			}
+// 			foreach ($form->getChildren() as $child)
+// 			{
+				$logger->info("form is invalid");
+				$logger->info($form->getErrorsAsString());
+// 			}
 		}
-		$response = $this->render ( 'ImageAnnotatorBundle:AddFileGateway:' . $prefix . 'addFile.html.twig', array (
-				'form' => $form->createView (),
-				'postUrl' => $this->generateUrl ( 'image_annotator_image_add_image' )
-		) );
+		
 		// form not valid, show the basic form
 		if ($request->isXmlHttpRequest ()) {
 			$return = array (
-					'page' => $response->getContent (),
+					'page' => null,
 					'finished' => false 
 			);
 			$return = json_encode ( $return ); // json encode the array
-			$response = new Response ( $return, 200, array (
+			$response = new Response ( $return, 400, array (
 					'Content-Type' => 'application/json' 
+			) );
+		}
+		else {
+			$response = $this->render ( 'ImageAnnotatorBundle:AddFileGateway:' . 'addFile.html.twig', array (
+					'form' => $form->createView (),
+					'postUrl' => $this->generateUrl ( 'image_annotator_image_add_image' )
 			) );
 		}
 		return $response;

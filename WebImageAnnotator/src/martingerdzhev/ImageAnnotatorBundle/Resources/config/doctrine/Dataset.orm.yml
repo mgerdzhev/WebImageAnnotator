@@ -17,7 +17,7 @@ martingerdzhev\ImageAnnotatorBundle\Entity\Dataset:
     oneToMany:
         images:
             targetEntity: Image
-            mappedBy: dataset_id
+            mappedBy: dataset
             orderBy:
                 id: DESC
                 

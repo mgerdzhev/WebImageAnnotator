@@ -54,7 +54,7 @@ class ImageGatewayController extends Controller
             25 /*limit per page*/
         );
 
-        return $this->render('ImageAnnotatorBundle:MyImages:index.html.twig', array (
+        return $this->render('ImageAnnotatorBundle:ImageGateway:index.html.twig', array (
             'resourceFiles' => $resourceFiles,
             'uploadForms' => MediaChooserGatewayController::getUploadForms($this)
 		));
@@ -66,7 +66,7 @@ class ImageGatewayController extends Controller
 	 * @param Request $request        	
 	 * @param unknown_type $mediaId        	
 	 */
-	public function deleteMediaAction(Request $request, $mediaId)
+	public function deleteImageAction(Request $request, $imageId)
 	{
 		if (! $this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
 		{
@@ -80,7 +80,7 @@ class ImageGatewayController extends Controller
 		 *
 		 * @var $media martingerdzhev\ImageAnnotatorBundle\Entity\Image
 		 */
-		$media = $em->getRepository('ImageAnnotatorBundle:Image')->find($mediaId);
+		$media = $em->getRepository('ImageAnnotatorBundle:Image')->find($imageId);
 		if ($media !== null)
 		{
 			if ($media->getOwner() != $user)
@@ -118,24 +118,25 @@ class ImageGatewayController extends Controller
 	 * @param Request $request        	
 	 * @param unknown_type $mediaId        	
 	 */
-	public function previewMediaAction(Request $request, $mediaId)
+	public function viewAction(Request $request, $imageId)
 	{
 		if (! $this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
 		{
 			return $this->redirect($this->generateUrl('fos_user_security_login'));
 		}
-		if (! $request->isXmlHttpRequest())
-			throw new BadRequestHttpException('Only Ajax POST calls accepted');
+// 		if (! $request->isXmlHttpRequest())
+// 			throw new BadRequestHttpException('Only Ajax POST calls accepted');
 		$user = $this->getUser();
 		$em = $this->get('doctrine')->getManager();
 		/**
 		 *
 		 * @var $media martingerdzhev\ImageAnnotatorBundle\Entity\Image
 		 */
-		$media = $em->getRepository('ImageAnnotatorBundle:Image')->find($mediaId);
+		$media = $em->getRepository('ImageAnnotatorBundle:Image')->find($imageId);
 		
 		$responseURL = "";
 		
+		$prefix = '';
 		if ($request->isXmlHttpRequest())
 		{
 			$prefix = "ajax.";
@@ -143,7 +144,7 @@ class ImageGatewayController extends Controller
 		// form not valid, show the basic form
 		if ($media !== null)
 		{
-			$responseURL = 'ImageAnnotatorBundle:Media:' . $prefix . 'previewImage.html.twig';
+			$responseURL = 'ImageAnnotatorBundle:ImageGateway:' . $prefix . 'view.html.twig';
 		}
 		else
 		{
@@ -175,7 +176,7 @@ class ImageGatewayController extends Controller
 	 * @param Request $request        	
 	 * @param unknown_type $mediaId        	
 	 */
-	public function updateMediaAction(Request $request, $mediaId)
+	public function updateImageAction(Request $request, $mediaId)
 	{
 		if (! $this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
 		{

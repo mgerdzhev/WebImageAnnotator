@@ -11,6 +11,7 @@
         $(document).ready(function() {
             require(['main'], function() {
                 var myImages = new $ia.Controller.Images();
+                myImages.datasetId = {{ dataset.Id }};
                 //FIXME context
                 context = myImages;
 
@@ -25,13 +26,7 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-offset-2 col-md-8">
-                <hr class="ia-separator-top" />
-                <img class="img-responsive center-block" src="" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8">
-                {% include 'ImageAnnotatorBundle:Media:chooserForm.html.twig' with {'isFileSelection': false} %}
+                {% include 'ImageAnnotatorBundle:Media:chooserForm.html.twig' %}
             </div>
         </div>
         <div class="row">
@@ -56,28 +51,21 @@
                                                 <a class="btn btn-danger btn-xs delete-button"
                                                    href="#"
                                                    data-val="{{ resourceFile.id }}">
-                                                    <i class="fa fa-trash-o"></i> {{ 'filesGateway.deleteLink'|trans }}
+                                                    <i class="fa fa-trash-o"></i> {{ 'imageGateway.deleteLink'|trans }}
                                                 </a>
-                                                <a class="btn btn-default btn-xs preview-button{% if resourceFile.getIsReady == constant('IMDC\\TerpTubeBundle\\Entity\\Media::READY_NO') %} disabled{% endif %}"
-                                                   href="#"
-                                                   data-type="{{ resourceFile.type }}"
-                                                   data-url="{{ path('image_annotator_images_preview', {'mediaId': resourceFile.id}) }}"
-                                                   data-val="{{ resourceFile.id }}">
-                                                    <i class="fa fa-play-circle"></i> {{ 'filesGateway.previewLink'|trans }}
+                                                <a class="btn btn-default btn-xs preview-button"
+                                                   href="{{ path('image_annotator_image_preview', {'imageId': resourceFile.id}) }}">
+                                                    <i class="fa fa-edit"></i> {{ 'imageGateway.viewLink'|trans }}
                                                 </a>
                                             </div>
                                         </td>
                                         <!-- name -->
                                         <td>{{ resourceFile.title }}</td>
                                         <!-- created -->
-                                        <td>{{ resourceFile.getMetaData.getTimeUploaded|date('g:ia M j') }}</td>
+                                        <td>{{ resourceFile.getMetaData.getTimeUploaded|date('g:ia M j Y') }}</td>
                                         <!-- size -->
                                         <td>
-                                            {% if resourceFile.getMetaData.getSize == -1 %}
-                                                <i class="fa fa-spinner fa-spin fa-large"></i>
-                                            {% else %}
-                                                {{ '%.2f'|format(resourceFile.getMetaData.getSize / 1024 / 1024) }} MB
-                                            {% endif %}
+                                                {{ resourceFile.annotations|length }} 
                                         </td>
                                     </tr>
                                 {% endfor %}

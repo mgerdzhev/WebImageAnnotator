@@ -70,14 +70,9 @@ class MediaChooserGatewayController extends Controller
 		$this->get('session')->set('mediaChooseFinished', false);
 		return $response;
 	}
-	/**
-	 * An Ajax function that deletes a media with a specific media ID
-	 * @param Request $request
-	 * @param unknown_type $mediaId
-	 */
 
     public static function getUploadForms(Controller $controller) {
-        $formImage = $controller->createForm(new ImageMediaFormType(), new Image());
+        $formImage = $controller->createForm(new ImageMediaFormType(), new Image(), array());
 
         return array(
             $formImage->createView(),

@@ -13,6 +13,7 @@ class ImageMediaFormType extends AbstractType
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
 		$builder->add('title', null, array('label'=> 'form.media.title', 'translation_domain' => 'ImageAnnotatorBundle'));
+		$builder->add('dataset', 'entity', array('class' => 'ImageAnnotatorBundle:Dataset', 'property' => 'id'));
 		$builder->add('resource', new ImageResourceFileFormType());
 	}
 	

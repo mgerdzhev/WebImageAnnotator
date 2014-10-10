@@ -2,10 +2,10 @@ define(['core/mediaManager'], function(MediaManager) {
     var MediaChooser = function(options) {
         this.element = options.element.dialog({ autoOpen: false });
         this.isPopUp = options.isPopUp;
-        this.postId = options.postId;
 
         this.mediaManager = new MediaManager();
         this.media = null;
+        this.datasetId = null;
     };
 
     MediaChooser.TAG = "MediaChooser";
@@ -57,6 +57,8 @@ define(['core/mediaManager'], function(MediaManager) {
             var resourceFile = formRootElement.find("#image_annotator_image_media_resource_file");
             var title = formRootElement.find("#image_annotator_image_media_title");
             var form = formRootElement.find("form[name=image_annotator_image_media]");
+            var datasetId = formRootElement.find("#image_annotator_image_media_dataset");
+            datasetId.val(this.datasetId);
 
             resourceFile.on("change", (function(e) {
                 if (resourceFile.val() == "") {

@@ -10,11 +10,11 @@
     <script type="text/javascript">
         $(document).ready(function() {
             require(['main'], function() {
-                var dataSets = new $ia.Controller.Datasets();
+                var datasets = new $ia.Controller.Datasets();
                 //FIXME context
-                context = dataSets;
+                context = datasets;
 
-                dataSets.bindUIEvents($ia.Controller.Datasets.Page.INDEX);
+                datasets.bindUIEvents($ia.Controller.Datasets.Page.INDEX);
             });
         });
     </script>
@@ -24,12 +24,6 @@
 
 {% block content %}
     <div class="col-md-12">
-        <div class="row">
-            <div class="col-md-offset-2 col-md-8">
-                <hr class="ia-separator-top" />
-                <img class="img-responsive center-block" src="" />
-            </div>
-        </div>
         <div class="row">
             <div class="col-md-offset-2 col-md-8">
             	<div class="row" id="chooseFile">

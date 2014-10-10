@@ -11,6 +11,14 @@ image_annotator_dataset_browse:
     datasetId: \d+
   options:
     expose: true
+    
+image_annotator_dataset_annotate:
+  pattern: /{datasetId}/annotate
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:annotate }
+  requirements:
+    datasetId: \d+
+  options:
+    expose: true
 
 image_annotator_dataset_create:
   pattern: /create

@@ -34,6 +34,6 @@ martingerdzhev\ImageAnnotatorBundle\Entity\Image:
             orderBy:
                 dateCreated: DESC
     manyToOne:
-        dataset_id:
+        dataset:
             targetEntity: Dataset
             inversedBy: images

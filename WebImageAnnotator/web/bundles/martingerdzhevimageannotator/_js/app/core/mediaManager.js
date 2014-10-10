@@ -21,11 +21,11 @@ define(function() {
 				return false;
 		}
 
-		var address = Routing.generate('imdc_myfiles_remove', {
-			'mediaId' : mediaID
+		var address = Routing.generate('image_annotator_image_remove', {
+			'imageId' : mediaID
 		});
 		var data = {
-			'mediaId' : mediaID
+			'imageId' : mediaID
 		};
 		$.ajax({
 			url : address,

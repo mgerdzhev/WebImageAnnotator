@@ -106,12 +106,13 @@ imageGateway:
         google: "Search images from google"
         flickr: "Search images from flickr"
         createDataset: "Create a new Dataset"
+        annotateDataset: "Annotate dataset"
     type:
         0: "Image"
     empty: "You have not added any images yet. Use the above buttons to add images."
     deleteLink: "Delete"
     deleteConfirmMessage: "Are you sure you want to remove this image's annotations?"
-    previewLink: "Preview"
+    viewLink: "View/Annotate"
 # Form field labels
 form:
     username: "Username:"
