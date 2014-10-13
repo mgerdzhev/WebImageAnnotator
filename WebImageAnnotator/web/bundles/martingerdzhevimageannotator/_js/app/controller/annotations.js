@@ -119,6 +119,8 @@ define([ 'core/mediaChooser', 'core/mediaManager', 'core/annotation' ],
 			var polygon = instance.canvas.getById(annotation.getPolygonId());
 //			console.log(polygon.attr('path'));
 			polygon.attr('path',polygon.attr('path')+'Z');
+			polygon.attr("fill", annotation.color);
+			polygon.attr("fill-opacity", 0.5);
 			console.log("Annotation polygon closed");
 			circle.remove();
 			instance.canvasElement.off("click", instance.bind__polygonMouseClickListener);
@@ -135,8 +137,8 @@ define([ 'core/mediaChooser', 'core/mediaManager', 'core/annotation' ],
 		    polygon.attr('path',polygon.attr('path')+"L" + coords.x + "," + coords.y);
 		    polygon.toBack();
 		    polygon.attr("stroke", annotation.color);
-		    polygon.attr("fill", annotation.color);
-		    polygon.attr("fill-opacity", 0.5);
+//		    polygon.attr("fill", annotation.color);
+//		    polygon.attr("fill-opacity", 0.5);
 		    console.log("new point");
 
 		}
