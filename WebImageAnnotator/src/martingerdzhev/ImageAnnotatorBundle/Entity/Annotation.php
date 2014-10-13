@@ -164,4 +164,32 @@ class Annotation
     {
         return $this->image;
     }
+    /**
+     * @var array
+     */
+    private $polygon;
+
+
+    /**
+     * Set polygon
+     *
+     * @param array $polygon
+     * @return Annotation
+     */
+    public function setPolygon($polygon)
+    {
+        $this->polygon = $polygon;
+
+        return $this;
+    }
+
+    /**
+     * Get polygon
+     *
+     * @return array 
+     */
+    public function getPolygon()
+    {
+        return $this->polygon;
+    }
 }

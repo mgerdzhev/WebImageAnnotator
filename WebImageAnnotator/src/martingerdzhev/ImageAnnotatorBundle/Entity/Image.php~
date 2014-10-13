@@ -111,7 +111,7 @@ class Image
     /**
      * @var \martingerdzhev\ImageAnnotatorBundle\Entity\Dataset
      */
-    private $dataset_id;
+    private $dataset;
 
 
     /**
@@ -120,9 +120,9 @@ class Image
      * @param \martingerdzhev\ImageAnnotatorBundle\Entity\Dataset $datasetId
      * @return Image
      */
-    public function setDatasetId(\martingerdzhev\ImageAnnotatorBundle\Entity\Dataset $datasetId = null)
+    public function setDataset(\martingerdzhev\ImageAnnotatorBundle\Entity\Dataset $dataset = null)
     {
-        $this->dataset_id = $datasetId;
+        $this->dataset = $dataset;
 
         return $this;
     }
@@ -132,9 +132,9 @@ class Image
      *
      * @return \martingerdzhev\ImageAnnotatorBundle\Entity\Dataset 
      */
-    public function getDatasetId()
+    public function getDataset()
     {
-        return $this->dataset_id;
+        return $this->dataset;
     }
     /**
      * @var \Doctrine\Common\Collections\Collection

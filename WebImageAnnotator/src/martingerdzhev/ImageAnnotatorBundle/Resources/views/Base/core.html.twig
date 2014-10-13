@@ -28,11 +28,8 @@
         <!--  FOS js routing script -->
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
-
-        <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
-        <!--[if lt IE 9]>
-        <script src="../assets/js/html5shiv.js"></script>
-        <![endif]-->
+        <!-- raphael javascript svg library -->
+		<script type="text/javascript" src="{{ asset('bundles/bmatznerraphael/js/raphael.min.js') }}"></script>
 
         {% block header %}
          <link rel="stylesheet" type="text/css" href="{{ asset('bundles/martingerdzhevimageannotator/_css/image_annotator.css') }}">

@@ -10,8 +10,7 @@ define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaM
         this.bind__onSuccess = this._onSuccess.bind(this);
         this.bind__onDialogClose = this._onDialogClose.bind(this);
         this.bind_forwardFunction = this.forwardFunction.bind(this);
-
-    }
+    };
 
     Annotations.TAG = "Annotations";
 
@@ -20,6 +19,11 @@ define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaM
         PREVIEW: 1
     };
 
+    Annotations.prototype.setCanvasElement = function(canvasElement)
+    {
+	 this.canvasElement = canvasElement;
+	 this.canvas = new Raphael(canvasElement.eq(0), canvasElement.width, canvasElement.height);
+    };
     /**
      * MediaChooser options for each related page that uses MediaChooser
      * @param {number} page

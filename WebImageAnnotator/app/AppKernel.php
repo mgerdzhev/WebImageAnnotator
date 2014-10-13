@@ -26,6 +26,7 @@ class AppKernel extends Kernel
         	new Hearsay\RequireJSBundle\HearsayRequireJSBundle(),
         	new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(), 
         	new Knp\Bundle\TimeBundle\KnpTimeBundle(),
+        	new Bmatzner\RaphaelBundle\BmatznerRaphaelBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -12,6 +12,8 @@ martingerdzhev\ImageAnnotatorBundle\Entity\Annotation:
         dateModified:
             type: datetime
             nullable: true
+        polygon: 
+            type: array
             
     manyToOne:
         creator:
