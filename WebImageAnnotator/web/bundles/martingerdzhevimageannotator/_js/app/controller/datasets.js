@@ -3,7 +3,6 @@ define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaM
         this.page = null;
         this.mediaChooser = null;
         this.mediaManager = new MediaManager();
-        this.forwardButton = "<button class='forwardButton'></button>";
 
         this.bind__onPreviewButtonClick = this.onPreviewButtonClick.bind(this);
         this.bind__onDeleteButtonClick = this.onDeleteButtonClick.bind(this);

@@ -12,13 +12,9 @@ _Thread:edit.html.twig
 _Thread:thumbnail.html.twig
 #}
 
-{% if enableControls is not defined %}
-    {% set enableControls = true %}
-{% endif %}
-
 {% block media %}
     {# mediatype 0 = image 1 = video 2 = audio 9 = other #}
         {% block mediaimagetype %}
-            <img class="img-responsive center-block ia-media-img" src="{{ asset(mediaFile.getResource.getWebPath) }}" alt="{{ mediaFile.title }}" title="{{ mediaFile.title }}" />
+            <img class="center-block ia-media-img" src="{{ asset(mediaFile.getResource.getWebPath) }}" alt="{{ mediaFile.title }}" title="{{ mediaFile.title }}" />
         {% endblock mediaimagetype %}
 {% endblock media %}

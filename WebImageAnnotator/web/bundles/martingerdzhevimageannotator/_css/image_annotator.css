@@ -160,3 +160,28 @@ body {
 .ia-media-video, .ia-media-audio {
   width: 100%;
 }
+
+/* line 1, sass/images.scss */
+#ia-image-canvas {
+  position: absolute;
+  z-index: 3;
+}
+
+/* line 5, sass/images.scss */
+.ia-media-img {
+  position: relative;
+  overflow: scroll;
+  z-index: 2;
+}
+
+/* line 11, sass/images.scss */
+.ia-image-container {
+  position: relative;
+  overflow: scroll;
+  max-height: 768px;
+}
+
+/* line 5, sass/annotations.scss */
+.ia-media-video, .ia-media-audio {
+  width: 100%;
+}

@@ -2,10 +2,12 @@
 
 <div class="row" id="chooseFile">
 	<div class="col-md-12">
-		<div class="form-group">
-			<a class="btn btn-primary" id="annotation-polygon-button" href="#"><i class="fa fa-upload"></i> {{ 'annotationGateway.buttons.upload'|trans }}</a>
-			<a class="btn btn-primary" id="annotation-polygon-button" href="#"><i class="fa fa-google"></i> {{ 'annotationGateway.buttons.google'|trans }}</a>
-			<a class="btn btn-primary" id="search-images-flickr-link" href="#"><i class="fa fa-flickr"></i> {{ 'annotationGateway.buttons.flickr'|trans }}</a>
+		<div class="btn-group btn-group-vertical">
+			<a class="btn btn-default" id="annotation-polygon-button" href="#" title="{{ 'annotationGateway.buttons.polygon'|trans }}"><i class="fa fa-share-alt"></i></a>
+			<a class="btn btn-default" id="annotation-remove-polygon-button" href="#" title="{{ 'annotationGateway.buttons.removePolygon'|trans }}"><i class="fa fa-eraser"></i></a>
+			<a class="btn btn-default" id="annotation-zoom-in-button" href="#" title="{{ 'annotationGateway.buttons.zoomIn'|trans }}"><i class="fa fa-search-plus"></i></a>
+			<a class="btn btn-default" id="annotation-zoom-out-button" href="#" title="{{ 'annotationGateway.buttons.zoomOut'|trans }}"><i class="fa fa-search-minus"></i></a>
+			<a class="btn btn-default" id="annotation-save-button" href="#"><i class="fa fa-save" title=" {{ 'annotationGateway.buttons.save'|trans }}"></i></a>
 		</div>
 	</div>
 </div>

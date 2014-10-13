@@ -22,37 +22,17 @@
    <!--      <script src="{{ asset('js/tag-it.min.js') }}"></script> -->
   <!--  <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.tagit.css') }}"> -->
 
-        {{ require_js_initialize() }}
 
-        <script type="text/javascript">require(['main'])</script>
         <!--  FOS js routing script -->
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
         <!-- raphael javascript svg library -->
 		<script type="text/javascript" src="{{ asset('bundles/bmatznerraphael/js/raphael.min.js') }}"></script>
+		
+		{{ require_js_initialize({'main' : 'main'}) }}
 
         {% block header %}
          <link rel="stylesheet" type="text/css" href="{{ asset('bundles/martingerdzhevimageannotator/_css/image_annotator.css') }}">
-<!--
-            {% if app.environment == 'dev' %}
-                <script type="text/javascript">
-                    requirejs.config({
-                        baseUrl: '{{ app.request.basePath }}/bundles/martingerdzhevimageannotator/_js/app',
-                        paths: {
-                            extra: 'lib/extra',
-                        },
-                        shim: {
-                            main: {
-                                deps: ['extra']
-                            }
-                        }
-                    });
-
-                    require(['main']);
-                </script>
-            {% else %}
-                <script src="{{ asset('bundles/martingerdzhevimageannotator/_js/imageannotator.js') }}"></script>
-            {% endif %} -->
         {% endblock header %}
     </head>
     <body>

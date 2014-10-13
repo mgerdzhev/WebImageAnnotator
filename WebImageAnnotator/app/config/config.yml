@@ -99,6 +99,7 @@ doctrine:
 
 hearsay_require_js:
     base_url: ../bundles/martingerdzhevimageannotator/_js/app
+#    base_url: %kernel.root_dir%/../web/bundles/martingerdzhevimageannotator/_js/app
     base_dir: '/usr/local/bin/'
     shim: 
         main: 

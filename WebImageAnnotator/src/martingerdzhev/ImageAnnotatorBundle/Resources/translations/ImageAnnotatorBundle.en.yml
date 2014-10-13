@@ -77,9 +77,9 @@ annotationGateway:
     add:
         title: "Select from My Files"
     buttons:
-        upload: "Upload a new image"
-        google: "Search images from google"
-        flickr: "Search images from flickr"
+        save: "Save annotations"
+        polygon: "Create a polygonal annotation"
+        removePolygon: "Remove an annotation"
         createDataset: "Create a new Dataset"
     type:
         0: "Image"

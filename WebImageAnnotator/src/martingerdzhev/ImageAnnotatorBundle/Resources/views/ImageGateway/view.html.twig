@@ -11,9 +11,9 @@
         $(document).ready(function() {
             require(['main'], function() {
                 var images = new $ia.Controller.Images();
-//                 var annotations = new $ia.Controller.Annotations();
-//                 annotations.setCanvasElement($('#image-canvas'));
-//                 annotations.bindUIEvents($ia.Controller.Annotations.Page.INDEX);
+                var annotations = new $ia.Controller.Annotations();
+                annotations.setCanvasElement('ia-image-canvas');
+                annotations.bindUIEvents($ia.Controller.Annotations.Page.INDEX);
                 //FIXME context
                 context = images;
 
@@ -36,16 +36,16 @@
     <div class="col-lg-12">
        
         <div class="row">
-            <div class="col-md-offset-2 col-md-8">
+            <div class="col-md-12">
                 <div id="preview"></div>
                 <div class="ia-media-preview">
 				    <div class="text-center ia-media-preview-title">
 				        <input type="text" id="mediaPreviewTitle" value="{{ mediaFile.title }}" />
 				    </div>
 				
-				<div class="ia-image-containter">
-					<div id="image-canvas"></div>
-			    	{% include 'ImageAnnotatorBundle:Media:element.html.twig' with {'enableControls': false} %}
+				<div class="ia-image-container">
+					<div id="ia-image-canvas"></div>
+			    	{% include 'ImageAnnotatorBundle:Media:element.html.twig' %}
 				</div>
 			    {% block preview %}
 			    {% endblock preview %}

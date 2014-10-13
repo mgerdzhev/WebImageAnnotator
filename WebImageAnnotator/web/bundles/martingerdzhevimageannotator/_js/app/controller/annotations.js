@@ -1,174 +1,264 @@
-define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaManager) {
-    var Annotations = function() {
-        this.page = null;
-        this.mediaChooser = null;
-        this.mediaManager = new MediaManager();
-        this.forwardButton = "<button class='forwardButton'></button>";
+define([ 'core/mediaChooser', 'core/mediaManager', 'core/annotation' ],
+	function(MediaChooser, MediaManager, Annotation)
+	{
+	    var Annotations = function()
+	    {
+		this.page = null;
+		this.mediaChooser = null;
+		this.mediaManager = new MediaManager();
+		this.annotations = new Array();
+		this.bind__onPolygonButtonClick = this.onPolygonButtonClick.bind(this);
+		this.bind__onRemovePolygonButtonClick = this.onRemovePolygonButtonClick.bind(this);
+		this.bind__onZoomInButtonClick = this.onZoomInButtonClick.bind(this);
+		this.bind__onZoomOutButtonClick = this.onZoomOutButtonClick.bind(this);
+		this.bind__onSaveButtonClick = this.onSaveButtonClick.bind(this);
+		this.bind__polygonMouseClickListener = this.polygonMouseClickListener.bind(this);
+	    };
 
-        this.bind__onPreviewButtonClick = this.onPreviewButtonClick.bind(this);
-        this.bind__onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
-        this.bind__onSuccess = this._onSuccess.bind(this);
-        this.bind__onDialogClose = this._onDialogClose.bind(this);
-        this.bind_forwardFunction = this.forwardFunction.bind(this);
-    };
+	    Annotations.TAG = "Annotations";
 
-    Annotations.TAG = "Annotations";
+	    Annotations.Page = {
+		INDEX : 0,
+		PREVIEW : 1
+	    };
 
-    Annotations.Page = {
-        INDEX: 0,
-        PREVIEW: 1
-    };
+	    Annotations.prototype.setCanvasElement = function(canvasId)
+	    {
+		this.canvasId = canvasId;
+		this.canvasElement = $("#" + canvasId);
+		this.imageElement = this.canvasElement.next('.ia-media-img');
+		this.canvasElement.width(this.imageElement.width());
+		this.canvasElement.height(this.imageElement.height());
+		console.log(this.canvasElement.eq(0));
+		this.canvas = new Raphael(canvasId, this.imageElement.width(), this.imageElement.height());
+	    };
+	    /**
+	     * MediaChooser options for each related page that uses MediaChooser
+	     * 
+	     * @param {number}
+	     *                page
+	     */
+	    Annotations.mediaChooserOptions = function(page)
+	    {
+		switch (page)
+		{
+		case Annotations.Page.INDEX:
+		    return {
+			element : $("#preview"),
+			isPopUp : true,
+			isFileSelection : false
+		    };
+		case Annotations.Page.PREVIEW:
+		    return {};
+		}
+	    };
 
-    Annotations.prototype.setCanvasElement = function(canvasElement)
-    {
-	 this.canvasElement = canvasElement;
-	 this.canvas = new Raphael(canvasElement.eq(0), canvasElement.width, canvasElement.height);
-    };
-    /**
-     * MediaChooser options for each related page that uses MediaChooser
-     * @param {number} page
-     */
-    Annotations.mediaChooserOptions = function(page) {
-        switch (page) {
-            case Annotations.Page.INDEX:
-                return {
-                    element: $("#preview"),
-                    isPopUp: true,
-                    isFileSelection: false
-                };
-            case Annotations.Page.PREVIEW:
-                return {};
-        }
-    };
+	    /**
+	     * ui element event bindings in order of appearance
+	     * 
+	     * @param {number}
+	     *                page
+	     */
+	    Annotations.prototype.bindUIEvents = function(page)
+	    {
+		console.log("%s: %s- page=%d", Annotations.TAG, "bindUIEvents", page);
 
-    /**
-     * ui element event bindings in order of appearance
-     * @param {number} page
-     */
-    Annotations.prototype.bindUIEvents = function(page) {
-        console.log("%s: %s- page=%d", Annotations.TAG, "bindUIEvents", page);
+		this.page = page;
 
-        this.page = page;
+		switch (this.page)
+		{
+		case Annotations.Page.INDEX:
+		    this._bindUIEventsIndex();
+		    break;
+		case Annotations.Page.PREVIEW:
+		    break;
+		}
+	    };
 
-        switch (this.page) {
-            case Annotations.Page.INDEX:
-                this._bindUIEventsIndex();
-                break;
-            case Annotations.Page.PREVIEW:
-                break;
-        }
-    };
+	    Annotations.prototype._bindUIEventsIndex = function()
+	    {
+		console.log("%s: %s", Annotations.TAG, "_bindUIEventsIndex");
 
-    Annotations.prototype._bindUIEventsIndex = function() {
-        console.log("%s: %s", Annotations.TAG, "_bindUIEventsIndex");
+		$("#annotation-polygon-button").on("click", this.bind__onPolygonButtonClick);
+		$("#annotation-remove-polygon-button").on("click", this.bind__onRemovePolygonButtonClick);
+		$("#annotation-zoom-in-button").on("click", this.bind__onZoomInButtonClick);
+		$("#annotation-zoom-out-button").on("click", this.bind__onZoomOutButtonClick);
+		$("#annotation-save-button").on("click", this.bind__onSaveButtonClick);
+	    };
 
-        this.mediaChooser = new MediaChooser(Annotations.mediaChooserOptions(Annotations.Page.INDEX));
-        $(this.mediaChooser).on(MediaChooser.Event.SUCCESS, this.bind__onSuccess);
-        $(this.mediaChooser).on(MediaChooser.Event.DIALOG_CLOSE, this.bind__onDialogClose);
-        this.mediaChooser.bindUIEvents();
+	    Annotations.prototype.onPolygonButtonClick = function(e)
+	    {
+		e.preventDefault();
+		console.log("Polygon");
+		this.canvasElement.off("click", this.bind__polygonMouseClickListener);
+		this.isFirstPoint = true;
+		this.canvasElement.on("click", this.bind__polygonMouseClickListener);
+	    };
 
-        $(".preview-button").on("click", this.bind__onPreviewButtonClick);
-        $(".delete-button").on("click", this.bind__onDeleteButtonClick);
-    };
+	    Annotations.prototype.polygonMouseClickListener = function(e)
+	    {
+		console.log("click");
+		var offset = $(this.canvasElement).offset();
+		var coords = {
+		    x : Math.round(e.clientX - offset.left),
+		    y : Math.round(e.clientY - offset.top)
+		};
 
-    Annotations.prototype.onPreviewButtonClick = function(e) {
-        e.preventDefault();
-        console.log("Preview");
-        if ($(e.target).hasClass("disabled")) {
-            return false;
-        }
-        $('#preview').html('');
-        this.page = Annotations.Page.PREVIEW;
-        this.mediaChooser.previewMedia({
-            mediaUrl: $(e.target).data("url"),
-            mediaId: $(e.target).data("val")
-        });
-    };
+		if (this.isFirstPoint)
+		{
+		    var instance = this;
+		    var polygon = this.canvas.path("M" + coords.x + "," + coords.y);
+		    var annotation = new Annotation();
+		    annotation.addPoint(coords.x, coords.y);
+		    annotation.setPolygonId(polygon.id);
+		    this.annotations.push(annotation);
+		    this.isFirstPoint = false;
+		    var circle = this.canvas.circle(coords.x, coords.y, 8);
+		    circle.click(function()
+		    {
+			var polygon = instance.canvas.getById(annotation.getPolygonId());
+//			console.log(polygon.attr('path'));
+			polygon.attr('path',polygon.attr('path')+'Z');
+			console.log("Annotation polygon closed");
+			circle.remove();
+			instance.canvasElement.off("click", instance.bind__polygonMouseClickListener);
+		    });
+		    circle.attr("fill", "#FFFFFF");
+		    circle.attr("stroke", "#FF0000");
+		    console.log("First point");
+		}
+		else
+		{
+		    var annotation = this.annotations[this.annotations.length - 1];
+		    var polygon = this.canvas.getById(annotation.getPolygonId());
+		    annotation.addPoint(coords.x, coords.y);
+		    polygon.attr('path',polygon.attr('path')+"L" + coords.x + "," + coords.y);
+		    polygon.toBack();
+		    polygon.attr("stroke", annotation.color);
+		    polygon.attr("fill", annotation.color);
+		    polygon.attr("fill-opacity", 0.5);
+		    console.log("new point");
 
-    Annotations.prototype.onDeleteButtonClick = function(e) {
-        e.preventDefault();
+		}
+	    }
+	    Annotations.prototype.onRemovePolygonButtonClick = function(e)
+	    {
+		e.preventDefault();
+		console.log("Polygon Remove");
+	    };
 
-        var file = $(e.target);
+	    Annotations.prototype.onZoomInButtonClick = function(e)
+	    {
+		e.preventDefault();
+		console.log("Zoom In");
+	    };
 
-        $(this.mediaManager).one(MediaManager.EVENT_DELETE_SUCCESS, function() {
-            file.parent().parent().parent().remove();
-        });
-        $(this.mediaManager).one(MediaManager.EVENT_DELETE_ERROR, function(error, e) {
-            if (e.status == 500) {
-                alert(e.statusText);
-            } else {
-                alert('Error: ' + error);
-            }
-        });
+	    Annotations.prototype.onZoomOutButtonClick = function(e)
+	    {
+		e.preventDefault();
+		console.log("Zoom Out");
+	    };
 
-        return this.mediaManager.deleteMedia(file.data("val"), $("#mediaDeleteConfirmMessage").html());
+	    Annotations.prototype.onSaveButtonClick = function(e)
+	    {
+		e.preventDefault();
+		console.log("Save");
+	    };
 
-        /*var response = confirm($("#mediaDeleteConfirmMessage").html());
-        if (!response) {
-            return false;
-        }
-        var file = $(e.target);
-        var address = file.data("url");
+	    Annotations.prototype.onPreviewButtonClick = function(e)
+	    {
+		e.preventDefault();
+		console.log("Preview");
+		if ($(e.target).hasClass("disabled"))
+		{
+		    return false;
+		}
+		$('#preview').html('');
+		this.page = Annotations.Page.PREVIEW;
+		this.mediaChooser.previewMedia({
+		    mediaUrl : $(e.target).data("url"),
+		    mediaId : $(e.target).data("val")
+		});
+	    };
 
-        $.ajax({
-            url: address,
-            type: "POST",
-            contentType: "application/x-www-form-urlencoded",
-            data: {
-                mediaId: file.data("val")
-            },
-            success: function(data) {
-                if (data.responseCode == 200) {
-                    file.parent().parent().remove();
-                } else if (data.responseCode == 400) { // bad request
-                    alert('Error: ' + data.feedback);
-                } else {
-                    alert('An unexpected error occured');
-                }
-            },
-            error: function(request) {
-                console.log(request.statusText);
-            }
-        });*/
-    };
+	    Annotations.prototype.onDeleteButtonClick = function(e)
+	    {
+		e.preventDefault();
 
-    Annotations.prototype._onSuccess = function(e) {
-        switch (this.page) {
-            case Annotations.Page.INDEX:
-                this._addMediaRow(e.media); //FIXME pagination makes this impractical
-                break;
-            case Annotations.Page.PREVIEW:
-                console.log("Done previewing");
-                break;
-        }
-    };
+		var file = $(e.target);
 
-    Annotations.prototype._onDialogClose = function(e) {
-        switch (this.page) {
-            case Annotations.Page.PREVIEW:
-                this.page = Annotations.Page.INDEX;
-                console.log("Terminating function called");
-                console.log(e.media);
-                this._updateMediaRow(e.media);
-                break;
-        }
-    };
+		$(this.mediaManager).one(MediaManager.EVENT_DELETE_SUCCESS, function()
+		{
+		    file.parent().parent().parent().remove();
+		});
+		$(this.mediaManager).one(MediaManager.EVENT_DELETE_ERROR, function(error, e)
+		{
+		    if (e.status == 500)
+		    {
+			alert(e.statusText);
+		    }
+		    else
+		    {
+			alert('Error: ' + error);
+		    }
+		});
 
+		return this.mediaManager.deleteMedia(file.data("val"), $("#mediaDeleteConfirmMessage").html());
 
-    Annotations.prototype.forwardFunction = function() {
-        console.log("%s: %s", Annotations.TAG, "forwardFunction");
+		/*
+		 * var response = confirm($("#mediaDeleteConfirmMessage").html()); if (!response) { return false; } var
+		 * file = $(e.target); var address = file.data("url");
+		 * 
+		 * $.ajax({ url: address, type: "POST", contentType: "application/x-www-form-urlencoded", data: {
+		 * mediaId: file.data("val") }, success: function(data) { if (data.responseCode == 200) {
+		 * file.parent().parent().remove(); } else if (data.responseCode == 400) { // bad request alert('Error: ' +
+		 * data.feedback); } else { alert('An unexpected error occured'); } }, error: function(request) {
+		 * console.log(request.statusText); } });
+		 */
+	    };
 
-        this.mediaChooser.destroyVideoRecorder();
+	    Annotations.prototype._onSuccess = function(e)
+	    {
+		switch (this.page)
+		{
+		case Annotations.Page.INDEX:
+		    this._addMediaRow(e.media); // FIXME pagination makes this
+		    // impractical
+		    break;
+		case Annotations.Page.PREVIEW:
+		    console.log("Done previewing");
+		    break;
+		}
+	    };
 
-        this.mediaChooser.previewMedia({
-            type: MediaChooser.TYPE_RECORD_VIDEO,
-            mediaUrl: Routing.generate('imdc_myfiles_preview', { mediaId: this.mediaChooser.media.id }),
-            mediaId: this.mediaChooser.media.id,
-            recording: true
-        });
-    };
+	    Annotations.prototype._onDialogClose = function(e)
+	    {
+		switch (this.page)
+		{
+		case Annotations.Page.PREVIEW:
+		    this.page = Annotations.Page.INDEX;
+		    console.log("Terminating function called");
+		    console.log(e.media);
+		    this._updateMediaRow(e.media);
+		    break;
+		}
+	    };
 
+	    Annotations.prototype.forwardFunction = function()
+	    {
+		console.log("%s: %s", Annotations.TAG, "forwardFunction");
 
+		this.mediaChooser.destroyVideoRecorder();
 
-    return Annotations;
-});
+		this.mediaChooser.previewMedia({
+		    type : MediaChooser.TYPE_RECORD_VIDEO,
+		    mediaUrl : Routing.generate('imdc_myfiles_preview', {
+			mediaId : this.mediaChooser.media.id
+		    }),
+		    mediaId : this.mediaChooser.media.id,
+		    recording : true
+		});
+	    };
+
+	    return Annotations;
+	});

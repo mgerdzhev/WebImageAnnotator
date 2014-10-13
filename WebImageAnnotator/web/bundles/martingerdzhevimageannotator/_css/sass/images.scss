@@ -1,0 +1,15 @@
+#ia-image-canvas {
+	position: absolute;
+	z-index: 3;
+}
+.ia-media-img {
+	position: relative;
+	overflow: scroll;
+	z-index: 2;
+}
+
+.ia-image-container {
+	position: relative;
+	overflow: scroll;
+	max-height: 768px;
+}
