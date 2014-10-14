@@ -27,3 +27,17 @@ martingerdzhev\ImageAnnotatorBundle\Entity\Dataset:
             joinColumn:
                 name: creator_id
                 referencedColumnName: id
+  
+    manyToMany:
+        annotationTypes:
+            targetEntity: AnnotationType
+            joinTable:
+                name: dataset_annotation_types
+                joinColumns:
+                  dataset_id:
+                    referencedColumnName: id
+                inverseJoinColumns:
+                  annotation_type_id:
+                    referencedColumnName: id
+                    unique: true
+              

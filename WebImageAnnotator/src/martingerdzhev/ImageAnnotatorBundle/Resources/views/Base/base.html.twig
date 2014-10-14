@@ -4,17 +4,10 @@
 
 {% block base_content %}
 	<!-- <div class="span12" -->
-	<div class="col-lg-1 span1">
-    	<div class="row">
-            {% block left_side_content %}
-            {% endblock left_side_content %}
-        </div>
-    </div>
-    <div class="col-lg-10 span10">
-        {% block flashmessages %}
+	{% block flashmessages %}
             {% for type, messages in app.session.flashbag.all %}
                 <div class="row">
-                    <div class="col-md-12 ia-flash-message-container">
+                    <div class="col-md-8 ia-flash-message-container">
                         {% for key, message in messages %}
                             <span class="label label-{{ type }}">
                                 {{ message|trans({}, 'FOSUserBundle') }}
@@ -23,16 +16,16 @@
                     </div>
                 </div>
             {% endfor %}
-        {% endblock flashmessages %}
-        <div class="row">
-            {% block content %}
-            {% endblock content %}
-        </div>
-    </div>
-    <div class="col-lg-1 span1">
-    	<div class="row">
-            {% block right_side_content %}
-            {% endblock right_side_content %}
-        </div>
+    {% endblock flashmessages %}
+    <div class="row">
+	            {% block left_side_content %}
+	            {% endblock left_side_content %}
+	            
+	            {% block content %}
+	            {% endblock content %}
+	            
+	            {% block right_side_content %}
+	            {% endblock right_side_content %}
+	    </div>
     </div>
 {% endblock base_content %}

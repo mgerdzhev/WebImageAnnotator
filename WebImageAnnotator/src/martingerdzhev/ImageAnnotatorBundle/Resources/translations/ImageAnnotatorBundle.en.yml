@@ -87,6 +87,10 @@ annotationGateway:
     deleteLink: "Delete"
     deleteConfirmMessage: "Are you sure you want to remove this image's annotations?"
     previewLink: "Preview"
+
+annotationType:
+    add: "Add new type"
+    types: "Types of annotations"
     
 datasetGateway:
     title: "Datasets"
