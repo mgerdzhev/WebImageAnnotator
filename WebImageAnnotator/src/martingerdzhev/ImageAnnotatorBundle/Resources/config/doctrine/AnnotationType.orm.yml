@@ -1,6 +1,7 @@
 martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType:
     type: entity
     table: annotation_type
+    repositoryClass: martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationTypeRepository
     fields:
         id:
             type: integer
@@ -9,3 +10,4 @@ martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType:
                 strategy: AUTO
         name:
             type: string
+            unique: true

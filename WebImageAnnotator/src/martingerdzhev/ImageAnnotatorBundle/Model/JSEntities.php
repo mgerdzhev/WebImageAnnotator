@@ -4,10 +4,15 @@ namespace martingerdzhev\ImageAnnotatorBundle\Model;
 use martingerdzhev\ImageAnnotatorBundle\Entity\ResourceFile;
 use martingerdzhev\ImageAnnotatorBundle\Entity\MetaData;
 use martingerdzhev\ImageAnnotatorBundle\Entity\Image;
+use martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType;
 
 class JSEntities
 {
 
+	public static function getAnnotationTypeObject(AnnotationType $annotationType)
+	{
+		return array('id' => $annotationType->getId(), 'name' => $annotationType->getName());
+	}
 	public static function getMediaObject(Image $media)
 	{
 		return array('id' => $media->getId(), 'title' => $media->getTitle(),

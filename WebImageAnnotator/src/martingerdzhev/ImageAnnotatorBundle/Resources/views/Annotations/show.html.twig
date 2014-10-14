@@ -1,0 +1,35 @@
+{% trans_default_domain 'ImageAnnotatorBundle' %}
+
+<div class="row">
+	<div class="col-lg-offset-2 col-lg-8">
+	<h4>{{'annotationType.choose'|trans }}</h4>
+		{% if dataset.annotationTypes|length > 0 %}
+		
+		<div class="row">
+			<div class="col-lg-5">
+				<div class="row">
+					<select class="form-control" id="annotation-type-choice" size="6"> 
+					{% for annotationType in dataset.annotationTypes %}
+						<option value="{{ annotationType.id }}">{{ annotationType.name }}</option>
+			 		{% endfor %}
+					</select>
+				</div>
+			</div>
+			<div class="col-lg-3">
+				<button id="annotation-type-choose" class="btn btn-default" type="button"> <i class="fa fa-check"></i>
+								{{ 'annotationType.button.choose'|trans }} </button>
+			</div>
+		</div>
+		<div class="row">{{ 'annotationType.separator.addNew'|trans }}</div>
+		{% endif %}
+		<div class="row">
+  			<div class="col-lg-5">
+      			<input id="annotaion-type-name" type="text" class="form-control">
+      		</div>
+      		<div class="col-lg-3">
+      			<button id="annotation-type-add-to-dataset" class="btn btn-default" type="button">{{ 'annotationType.button.add'|trans }}</button>
+      		</div
+	  	</div>
+	</div>
+</div>
+

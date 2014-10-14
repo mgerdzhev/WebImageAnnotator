@@ -160,4 +160,42 @@ class Dataset
     {
         $this->createdDate = new \DateTime('NOW');
     }
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $annotationTypes;
+
+
+    /**
+     * Add annotationTypes
+     *
+     * @param \martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType $annotationTypes
+     * @return Dataset
+     */
+    public function addAnnotationType(\martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType $annotationTypes)
+    {
+        $this->annotationTypes[] = $annotationTypes;
+
+        return $this;
+    }
+
+    /**
+     * Remove annotationTypes
+     *
+     * @param \martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType $annotationTypes
+     */
+    public function removeAnnotationType(\martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType $annotationTypes)
+    {
+        $this->annotationTypes->removeElement($annotationTypes);
+    }
+
+    /**
+     * Get annotationTypes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getAnnotationTypes()
+    {
+        return $this->annotationTypes;
+    }
 }

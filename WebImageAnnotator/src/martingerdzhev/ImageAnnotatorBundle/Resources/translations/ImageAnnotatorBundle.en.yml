@@ -89,8 +89,16 @@ annotationGateway:
     previewLink: "Preview"
 
 annotationType:
-    add: "Add new type"
+    addLabel: "Add new type"
+    add: "Add"
     types: "Types of annotations"
+    choose: "Choose an annotation to add"
+    delete: "Delete"
+    button:
+      add: "Add new"
+      choose: "Select"
+    separator:
+      addNew: "----- Or add new -----"
     
 datasetGateway:
     title: "Datasets"

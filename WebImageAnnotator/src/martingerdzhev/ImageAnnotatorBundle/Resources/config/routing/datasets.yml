@@ -12,6 +12,32 @@ image_annotator_dataset_browse:
   options:
     expose: true
     
+image_annotator_dataset_annotation_types_show:
+  pattern: /{datasetId}/annotationTypes/show/{type}
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:showAnnotationTypes, type: 'all' }
+  requirements:
+    _method:  POST
+  options:
+    expose: true
+    
+image_annotator_dataset_annotation_types_create:
+  pattern: /{datasetId}/annotationTypes/create
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:createAnnotationType }
+  requirements:
+    datasetId: \d+
+    _method:  POST
+  options:
+    expose: true
+    
+image_annotator_dataset_annotation_types_add:
+  pattern: /{datasetId}/annotationTypes/annotationTypeId
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:addAnnotationType }
+  requirements:
+    _method:  POST
+    datasetId: \d+
+  options:
+    expose: true
+    
 image_annotator_dataset_annotate:
   pattern: /{datasetId}/annotate
   defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:annotate }

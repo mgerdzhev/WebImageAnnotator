@@ -1,5 +1,5 @@
 {% trans_default_domain 'ImageAnnotatorBundle' %}
-
+		<div id="annotation-type-chooser"></div>
 		<div class="table-responsive">
 			<table
 				class="table table-bordered table-hover ia-annotation-types-table">
@@ -11,14 +11,18 @@
 				<tbody>
 					<tr>
 						<td>
-							<a
-						class="btn btn-danger btn-xs" href="#"
-						data-val="{{ dataset.id }}" title="{{
-							'annotationType.add'|trans }}"> <i class="fa fa-plus"></i> 
+							<div class="text-center">
+								<a
+							class="btn btn-danger btn-xs" id="annotation-type-add" href="#"
+							data-val="{{ dataset.id }}" title="{{
+								'annotationType.addLabel'|trans }}"> <i class="fa fa-plus"></i> {{
+								'annotationType.add'|trans }}
+								</a>
+							</div>
 						</td>
 						<td>
 							{{
-							'annotationType.add'|trans }}
+							'annotationType.addLabel'|trans }}
 						</td>
 					</tr>
 					{% if dataset.annotationTypes|length > 0 %} 
@@ -27,9 +31,9 @@
 						<!-- tools -->
 						<td>
 							<div class="text-center">
-								<a class="btn btn-danger btn-xs delete-button" href="#"
-									data-val="{{ resourceFile.id }}"> <i class="fa fa-trash-o"></i>
-									{{ 'imageGateway.deleteLink'|trans }}
+								<a class="btn btn-danger btn-xs annotation-type-delete" href="#"
+									data-val="{{ annotationType.id }}"> <i class="fa fa-trash-o"></i>
+									{{ 'annotationType.delete'|trans }}
 								</a>
 							</div>
 						</td>
@@ -40,5 +44,5 @@
 					{% endif %}
 				</tbody>
 			</table>
-	</div>
+		</div>
 

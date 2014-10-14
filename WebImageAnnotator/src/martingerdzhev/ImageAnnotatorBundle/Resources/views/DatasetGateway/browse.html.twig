@@ -14,6 +14,9 @@
                 myImages.datasetId = {{ dataset.Id }};
                 //FIXME context
                 context = myImages;
+                var datasets = new $ia.Controller.Datasets();
+                datasets.datasetId = {{ dataset.Id }};
+                datasets.bindUIEvents($ia.Controller.Datasets.Page.BROWSE);
 
                 myImages.bindUIEvents($ia.Controller.Images.Page.INDEX);
             });

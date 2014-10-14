@@ -78,6 +78,14 @@ assetic:
             inputs:
                 - %kernel.root_dir%/../vendor/sonata-project/jquery-bundle/Resources/public/jquery-ui-1.10.4.js
             output: js/jquery-ui.js
+        bootstrap_dialog_js:
+            inputs:
+                - %kernel.root_dir%/../bower_components/bootstrap3-dialog/src/js/bootstrap-dialog.js
+            output: js/bootstrap-dialog.js
+        bootstrap_dialog_css:
+            inputs:
+                - %kernel.root_dir%/../bower_components/bootstrap3-dialog/src/css/bootstrap-dialog.css
+            output: css/bootstrap-dialog.css
 
 # Doctrine Configuration
 doctrine:

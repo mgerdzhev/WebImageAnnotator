@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\Intl\Exception\NotImplementedException;
 use martingerdzhev\ImageAnnotatorBundle\Event\UploadEvent;
 use martingerdzhev\ImageAnnotatorBundle\Entity\Dataset;
+use martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use martingerdzhev\ImageAnnotatorBundle\Filter\FileFilter;
 use martingerdzhev\ImageAnnotatorBundle\Form\Type\DatasetFormType;
@@ -31,6 +32,9 @@ class DatasetGatewayController extends Controller
 	const FEEDBACK_MESSAGE_NOT_OWNER = "Not the rightful owner";
 	const FEEDBACK_MESSAGE_NOT_EXIST_MEDIA = "Dataset does not exist";
 	const FEEDBACK_MESSAGE_NOT_EXIST_USER = "User does not exist";
+	const ANNOTATION_TYPE_SHOW_ALL = "all";
+	const ANNOTATION_TYPE_SHOW_DATASET = "dataset";
+	const ANNOTATION_TYPE_SHOW_REMAINING = "remaining";
 	
 	/**
 	 * A gateway form for uploading/recording or selecting existing files
@@ -99,6 +103,135 @@ class DatasetGatewayController extends Controller
 		) );
 		// form not valid, show the basic form
 		return $response;
+	}
+	
+	public function showAnnotationTypesAction(Request $request, $datasetId, $type)
+	{
+		$user = $this->getUser ();
+		if (! $this->container->get ( 'image_annotator.authentication_manager' )->isAuthenticated ( $request )) {
+			return $this->redirect ( $this->generateUrl ( 'fos_user_security_login' ) );
+		}
+		$userManager = $this->container->get ( 'fos_user.user_manager' );
+		$userObject = $userManager->findUserByUsername ( $user->getUsername () );
+		if ($userObject == null) {
+			throw new NotFoundHttpException ( "This user does not exist" );
+		}
+		if (! $request->isXmlHttpRequest())
+			throw new BadRequestHttpException('Only Ajax POST calls accepted');
+		
+		$logger = $this->container->get ( 'logger' );
+		$logger->info("type:".$type);
+		$dataset = null;
+		if ($type == DatasetGatewayController::ANNOTATION_TYPE_SHOW_ALL)
+		{
+			$annotationTypes = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:AnnotationType')->findAll();
+		}
+		else if ($type == DatasetGatewayController::ANNOTATION_TYPE_SHOW_DATASET)
+		{
+			$dataset = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->find($datasetId);
+			if ($dataset == null)
+				throw new NotFoundHttpException ( "This dataset does not exist" );
+			$annotationTypes = $dataset->getAnnotationTypes();
+		}
+		else if ($type == DatasetGatewayController::ANNOTATION_TYPE_SHOW_REMAINING)
+		{
+			$dataset = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->find($datasetId);
+			if ($dataset == null)
+				throw new NotFoundHttpException ( "This dataset does not exist" );
+			$annotationTypes = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:AnnotationType')->findNotInDataset($dataset);
+		}
+		else 
+			throw new NotFoundHttpException ( "This type does not exist" );
+	
+		$response = $this->render ( 'ImageAnnotatorBundle:Annotations:show.html.twig', array (
+				'annotationTypes' => $annotationTypes,
+				'dataset' =>$dataset
+		) );
+		$return = array('page' => $response->getContent());
+		$return = json_encode($return);
+		$response = new Response($return, 200, array (
+				'Content-Type' => 'application/json'
+		));
+		// form not valid, show the basic form
+		return $response;
+	}
+	
+	public function addAnnotationTypeAction(Request $request, $datasetId, $annotationTypeId)
+	{
+		$user = $this->getUser ();
+		if (! $this->container->get ( 'image_annotator.authentication_manager' )->isAuthenticated ( $request )) {
+			return $this->redirect ( $this->generateUrl ( 'fos_user_security_login' ) );
+		}
+		$userManager = $this->container->get ( 'fos_user.user_manager' );
+		$userObject = $userManager->findUserByUsername ( $user->getUsername () );
+		if ($userObject == null) {
+			throw new NotFoundHttpException ( "This user does not exist" );
+		}
+		if (! $request->isXmlHttpRequest())
+			throw new BadRequestHttpException('Only Ajax POST calls accepted');
+		$dataset = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->find($datasetId);
+		if ($dataset == null)
+			throw new NotFoundHttpException ( "This dataset does not exist" );
+		
+		$annotationType = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->find($annotationTypeId);
+		if ($annotationType == null)
+			throw new NotFoundHttpException ( "This Annotation type does not exist" );
+		$em = $this->container->get ( 'doctrine' )->getManager ();
+		$dataset->addAnnotationType($annotationType);
+		$em->flush ();
+		$return = array (
+				'annotationType' => JSEntities::getAnnotationTypeObject($annotationType),
+				'responseCode' => 200
+		);
+		$return = json_encode($return); // json encode the array
+		return new Response($return, 200, array (
+				'Content-Type' => 'application/json' 
+		));
+	}
+	
+	public function createAnnotationTypeAction(Request $request, $datasetId)
+	{
+		$user = $this->getUser ();
+		if (! $this->container->get ( 'image_annotator.authentication_manager' )->isAuthenticated ( $request )) {
+			return $this->redirect ( $this->generateUrl ( 'fos_user_security_login' ) );
+		}
+		$userManager = $this->container->get ( 'fos_user.user_manager' );
+		$userObject = $userManager->findUserByUsername ( $user->getUsername () );
+		if ($userObject == null) {
+			throw new NotFoundHttpException ( "This user does not exist" );
+		}
+		if (! $request->isXmlHttpRequest())
+			throw new BadRequestHttpException('Only Ajax POST calls accepted');
+		$dataset = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->find($datasetId);
+		if ($dataset == null)
+			throw new NotFoundHttpException ( "This dataset does not exist" );
+		$name = $request->get('name');
+		$logger = $this->container->get ( 'logger' );
+		$logger->info("name:".$name);
+		if ($name == null || strlen($name)<2)
+			throw new NotFoundHttpException ( "This name does not exist/Name too short" );
+		try
+		{
+			$annotationType = new AnnotationType();
+			$annotationType->setName($name);
+			$em = $this->container->get ( 'doctrine' )->getManager ();
+			$em->persist ( $annotationType );
+			$dataset->addAnnotationType($annotationType);
+			$em->flush ();
+			$return = array (
+					'annotationType' => JSEntities::getAnnotationTypeObject($annotationType),
+					'responseCode' => 200
+			);
+		}
+		catch (\Doctrine\DBAL\DBALException $e )
+		{
+			$return = array ('responseCode' => 400);
+		}
+	
+		$return = json_encode($return); // json encode the array
+		return new Response($return, 200, array (
+				'Content-Type' => 'application/json'
+		));
 	}
 	
 	/**
