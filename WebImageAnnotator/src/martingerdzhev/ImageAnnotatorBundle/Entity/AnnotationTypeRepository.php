@@ -17,11 +17,9 @@ class AnnotationTypeRepository extends EntityRepository
 	{
 		$query = $this->getEntityManager()->createQuery('
                     SELECT a
-					FROM ImageAnnotatorBundle:Dataset d
-					JOIN d.annotationTypes e 
-					JOIN ImageAnnotatorBundle:AnnotationType a
-					WHERE d.id = :did
-					AND	a.id != e.id
+					FROM ImageAnnotatorBundle:AnnotationType a
+					WHERE a.id NOT IN (SELECT e.id FROM ImageAnnotatorBundle:Dataset d JOIN d.annotationTypes e WHERE d.id = :did)
+					
                 ')->setParameter('did', $dataset->getId());
 	
 		return $query->getResult();

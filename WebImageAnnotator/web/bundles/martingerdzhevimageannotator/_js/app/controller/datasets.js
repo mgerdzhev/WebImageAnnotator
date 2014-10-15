@@ -100,7 +100,6 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 	this.ajaxLoadPage(url, data, function(data)
 	{
 	    console.log("success");
-	    console.log(data.page);
 	    instance.element.html(data.page);
 
 	    // Add event listeners to the buttons
