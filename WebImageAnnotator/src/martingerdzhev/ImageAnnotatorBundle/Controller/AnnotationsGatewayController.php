@@ -62,6 +62,53 @@ class AnnotationsGatewayController extends Controller
 		));
 	}
 	
+	public function addAnnotationAction(Request $request, $imageId)
+	{
+		$user = $this->getUser ();
+		if (! $this->container->get ( 'image_annotator.authentication_manager' )->isAuthenticated ( $request )) {
+			return $this->redirect ( $this->generateUrl ( 'fos_user_security_login' ) );
+		}
+		$userManager = $this->container->get ( 'fos_user.user_manager' );
+		$userObject = $userManager->findUserByUsername ( $user->getUsername () );
+		if ($userObject == null) {
+			throw new NotFoundHttpException ( "This user does not exist" );
+		}
+		if (! $request->isXmlHttpRequest())
+			throw new BadRequestHttpException('Only Ajax POST calls accepted');
+		
+		$image = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Image')->find($imageId);
+		if ($image == null)
+		{
+			throw new NotFoundHttpException ( "This Image does not exist" );
+		}
+		$annotation = json_decode($request->get('annotation'));
+		$annotationTypeId = $annotation['type'];
+		$annotationPolygon = $annotation['polygon'];
+		
+		
+		$annotationType = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:AnnotationType')->find($annotationTypeId);
+		if ($annotationType == null)
+			throw new NotFoundHttpException ( "This Annotation type does not exist" );
+		
+		$newAnnotation = new Annotation();
+		$newAnnotation->setCreator($user);
+		$newAnnotation->setImage($image);
+		$newAnnotation->setType($annotationType);
+		$newAnnotation->setPolygon($annotationPolygon);
+
+		$em = $this->container->get ( 'doctrine' )->getManager ();
+		$em->persist ( $newAnnotation );
+		$em->flush ();
+		$return = array (
+				'responseCode' => 200
+		);
+	
+		$return = json_encode($return); // json encode the array
+		return new Response($return, 200, array (
+				'Content-Type' => 'application/json'
+		));
+	}
+	
 	/**
 	 * An Ajax function that deletes a media with a specific media ID
 	 *

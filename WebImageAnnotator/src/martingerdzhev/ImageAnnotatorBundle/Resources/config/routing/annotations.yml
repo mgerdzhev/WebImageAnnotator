@@ -38,7 +38,7 @@ image_annotator_annotation_remove:
 
 image_annotator_annotation_add:
   pattern: /add/{imageId}
-  defaults: { _controller: ImageAnnotatorBundle:AnnotationsGateway:addAnnotation, url: null }
+  defaults: { _controller: ImageAnnotatorBundle:AnnotationsGateway:addAnnotation }
   requirements:
     _method:  POST
     imageId: \d+

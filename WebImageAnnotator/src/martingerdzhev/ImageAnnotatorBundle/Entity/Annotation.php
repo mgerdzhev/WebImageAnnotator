@@ -192,4 +192,13 @@ class Annotation
     {
         return $this->polygon;
     }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setCreatedDateToNow()
+    {
+        $this->dateCreated = new \DateTime('NOW');
+        $this->dateModified = new \DateTime('NOW');
+    }
 }

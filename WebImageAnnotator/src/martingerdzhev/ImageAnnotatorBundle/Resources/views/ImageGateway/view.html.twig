@@ -27,7 +27,7 @@
 {% block nav_ul_authenticated_my_files %}class="active"{% endblock %}
 {% block left_side_content %}
             <div class="col-md-1">
-                {% include 'ImageAnnotatorBundle:Annotations:controlsForm.html.twig' %}
+                {% include 'ImageAnnotatorBundle:Annotations:controlsForm.html.twig' with {'dataset':mediaFile.dataset} %}
             </div>
 {% endblock left_side_content %}
 {% block content %}

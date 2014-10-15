@@ -29,4 +29,5 @@ martingerdzhev\ImageAnnotatorBundle\Entity\Annotation:
         image:
             targetEntity: Image
             inversedBy: annotations
-    lifecycleCallbacks: {  }
+    lifecycleCallbacks: 
+        prePersist: [setCreatedDateToNow]

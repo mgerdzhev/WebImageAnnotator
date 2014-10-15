@@ -13,6 +13,7 @@ define([ 'core/mediaChooser', 'core/mediaManager', 'core/annotation' ],
 		this.bind__onZoomOutButtonClick = this.onZoomOutButtonClick.bind(this);
 		this.bind__onSaveButtonClick = this.onSaveButtonClick.bind(this);
 		this.bind__polygonMouseClickListener = this.polygonMouseClickListener.bind(this);
+		this.isFirstPoint = true;
 	    };
 
 	    Annotations.TAG = "Annotations";
@@ -78,21 +79,51 @@ define([ 'core/mediaChooser', 'core/mediaManager', 'core/annotation' ],
 	    Annotations.prototype._bindUIEventsIndex = function()
 	    {
 		console.log("%s: %s", Annotations.TAG, "_bindUIEventsIndex");
-
 		$("#annotation-polygon-button").on("click", this.bind__onPolygonButtonClick);
 		$("#annotation-remove-polygon-button").on("click", this.bind__onRemovePolygonButtonClick);
 		$("#annotation-zoom-in-button").on("click", this.bind__onZoomInButtonClick);
 		$("#annotation-zoom-out-button").on("click", this.bind__onZoomOutButtonClick);
 		$("#annotation-save-button").on("click", this.bind__onSaveButtonClick);
+
+		var instance = this;
+
+		$('a[name=annotation-type-button]').on("click", function(e)
+		{
+		    e.preventDefault();
+		    var button = $(e.target);
+		    if (!$(button).is('a'))
+			button = $(button).parent();
+		    button = button.eq(0);
+		    console.log(button);
+		    if (!button.hasClass('active'))
+		    {
+			instance.currentAnnotationType = button.attr('data-val');
+			button.siblings().removeClass('active');
+		    }
+		    else
+		    {
+			button.removeClass('active')
+		    }
+		});
 	    };
 
 	    Annotations.prototype.onPolygonButtonClick = function(e)
 	    {
 		e.preventDefault();
+		var button = $(e.target);
+		if (!$(button).is('a'))
+		    button = $(button).parent();
+		button = button.eq(0);
+		console.log(button);
+		if (!button.hasClass('active'))
+		{
+		    button.siblings().removeClass('active');
+		    this.canvasElement.on("click", this.bind__polygonMouseClickListener);
+		}
 		console.log("Polygon");
-		this.canvasElement.off("click", this.bind__polygonMouseClickListener);
-		this.isFirstPoint = true;
-		this.canvasElement.on("click", this.bind__polygonMouseClickListener);
+//		this.canvasElement.off("click", this.bind__polygonMouseClickListener);
+		
+		
 	    };
 
 	    Annotations.prototype.polygonMouseClickListener = function(e)
@@ -114,16 +145,23 @@ define([ 'core/mediaChooser', 'core/mediaManager', 'core/annotation' ],
 		    this.annotations.push(annotation);
 		    this.isFirstPoint = false;
 		    var circle = this.canvas.circle(coords.x, coords.y, 8);
-		    circle.click(function()
+		    circle.click(function(e)
 		    {
+			instance.canvasElement.off("click", instance.bind__polygonMouseClickListener);
 			var polygon = instance.canvas.getById(annotation.getPolygonId());
-//			console.log(polygon.attr('path'));
-			polygon.attr('path',polygon.attr('path')+'Z');
+			// console.log(polygon.attr('path'));
+			polygon.attr('path', polygon.attr('path') + 'Z');
 			polygon.attr("fill", annotation.color);
 			polygon.attr("fill-opacity", 0.5);
 			console.log("Annotation polygon closed");
 			circle.remove();
-			instance.canvasElement.off("click", instance.bind__polygonMouseClickListener);
+//			instance.canvasElement.on("click", instance.bind__polygonMouseClickListener);
+			
+			image_annotator_annotation_add
+			
+			instance.isFirstPoint = true;
+			$("#annotation-polygon-button").click();
+			
 		    });
 		    circle.attr("fill", "#FFFFFF");
 		    circle.attr("stroke", "#FF0000");
@@ -134,11 +172,11 @@ define([ 'core/mediaChooser', 'core/mediaManager', 'core/annotation' ],
 		    var annotation = this.annotations[this.annotations.length - 1];
 		    var polygon = this.canvas.getById(annotation.getPolygonId());
 		    annotation.addPoint(coords.x, coords.y);
-		    polygon.attr('path',polygon.attr('path')+"L" + coords.x + "," + coords.y);
+		    polygon.attr('path', polygon.attr('path') + "L" + coords.x + "," + coords.y);
 		    polygon.toBack();
 		    polygon.attr("stroke", annotation.color);
-//		    polygon.attr("fill", annotation.color);
-//		    polygon.attr("fill-opacity", 0.5);
+		    // polygon.attr("fill", annotation.color);
+		    // polygon.attr("fill-opacity", 0.5);
 		    console.log("new point");
 
 		}
@@ -146,24 +184,64 @@ define([ 'core/mediaChooser', 'core/mediaManager', 'core/annotation' ],
 	    Annotations.prototype.onRemovePolygonButtonClick = function(e)
 	    {
 		e.preventDefault();
+		var button = $(e.target);
+		if (!$(button).is('a'))
+		    button = $(button).parent();
+		button = button.eq(0);
+		console.log(button);
+		if (!button.hasClass('active'))
+		{
+		    button.siblings().removeClass('active');
+		    this.canvasElement.off("click", this.bind__polygonMouseClickListener);
+		}
 		console.log("Polygon Remove");
 	    };
 
 	    Annotations.prototype.onZoomInButtonClick = function(e)
 	    {
 		e.preventDefault();
+		var button = $(e.target);
+		if (!$(button).is('a'))
+		    button = $(button).parent();
+		button = button.eq(0);
+		console.log(button);
+		if (!button.hasClass('active'))
+		{
+		    this.canvasElement.off("click", this.bind__polygonMouseClickListener);
+		    button.siblings().removeClass('active');
+		}
 		console.log("Zoom In");
 	    };
 
 	    Annotations.prototype.onZoomOutButtonClick = function(e)
 	    {
 		e.preventDefault();
+		var button = $(e.target);
+		if (!$(button).is('a'))
+		    button = $(button).parent();
+		button = button.eq(0);
+		console.log(button);
+		if (!button.hasClass('active'))
+		{
+		    this.canvasElement.off("click", this.bind__polygonMouseClickListener);
+		    button.siblings().removeClass('active');
+		}
 		console.log("Zoom Out");
 	    };
 
 	    Annotations.prototype.onSaveButtonClick = function(e)
 	    {
 		e.preventDefault();
+		var button = $(e.target);
+		if (!$(button).is('a'))
+		    button = $(button).parent();
+		button = button.eq(0);
+		console.log(button);
+		if (!button.hasClass('active'))
+		{
+		    this.canvasElement.off("click", this.bind__polygonMouseClickListener);
+		    button.siblings().removeClass('active');
+		}
 		console.log("Save");
 	    };
 

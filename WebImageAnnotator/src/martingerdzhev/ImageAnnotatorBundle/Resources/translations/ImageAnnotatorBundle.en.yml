@@ -74,13 +74,12 @@ layout:
 
 annotationGateway:
     title: "My Annotations"
-    add:
-        title: "Select from My Files"
     buttons:
         save: "Save annotations"
         polygon: "Create a polygonal annotation"
         removePolygon: "Remove an annotation"
         createDataset: "Create a new Dataset"
+        select: "Create %annotationType% annotation"
     type:
         0: "Image"
     empty: "You have not made any annotations yet. Use the above buttons to make annotations."

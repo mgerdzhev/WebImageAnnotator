@@ -30,7 +30,7 @@ image_annotator_dataset_annotation_types_create:
     expose: true
     
 image_annotator_dataset_annotation_types_add:
-  pattern: /{datasetId}/annotationTypes/annotationTypeId
+  pattern: /{datasetId}/annotationTypes/{annotationTypeId}
   defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:addAnnotationType }
   requirements:
     _method:  POST

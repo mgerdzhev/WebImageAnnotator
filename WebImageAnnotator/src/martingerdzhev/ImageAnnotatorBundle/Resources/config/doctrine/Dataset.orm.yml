@@ -39,5 +39,4 @@ martingerdzhev\ImageAnnotatorBundle\Entity\Dataset:
                 inverseJoinColumns:
                   annotation_type_id:
                     referencedColumnName: id
-                    unique: true
               

@@ -5,7 +5,6 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 	this.page = null;
 	this.dataset = null;
 
-	this.bind__onPreviewButtonClick = this.onPreviewButtonClick.bind(this);
 	this.bind__onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
 	this.bind__onSuccess = this._onSuccess.bind(this);
 	this.bind__onDialogClose = this._onDialogClose.bind(this);
@@ -68,9 +67,6 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 
 	this.element = $("#annotation-type-chooser");
 
-	
-	$(".preview-button").on("click", this.bind__onPreviewButtonClick);
-	$(".delete-button").on("click", this.bind__onDeleteButtonClick);
 	$("#annotation-type-add").on("click", this.bind__onAnnotationTypeAddButtonClick);
 	$(".annotation-type-delete").on("click", this.bind__onAnnotationTypeDeleteButtonClick);
     };
@@ -80,15 +76,7 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 	console.log("%s: %s", Datasets.TAG, "_bindUIEventsIndex");
 
 	this.element = $("#annotation-type-chooser");
-	
-	this.mediaChooser = new MediaChooser(Datasets.mediaChooserOptions(Datasets.Page.BROWSE));
-        this.mediaChooser.datasetId = this.datasetId;
-        $(this.mediaChooser).on(MediaChooser.Event.SUCCESS, this.bind__onSuccess);
-        $(this.mediaChooser).on(MediaChooser.Event.DIALOG_CLOSE, this.bind__onDialogClose);
-        this.mediaChooser.bindUIEvents();
 
-	$(".preview-button").on("click", this.bind__onPreviewButtonClick);
-	$(".delete-button").on("click", this.bind__onDeleteButtonClick);
 	$("#annotation-type-add").on("click", this.bind__onAnnotationTypeAddButtonClick);
 	$(".annotation-type-delete").on("click", this.bind__onAnnotationTypeDeleteButtonClick);
     };
@@ -115,23 +103,55 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 		var annotationName = $('#annotaion-type-name').val();
 		var url = Routing.generate('image_annotator_dataset_annotation_types_create', {
 		    datasetId : instance.datasetId,
-		    name: annotationName
+		    name : annotationName
 		});
 		var data = {
-			    datasetId : instance.datasetId,
-			    name : annotationName
-			};
-		instance.ajaxLoadPage(url,data, function(data){
-		    
+		    datasetId : instance.datasetId,
+		    name : annotationName
+		};
+		instance.ajaxLoadPage(url, data, function(data)
+		{
+
 		    if (data.responseCode == 400)
 			console.log("Already exists");
 		    else
 			console.log("Successfully added");
 		    instance.element.dialog("close");
-		}, function(data){
+		}, function(data)
+		{
 		    console.log("Error adding");
 		});
-		
+
+	    });
+
+	    $("#annotation-type-choose").on("click", function(e)
+	    {
+		var annotationChoice = $('#annotation-type-choice').val();
+		if (annotationChoice == null)
+		{
+		    return;
+		}
+		var url = Routing.generate('image_annotator_dataset_annotation_types_add', {
+		    datasetId : instance.datasetId,
+		    annotationTypeId : annotationChoice
+		});
+		var data = {
+		    datasetId : instance.datasetId,
+		    annotationTypeId : annotationChoice
+		};
+		instance.ajaxLoadPage(url, data, function(data)
+		{
+
+		    if (data.responseCode == 400)
+			console.log("Already exists");
+		    else
+			console.log("Successfully added");
+		    instance.element.dialog("close");
+		}, function(data)
+		{
+		    console.log("Error adding");
+		});
+
 	    });
 	}, function(e)
 	{
@@ -149,7 +169,7 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 	    data : data,
 	    success : (function(data, textStatus, jqXHR)
 	    {
-		onSuccess.call(this,data);
+		onSuccess.call(this, data);
 	    }).bind(this),
 	    error : (function(jqXHR, textStatus, errorThrown)
 	    {
@@ -208,22 +228,6 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
     {
 	console.log("Delete Annotation clicked");
     }
-
-    Datasets.prototype.onPreviewButtonClick = function(e)
-    {
-	e.preventDefault();
-	console.log("Preview");
-	if ($(e.target).hasClass("disabled"))
-	{
-	    return false;
-	}
-	$('#preview').html('');
-	this.page = Datasets.Page.PREVIEW;
-	this.mediaChooser.previewMedia({
-	    mediaUrl : $(e.target).data("url"),
-	    mediaId : $(e.target).data("val")
-	});
-    };
 
     Datasets.prototype.onDeleteButtonClick = function(e)
     {

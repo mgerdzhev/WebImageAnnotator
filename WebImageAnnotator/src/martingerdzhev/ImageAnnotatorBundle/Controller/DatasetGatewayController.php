@@ -173,16 +173,26 @@ class DatasetGatewayController extends Controller
 		if ($dataset == null)
 			throw new NotFoundHttpException ( "This dataset does not exist" );
 		
-		$annotationType = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->find($annotationTypeId);
+		$annotationType = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:AnnotationType')->find($annotationTypeId);
 		if ($annotationType == null)
 			throw new NotFoundHttpException ( "This Annotation type does not exist" );
-		$em = $this->container->get ( 'doctrine' )->getManager ();
-		$dataset->addAnnotationType($annotationType);
-		$em->flush ();
-		$return = array (
-				'annotationType' => JSEntities::getAnnotationTypeObject($annotationType),
-				'responseCode' => 200
-		);
+		if ($dataset->getAnnotationTypes()->contains($annotationType))
+		{
+			$return = array (
+					'annotationType' => JSEntities::getAnnotationTypeObject($annotationType),
+					'responseCode' => 400);
+		}
+		else
+		{
+			$em = $this->container->get ( 'doctrine' )->getManager ();
+			$dataset->addAnnotationType($annotationType);
+			$em->flush ();
+			$return = array (
+					'annotationType' => JSEntities::getAnnotationTypeObject($annotationType),
+					'responseCode' => 200
+			);
+		}
+		
 		$return = json_encode($return); // json encode the array
 		return new Response($return, 200, array (
 				'Content-Type' => 'application/json' 
@@ -210,7 +220,9 @@ class DatasetGatewayController extends Controller
 		$logger->info("name:".$name);
 		if ($name == null || strlen($name)<2)
 			throw new NotFoundHttpException ( "This name does not exist/Name too short" );
-		try
+		
+		$annotationType = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:AnnotationType')->findOneBy(array('name'=>$name));
+		if ($annotationType == null)		
 		{
 			$annotationType = new AnnotationType();
 			$annotationType->setName($name);
@@ -223,11 +235,11 @@ class DatasetGatewayController extends Controller
 					'responseCode' => 200
 			);
 		}
-		catch (\Doctrine\DBAL\DBALException $e )
+		else 
 		{
-			$return = array ('responseCode' => 400);
+			return $this->forward('ImageAnnotatorBundle:DatasetGateway:addAnnotationType', 
+					array('datasetId'=>$datasetId, 'annotationTypeId'=>$annotationType->getId()));
 		}
-	
 		$return = json_encode($return); // json encode the array
 		return new Response($return, 200, array (
 				'Content-Type' => 'application/json'

@@ -1,13 +1,23 @@
 {% trans_default_domain 'ImageAnnotatorBundle' %}
 
-<div class="row" id="chooseFile">
+<div class="row" id="annotation-controls">
 	<div class="col-md-12">
-		<div class="btn-group btn-group-vertical">
-			<a class="btn btn-default" id="annotation-polygon-button" href="#" title="{{ 'annotationGateway.buttons.polygon'|trans }}"><i class="fa fa-share-alt"></i></a>
-			<a class="btn btn-default" id="annotation-remove-polygon-button" href="#" title="{{ 'annotationGateway.buttons.removePolygon'|trans }}"><i class="fa fa-eraser"></i></a>
-			<a class="btn btn-default" id="annotation-zoom-in-button" href="#" title="{{ 'annotationGateway.buttons.zoomIn'|trans }}"><i class="fa fa-search-plus"></i></a>
-			<a class="btn btn-default" id="annotation-zoom-out-button" href="#" title="{{ 'annotationGateway.buttons.zoomOut'|trans }}"><i class="fa fa-search-minus"></i></a>
-			<a class="btn btn-default" id="annotation-save-button" href="#"><i class="fa fa-save" title=" {{ 'annotationGateway.buttons.save'|trans }}"></i></a>
+		<div class="row">
+			<div class="btn-group btn-group-vertical" data-toggle="buttons-radio" >
+				<a class="btn btn-default" name="annotation-control-button" id="annotation-polygon-button" href="#" title="{{ 'annotationGateway.buttons.polygon'|trans }}"><i class="fa fa-share-alt"></i></a>
+				<a class="btn btn-default" name="annotation-control-button" id="annotation-remove-polygon-button" href="#" title="{{ 'annotationGateway.buttons.removePolygon'|trans }}"><i class="fa fa-eraser"></i></a>
+				<a class="btn btn-default" name="annotation-control-button" id="annotation-zoom-in-button" href="#" title="{{ 'annotationGateway.buttons.zoomIn'|trans }}"><i class="fa fa-search-plus"></i></a>
+				<a class="btn btn-default" name="annotation-control-button" id="annotation-zoom-out-button" href="#" title="{{ 'annotationGateway.buttons.zoomOut'|trans }}"><i class="fa fa-search-minus"></i></a>
+				<a class="btn btn-default" name="annotation-control-button" id="annotation-save-button" href="#"><i class="fa fa-save" title=" {{ 'annotationGateway.buttons.save'|trans }}"></i></a>
+			</div>
+		</div>
+		<div class="row">
+		<h5>{{ 'annotationType.types'|trans }}</h5>
+			<div class="btn-group btn-group-vertical" data-toggle="buttons-radio">
+			{% for annotationType in dataset.annotationTypes %}
+				<a class="btn btn-default" name="annotation-type-button" data-val="{{ annotationType.id }}" id="annotation-type-{{ annotationType.id }}-button" href="#" title="{{ 'annotationGateway.buttons.select'|trans({'%annotationType%':  annotationType.name}) }}">{{ annotationType.name }}</a>
+			{% endfor %}
+			</div>
 		</div>
 	</div>
 </div>
