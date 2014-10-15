@@ -68,6 +68,7 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 
 	this.element = $("#annotation-type-chooser");
 
+	
 	$(".preview-button").on("click", this.bind__onPreviewButtonClick);
 	$(".delete-button").on("click", this.bind__onDeleteButtonClick);
 	$("#annotation-type-add").on("click", this.bind__onAnnotationTypeAddButtonClick);
@@ -79,6 +80,12 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 	console.log("%s: %s", Datasets.TAG, "_bindUIEventsIndex");
 
 	this.element = $("#annotation-type-chooser");
+	
+	this.mediaChooser = new MediaChooser(Datasets.mediaChooserOptions(Datasets.Page.BROWSE));
+        this.mediaChooser.datasetId = this.datasetId;
+        $(this.mediaChooser).on(MediaChooser.Event.SUCCESS, this.bind__onSuccess);
+        $(this.mediaChooser).on(MediaChooser.Event.DIALOG_CLOSE, this.bind__onDialogClose);
+        this.mediaChooser.bindUIEvents();
 
 	$(".preview-button").on("click", this.bind__onPreviewButtonClick);
 	$(".delete-button").on("click", this.bind__onDeleteButtonClick);
