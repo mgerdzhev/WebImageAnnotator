@@ -16,13 +16,6 @@
         {# <link rel="stylesheet" href="{{ asset('css/jquery-ui.min.css') }}"> #}
         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/sonatajquery/themes/flick/jquery-ui-1.10.4.custom.css') }}">
 
-        <!-- jQuery autosize textboxes script -->
-        <script src="{{ asset('bundles/martingerdzhevimageannotator/js/autosize/jquery.autosize.min.js') }}"></script>
-
-   <!--      <script src="{{ asset('js/tag-it.min.js') }}"></script> -->
-  <!--  <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery.tagit.css') }}"> -->
-
-
         <!--  FOS js routing script -->
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
@@ -34,7 +27,7 @@
 		{{ require_js_initialize({'main' : 'main'}) }}
 
         {% block header %}
-         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/martingerdzhevimageannotator/_css/image_annotator.css') }}">
+         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/martingerdzhevimageannotator/css/image_annotator.css') }}">
         {% endblock header %}
     </head>
     <body>

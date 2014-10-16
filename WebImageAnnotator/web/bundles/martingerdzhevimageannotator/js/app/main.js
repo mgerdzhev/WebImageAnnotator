@@ -15,5 +15,5 @@ define(function(require) {
     $ia = window.ImageAnnotator;
 
     // make all elements with class 'autosize' expand to fit its contents
-    $(".autosize").autosize();
+//    $(".autosize").autosize();
 });
