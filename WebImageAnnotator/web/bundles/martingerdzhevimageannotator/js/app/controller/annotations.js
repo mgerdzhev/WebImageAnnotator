@@ -1,6 +1,5 @@
 define(
-	[ 'core/mediaChooser', 'core/mediaManager', 'core/annotation',
-		'core/functions' ],
+	[ 'core/mediaChooser', 'core/mediaManager', 'core/annotation', 'core/functions' ],
 	function(MediaChooser, MediaManager, Annotation, Functions)
 	{
 	    var Annotations = function(imageId, savedAnnotations)
@@ -9,25 +8,17 @@ define(
 		this.page = null;
 		this.functions = new Functions();
 		this.annotations = savedAnnotations;
-		this.bind__onPolygonButtonClick = this.onPolygonButtonClick
-			.bind(this);
-		this.bind__onRemovePolygonButtonClick = this.onRemovePolygonButtonClick
-			.bind(this);
-		this.bind__onZoomInButtonClick = this.onZoomInButtonClick
-			.bind(this);
-		this.bind__onZoomOutButtonClick = this.onZoomOutButtonClick
-			.bind(this);
-		this.bind__onSaveButtonClick = this.onSaveButtonClick
-			.bind(this);
-		this.bind__polygonMouseClickListener = this.polygonMouseClickListener
-			.bind(this);
+		this.bind__onPolygonButtonClick = this.onPolygonButtonClick.bind(this);
+		this.bind__onRemovePolygonButtonClick = this.onRemovePolygonButtonClick.bind(this);
+		this.bind__onZoomInButtonClick = this.onZoomInButtonClick.bind(this);
+		this.bind__onZoomOutButtonClick = this.onZoomOutButtonClick.bind(this);
+		this.bind__polygonMouseClickListener = this.polygonMouseClickListener.bind(this);
 		this.isFirstPoint = true;
 	    };
 
 	    Annotations.TAG = "Annotations";
 
-	    Annotations.Page =
-	    {
+	    Annotations.Page = {
 		INDEX : 0,
 		PREVIEW : 1
 	    };
@@ -39,8 +30,7 @@ define(
 		this.imageElement = this.canvasElement.next('.ia-media-img');
 		this.canvasElement.width(this.imageElement.width());
 		this.canvasElement.height(this.imageElement.height());
-		this.canvas = new Raphael(canvasId, this.imageElement.width(),
-			this.imageElement.height());
+		this.canvas = new Raphael(canvasId, this.imageElement.width(), this.imageElement.height());
 	    };
 
 	    /**
@@ -51,8 +41,7 @@ define(
 	     */
 	    Annotations.prototype.bindUIEvents = function(page)
 	    {
-		console.log("%s: %s- page=%d", Annotations.TAG, "bindUIEvents",
-			page);
+		console.log("%s: %s- page=%d", Annotations.TAG, "bindUIEvents", page);
 
 		this.page = page;
 
@@ -66,58 +55,19 @@ define(
 		}
 	    };
 
-	    Annotations.prototype.clearAlertMessage = function()
-	    {
-		$('#alert-text').removeClass('alert-danger');
-		$('#alert-text').removeClass('alert-info');
-		$('#alert-text').removeClass('alert-success');
-		$('#alert-text').html("");
-	    };
-
-	    Annotations.prototype.appendAnnotation = function(annotation)
-	    {
-		var instance = this;
-		var tableElement = $('.ia-annotation-table tbody');
-		var row = $("<tr></tr>");
-		var col1 = '<td><div class="text-center"><a class="btn btn-danger btn-xs annotation-type-delete" href="#" data-val="'
-			+ annotation.id
-			+ '"> <i class="fa fa-trash-o"></i></a></div></td>';
-		var annotationName = $(
-			'a[name=annotation-type-button][data-val='
-				+ annotation.type + ']').eq(0).data('name');
-		var col2 = '<td>' + annotationName + '</td>';
-		row.html(col1 + col2);
-		row.hover(function()
-		{
-		    var polygon = instance.canvas.getById(annotation.getPolygonId());
-		    polygon.attr("fill-opacity", 0.8);
-		}, function()
-		{
-		    var polygon = instance.canvas.getById(annotation.getPolygonId());
-		    polygon.attr("fill-opacity", 0.1);
-		});
-		tableElement.append(row);
-	    };
-
 	    Annotations.prototype._bindUIEventsIndex = function()
 	    {
 		console.log("%s: %s", Annotations.TAG, "_bindUIEventsIndex");
-		$("#annotation-polygon-button").on("click",
-			this.bind__onPolygonButtonClick);
-		$("#annotation-remove-polygon-button").on("click",
-			this.bind__onRemovePolygonButtonClick);
-		$("#annotation-zoom-in-button").on("click",
-			this.bind__onZoomInButtonClick);
-		$("#annotation-zoom-out-button").on("click",
-			this.bind__onZoomOutButtonClick);
-		$("#annotation-save-button").on("click",
-			this.bind__onSaveButtonClick);
+		$("#annotation-polygon-button").on("click", this.bind__onPolygonButtonClick);
+		$("#annotation-remove-polygon-button").on("click", this.bind__onRemovePolygonButtonClick);
+		$("#annotation-zoom-in-button").on("click", this.bind__onZoomInButtonClick);
+		$("#annotation-zoom-out-button").on("click", this.bind__onZoomOutButtonClick);
 
 		var instance = this;
+		// Add the initial annotations
 		for (var iterator = 0; iterator < this.annotations.length; iterator++)
 		{
 		    var annotation = this.annotations[iterator];
-		    console.log(annotation);
 		    var point = annotation.getPointAt(0);
 		    var polygonString = "M" + point.x + "," + point.y;
 		    for (var i = 1; i < annotation.getPolygonLength(); i++)
@@ -135,72 +85,173 @@ define(
 		    this.appendAnnotation(annotation);
 		}
 
-		$(document).keypress(
-			function(e)
+		$(document).keypress(function(e)
+		{
+		    var number = e.which - 48;
+//		    console.log(e.which);
+		    if (e.which == 80 || e.which == 112) // p
+		    {
+			$("#annotation-polygon-button").click();
+		    }
+		    else if (e.which == 68 || e.which == 100) // d
+		    {
+			$("#annotation-remove-polygon-button").click();
+		    }
+		    else if (e.which == 61 || e.which == 43) // =
+		    {
+			$("#annotation-zoom-in-button").click();
+		    }
+		    else if (e.which == 45) // -
+		    {
+			$("#annotation-zoom-out-button").click();
+		    }
+		    if ($('a[name=annotation-type-button][data-number=' + number + ']').length < 11)
+		    {
+			$('a[name=annotation-type-button][data-number=' + number + ']').each(function()
 			{
-			    var number = e.which - 48;
-			    if ($('a[name=annotation-type-button][data-number='
-				    + number + ']').length < 11)
+			    if (e.which - 48 == $(this).data('number'))
 			    {
-				$(
-					'a[name=annotation-type-button][data-number='
-						+ number + ']').each(function()
-				{
-				    if (e.which - 48 == $(this).data('number'))
-				    {
-					$(this).click();
-				    }
-				});
+				$(this).click();
 			    }
 			});
+		    }
+		});
 
-		$('a[name=annotation-type-button]')
-			.on(
-				"click",
-				function(e)
+		$('a[name=annotation-type-button]').on(
+			"click",
+			function(e)
+			{
+			    e.preventDefault();
+			    var button = $(e.target);
+			    if (!$(button).is('a'))
+				button = $(button).parent();
+			    button = button.eq(0);
+			    if (!button.hasClass('active'))
+			    {
+				instance.currentAnnotationType = button.attr('data-val');
+				instance.clearAlertMessage();
+				$('#alert-text').addClass('alert-info');
+				$('#alert-text').html(
+					"Current annotation type is: "
+						+ $(
+							'a[name=annotation-type-button][data-val='
+								+ instance.currentAnnotationType + ']').eq(0).data(
+							'name'));
+				button.siblings().removeClass('active');
+				if (instance.needsSubmitting)
 				{
-				    e.preventDefault();
-				    var button = $(e.target);
-				    if (!$(button).is('a'))
-					button = $(button).parent();
-				    button = button.eq(0);
-				    if (!button.hasClass('active'))
-				    {
-					instance.currentAnnotationType = button
-						.attr('data-val');
-					$('#alert-text').addClass('alert-info');
-					$('#alert-text')
-						.html(
-							"Current annotation type is: "
-								+ $(
-									'a[name=annotation-type-button][data-val='
-										+ instance.currentAnnotationType
-										+ ']')
-									.eq(0)
-									.html());
-					button.siblings().removeClass('active');
-					if (instance.needsSubmitting)
-					{
-					    button.siblings().removeClass(
-						    'alert');
-					    button.siblings().removeClass(
-						    'alert-danger');
-					    button.removeClass('alert');
-					    button.removeClass('alert-danger');
-					    button.parent()
-						    .removeClass('alert');
-					    button.parent().removeClass(
-						    'alert-danger');
-					    instance.clearAlertMessage();
-					    instance.submitLastAnnoatation();
-					}
-				    }
-				    else
-				    {
-					button.removeClass('active');
-				    }
-				});
+				    button.siblings().removeClass('alert');
+				    button.siblings().removeClass('alert-danger');
+				    button.removeClass('alert');
+				    button.removeClass('alert-danger');
+				    button.parent().removeClass('alert');
+				    button.parent().removeClass('alert-danger');
+				    instance.clearAlertMessage();
+				    instance.submitLastAnnoatation();
+				}
+			    }
+			    else
+			    {
+				button.removeClass('active');
+			    }
+			});
 	    };
+	    Annotations.prototype.clearAlertMessage = function()
+	    {
+		$('#alert-text').removeClass('alert-danger');
+		$('#alert-text').removeClass('alert-info');
+		$('#alert-text').removeClass('alert-success');
+		$('#alert-text').html("");
+	    };
+
+	    Annotations.prototype.appendAnnotation = function(annotation)
+	    {
+		var instance = this;
+		var tableElement = $('.ia-annotation-table tbody');
+		var row = $("<tr data-val=" + annotation.getId() + "></tr>");
+		var col1 = '<td><div class="text-center"><a class="btn btn-danger btn-xs annotation-type-delete" href="#" data-val="'
+			+ annotation.getId() + '"> <i class="fa fa-trash-o"></i></a></div></td>';
+		var annotationName = $('a[name=annotation-type-button][data-val=' + annotation.getType() + ']').eq(0)
+			.data('name');
+		var col2 = '<td><div data-val=' + annotation.getId() + '>' + annotationName + '</div></td>';
+		row.html(col1 + col2);
+		row.hover(function()
+		{
+		    instance.setAnnotationHighlighted(annotation, true);
+		}, function()
+		{
+		    instance.setAnnotationHighlighted(annotation, false);
+		});
+		tableElement.append(row);
+		$('a.annotation-type-delete[data-val=' + annotation.getId() + ']').eq(0).on('click', function(e)
+		{
+		    instance.deleteAnnotation(annotation);
+		});
+		var polygon = this.canvas.getById(annotation.getPolygonId());
+		$(polygon).data('annotation', annotation);
+	    };
+
+	    Annotations.prototype.setAnnotationHighlighted = function(annotation, highlighted)
+	    {
+		var polygon = this.canvas.getById(annotation.getPolygonId());
+		var tableElement = $('.ia-annotation-table tbody');
+		var row = tableElement.children('[data-val=' + annotation.getId() + ']').eq(0);
+		if (highlighted)
+		{
+		    polygon.attr("fill-opacity", 0.8);
+		    row.addClass('active');
+		}
+		else
+		{
+		    polygon.attr("fill-opacity", 0.1);
+		    row.removeClass('active');
+		}
+	    };
+
+	    Annotations.prototype.deleteAnnotation = function(annotation)
+	    {
+		var instance = this;
+		var index = $.inArray(annotation, instance.annotations);
+		if (index != -1)
+		{
+		    var url = Routing.generate('image_annotator_annotation_remove', {
+			annotationId : annotation.getId()
+		    });
+		    var data = {
+			'imageId' : this.imageId,
+			'annotation' : JSON.stringify(annotation)
+		    };
+		    this.functions.ajaxLoadPage(url, data, function(data)
+		    {
+			if (data.responseCode == 200)
+			{
+			    instance.clearAlertMessage();
+			    $('#alert-text').addClass('alert-success');
+			    $('#alert-text').html("Annotation removed");
+			    $('a.annotation-type-delete[data-val=' + annotation.getId() + ']').eq(0).parent().parent()
+				    .parent().remove();
+			    instance.annotations.splice(index, 1);
+			    var polygon =  instance.canvas.getById(annotation.getPolygonId());
+			    polygon.unmouseout();
+			    polygon.unmouseover();
+			    polygon.unclick();
+			    polygon.remove();
+			}
+			else
+			{
+			    instance.clearAlertMessage();
+			    $('#alert-text').addClass('alert-danger');
+			    $('#alert-text').html("Could not remove annotation");
+			}
+
+		    }, function(e)
+		    {
+			instance.clearAlertMessage();
+			$('#alert-text').addClass('alert-danger');
+			$('#alert-text').html("Could not remove annotation");
+		    });
+		}
+	    }
 
 	    Annotations.prototype.onPolygonButtonClick = function(e)
 	    {
@@ -209,46 +260,51 @@ define(
 		if (!$(button).is('a'))
 		    button = $(button).parent();
 		button = button.eq(0);
-		console.log(button);
 		if (!button.hasClass('active'))
 		{
 		    this.clearAlertMessage();
+		    this.resetPolygonStates();
 		    $('#alert-text').addClass('alert-info');
-		    $('#alert-text')
-			    .html(
-				    "Current annotation type is: "
-					    + $(
-						    'a[name=annotation-type-button][data-val='
-							    + this.currentAnnotationType
-							    + ']').eq(0).html());
+		    $('#alert-text').html(
+			    "Current annotation type is: "
+				    + $('a[name=annotation-type-button][data-val=' + this.currentAnnotationType + ']')
+					    .eq(0).data('name'));
 		    this.canvasElement.css('cursor', 'crosshair');
 		    button.siblings().removeClass('active');
-		    this.canvasElement.on("click",
-			    this.bind__polygonMouseClickListener);
+		    this.canvasElement.on("click", this.bind__polygonMouseClickListener);
+		    button.effect('highlight');
 		}
 		else
 		{
-		    this.canvasElement.css('cursor', 'auto');
+		    this.resetPolygonStates();
 		}
 		console.log("Polygon");
 	    };
 
+	    Annotations.prototype.resetPolygonStates = function()
+	    {
+		this.canvasElement.off("click", this.bind__polygonMouseClickListener);
+		this.canvasElement.css('cursor', '');
+		for (i in this.annotations)
+		{
+		    var polygon = this.canvas.getById(this.annotations[i].getPolygonId());
+		    polygon.attr('cursor', '');
+		    polygon.unclick();
+		    polygon.unmouseover();
+		    polygon.unmouseout();
+		}
+	    }
 	    Annotations.prototype.submitLastAnnoatation = function()
 	    {
 		if (typeof this.currentAnnotationType == "undefined")
 		{
 		    $('a[name=annotation-type-button]').addClass('alert');
-		    $('a[name=annotation-type-button]')
-			    .addClass('alert-danger');
-		    $('a[name=annotation-type-button]').eq(0).parent()
-			    .addClass('alert');
-		    $('a[name=annotation-type-button]').eq(0).parent()
-			    .addClass('alert-danger');
+		    $('a[name=annotation-type-button]').addClass('alert-danger');
+		    $('a[name=annotation-type-button]').eq(0).parent().addClass('alert');
+		    $('a[name=annotation-type-button]').eq(0).parent().addClass('alert-danger');
 		    this.clearAlertMessage();
 		    $('#alert-text').addClass('alert-danger');
-		    $('#alert-text')
-			    .html(
-				    "Select an annotation on the left in order to submit!");
+		    $('#alert-text').html("Select an annotation on the left in order to submit!");
 		    return;
 
 		}
@@ -258,29 +314,24 @@ define(
 
 		var annotation = this.annotations[this.annotations.length - 1];
 		annotation.type = this.currentAnnotationType;
-		console.log(annotation.type);
-		var url = Routing.generate('image_annotator_annotation_add',
-		{
+		var url = Routing.generate('image_annotator_annotation_add', {
 		    imageId : this.imageId
 		});
-		var data =
-		{
+		var data = {
 		    'imageId' : this.imageId,
 		    'annotation' : JSON.stringify(annotation)
 		};
 		this.functions.ajaxLoadPage(url, data, function(e)
 		{
-		    console.log($('a[name=annotation-type-button][data-val='
-			    + annotation.type + ']'));
 		    console.log("Annotation saved");
+		    instance.clearAlertMessage();
 		    $('#alert-text').addClass('alert-success');
 		    $('#alert-text').html(
 			    "Annotation type "
 				    + $(
-					    'a[name=annotation-type-button][data-val='
-						    + annotation.type + ']')
-					    .eq(0).html()
-				    + " saved successfully");
+					    'a[name=annotation-type-button][data-val=' + instance.currentAnnotationType
+						    + ']').eq(0).data('name') + " saved successfully");
+		    annotation.setId(e.annotation.id);
 		    instance.appendAnnotation(annotation);
 		}, function(e)
 		{
@@ -289,9 +340,8 @@ define(
 		    $('#alert-text').html(
 			    "Annotation type "
 				    + $(
-					    'a[name=annotation-type-button][data-val='
-						    + annotation.type + ']')
-					    .eq(0).html() + "failed to save");
+					    'a[name=annotation-type-button][data-val=' + instance.currentAnnotationType
+						    + ']').eq(0).data('name') + "failed to save");
 		});
 
 	    };
@@ -302,8 +352,7 @@ define(
 		    return;
 		console.log("click");
 		var offset = $(this.canvasElement).offset();
-		var coords =
-		{
+		var coords = {
 		    x : Math.round(e.clientX - offset.left),
 		    y : Math.round(e.clientY - offset.top)
 		};
@@ -311,8 +360,7 @@ define(
 		if (this.isFirstPoint)
 		{
 		    var instance = this;
-		    var polygon = this.canvas.path("M" + coords.x + ","
-			    + coords.y);
+		    var polygon = this.canvas.path("M" + coords.x + "," + coords.y);
 		    var annotation = new Annotation();
 		    annotation.addPoint(coords.x, coords.y);
 		    annotation.setPolygonId(polygon.id);
@@ -321,10 +369,8 @@ define(
 		    var circle = this.canvas.circle(coords.x, coords.y, 8);
 		    circle.click(function(e)
 		    {
-			instance.canvasElement.off("click",
-				instance.bind__polygonMouseClickListener);
-			var polygon = instance.canvas.getById(annotation
-				.getPolygonId());
+			instance.canvasElement.off("click", instance.bind__polygonMouseClickListener);
+			var polygon = instance.canvas.getById(annotation.getPolygonId());
 			polygon.attr('path', polygon.attr('path') + 'Z');
 			polygon.attr("fill", annotation.color);
 			polygon.attr("fill-opacity", 0.1);
@@ -344,11 +390,9 @@ define(
 		else
 		{
 		    var annotation = this.annotations[this.annotations.length - 1];
-		    var polygon = this.canvas
-			    .getById(annotation.getPolygonId());
+		    var polygon = this.canvas.getById(annotation.getPolygonId());
 		    annotation.addPoint(coords.x, coords.y);
-		    polygon.attr('path', polygon.attr('path') + "L" + coords.x
-			    + "," + coords.y);
+		    polygon.attr('path', polygon.attr('path') + "L" + coords.x + "," + coords.y);
 		    polygon.toBack();
 		    polygon.attr("stroke", annotation.color);
 		    polygon.attr("stroke-width", 3);
@@ -360,18 +404,45 @@ define(
 	    }
 	    Annotations.prototype.onRemovePolygonButtonClick = function(e)
 	    {
+		var instance = this;
 		e.preventDefault();
 		this.clearAlertMessage();
 		var button = $(e.target);
 		if (!$(button).is('a'))
 		    button = $(button).parent();
 		button = button.eq(0);
-		console.log(button);
 		if (!button.hasClass('active'))
 		{
 		    button.siblings().removeClass('active');
-		    this.canvasElement.off("click",
-			    this.bind__polygonMouseClickListener);
+		    this.resetPolygonStates();
+		    this.canvasElement.css('cursor', 'no-drop');
+		    for (i in this.annotations)
+		    {
+			var annotation = this.annotations[i];
+			var polygon = this.canvas.getById(this.annotations[i].getPolygonId());
+			polygon.attr('cursor', 'pointer');
+			polygon.click(function()
+			{
+			    var annotation = $(this).data('annotation');
+			    instance.deleteAnnotation(annotation);
+			});
+			polygon.mouseover(function()
+			{
+			    var annotation = $(this).data('annotation');
+			    instance.setAnnotationHighlighted(annotation, true);
+			});
+			polygon.mouseout(function()
+			{
+			    var annotation = $(this).data('annotation');
+			    instance.setAnnotationHighlighted(annotation, false);
+			});
+		    }
+		    button.effect('highlight');
+
+		}
+		else
+		{
+		    this.resetPolygonStates();
 		}
 		console.log("Polygon Remove");
 	    };
@@ -383,12 +454,12 @@ define(
 		if (!$(button).is('a'))
 		    button = $(button).parent();
 		button = button.eq(0);
-		console.log(button);
 		if (!button.hasClass('active'))
 		{
-		    this.canvasElement.off("click",
-			    this.bind__polygonMouseClickListener);
+		    this.resetPolygonStates();
 		    button.siblings().removeClass('active');
+		    button.addClass('active');
+		    button.effect('highlight');
 		}
 		console.log("Zoom In");
 	    };
@@ -400,138 +471,14 @@ define(
 		if (!$(button).is('a'))
 		    button = $(button).parent();
 		button = button.eq(0);
-		console.log(button);
 		if (!button.hasClass('active'))
 		{
-		    this.canvasElement.off("click",
-			    this.bind__polygonMouseClickListener);
+		    button.addClass('active');
+		    this.resetPolygonStates();
 		    button.siblings().removeClass('active');
+		    button.effect('highlight');
 		}
 		console.log("Zoom Out");
 	    };
-
-	    Annotations.prototype.onSaveButtonClick = function(e)
-	    {
-		e.preventDefault();
-		var button = $(e.target);
-		if (!$(button).is('a'))
-		    button = $(button).parent();
-		button = button.eq(0);
-		console.log(button);
-		if (!button.hasClass('active'))
-		{
-		    this.canvasElement.off("click",
-			    this.bind__polygonMouseClickListener);
-		    button.siblings().removeClass('active');
-		}
-		console.log("Save");
-	    };
-
-	    Annotations.prototype.onPreviewButtonClick = function(e)
-	    {
-		e.preventDefault();
-		console.log("Preview");
-		if ($(e.target).hasClass("disabled"))
-		{
-		    return false;
-		}
-		$('#preview').html('');
-		this.page = Annotations.Page.PREVIEW;
-		this.mediaChooser.previewMedia(
-		{
-		    mediaUrl : $(e.target).data("url"),
-		    mediaId : $(e.target).data("val")
-		});
-	    };
-
-	    Annotations.prototype.onDeleteButtonClick = function(e)
-	    {
-		e.preventDefault();
-
-		var file = $(e.target);
-
-		$(this.mediaManager).one(MediaManager.EVENT_DELETE_SUCCESS,
-			function()
-			{
-			    file.parent().parent().parent().remove();
-			});
-		$(this.mediaManager).one(MediaManager.EVENT_DELETE_ERROR,
-			function(error, e)
-			{
-			    if (e.status == 500)
-			    {
-				alert(e.statusText);
-			    }
-			    else
-			    {
-				alert('Error: ' + error);
-			    }
-			});
-
-		return this.mediaManager.deleteMedia(file.data("val"), $(
-			"#mediaDeleteConfirmMessage").html());
-
-		/*
-		 * var response =
-		 * confirm($("#mediaDeleteConfirmMessage").html()); if
-		 * (!response) { return false; } var file = $(e.target); var
-		 * address = file.data("url");
-		 * 
-		 * $.ajax({ url: address, type: "POST", contentType:
-		 * "application/x-www-form-urlencoded", data: { mediaId:
-		 * file.data("val") }, success: function(data) { if
-		 * (data.responseCode == 200) { file.parent().parent().remove(); }
-		 * else if (data.responseCode == 400) { // bad request
-		 * alert('Error: ' + data.feedback); } else { alert('An
-		 * unexpected error occured'); } }, error: function(request) {
-		 * console.log(request.statusText); } });
-		 */
-	    };
-
-	    Annotations.prototype._onSuccess = function(e)
-	    {
-		switch (this.page)
-		{
-		case Annotations.Page.INDEX:
-		    this._addMediaRow(e.media); // FIXME pagination makes this
-		    // impractical
-		    break;
-		case Annotations.Page.PREVIEW:
-		    console.log("Done previewing");
-		    break;
-		}
-	    };
-
-	    Annotations.prototype._onDialogClose = function(e)
-	    {
-		switch (this.page)
-		{
-		case Annotations.Page.PREVIEW:
-		    this.page = Annotations.Page.INDEX;
-		    console.log("Terminating function called");
-		    console.log(e.media);
-		    this._updateMediaRow(e.media);
-		    break;
-		}
-	    };
-
-	    Annotations.prototype.forwardFunction = function()
-	    {
-		console.log("%s: %s", Annotations.TAG, "forwardFunction");
-
-		this.mediaChooser.destroyVideoRecorder();
-
-		this.mediaChooser.previewMedia(
-		{
-		    type : MediaChooser.TYPE_RECORD_VIDEO,
-		    mediaUrl : Routing.generate('imdc_myfiles_preview',
-		    {
-			mediaId : this.mediaChooser.media.id
-		    }),
-		    mediaId : this.mediaChooser.media.id,
-		    recording : true
-		});
-	    };
-
 	    return Annotations;
 	});

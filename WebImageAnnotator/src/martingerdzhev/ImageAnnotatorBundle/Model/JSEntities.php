@@ -5,6 +5,7 @@ use martingerdzhev\ImageAnnotatorBundle\Entity\ResourceFile;
 use martingerdzhev\ImageAnnotatorBundle\Entity\MetaData;
 use martingerdzhev\ImageAnnotatorBundle\Entity\Image;
 use martingerdzhev\ImageAnnotatorBundle\Entity\AnnotationType;
+use martingerdzhev\ImageAnnotatorBundle\Entity\Annotation;
 
 class JSEntities
 {
@@ -13,6 +14,12 @@ class JSEntities
 	{
 		return array('id' => $annotationType->getId(), 'name' => $annotationType->getName());
 	}
+	
+	public static function getAnnotationObject(Annotation $annotation)
+	{
+		return array('id' => $annotation->getId(), 'type' => JSEntities::getAnnotationTypeObject($annotation->getType()), 'polygon' => $annotation->getPolygon(), 'image' => JSEntities::getMediaObject($annotation->getImage()));
+	}
+	
 	public static function getMediaObject(Image $media)
 	{
 		return array('id' => $media->getId(), 'title' => $media->getTitle(),

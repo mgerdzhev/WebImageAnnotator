@@ -199,6 +199,51 @@ class DatasetGatewayController extends Controller
 		));
 	}
 	
+	public function removeAnnotationTypeAction(Request $request, $datasetId, $annotationTypeId)
+	{
+		$user = $this->getUser ();
+		if (! $this->container->get ( 'image_annotator.authentication_manager' )->isAuthenticated ( $request )) {
+			return $this->redirect ( $this->generateUrl ( 'fos_user_security_login' ) );
+		}
+		$userManager = $this->container->get ( 'fos_user.user_manager' );
+		$userObject = $userManager->findUserByUsername ( $user->getUsername () );
+		if ($userObject == null) {
+			throw new NotFoundHttpException ( "This user does not exist" );
+		}
+		if (! $request->isXmlHttpRequest())
+			throw new BadRequestHttpException('Only Ajax POST calls accepted');
+		$dataset = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->find($datasetId);
+		if ($dataset == null)
+			throw new NotFoundHttpException ( "This dataset does not exist" );
+		if ($dataset->getCreator()!=$userObject)
+			throw new NotFoundHttpException ( "Not the owner of the dataset" );
+		
+		$logger = $this->container->get ( 'logger' );
+	
+		$annotationType = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:AnnotationType')->find($annotationTypeId);
+		if ($annotationType == null)
+		{
+			throw new NotFoundHttpException ( "Annotation Type not in the dataset" );
+		}
+		else
+		{
+			$em = $this->container->get ( 'doctrine' )->getManager ();
+			$annotations = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->findAnnotationsOfType($dataset, $annotationType);
+			$dataset->removeAnnotationType($annotationType);
+			foreach ($annotations as $annotation)
+			{
+				$em->remove($annotation);
+			}
+			$em->flush ();
+			$return = array (
+					'responseCode' => 200
+			);
+		}
+		$return = json_encode($return); // json encode the array
+		return new Response($return, 200, array (
+				'Content-Type' => 'application/json'
+		));
+	}
 	public function createAnnotationTypeAction(Request $request, $datasetId)
 	{
 		$user = $this->getUser ();

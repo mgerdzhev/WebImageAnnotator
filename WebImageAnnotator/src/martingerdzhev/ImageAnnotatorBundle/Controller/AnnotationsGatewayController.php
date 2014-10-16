@@ -30,7 +30,7 @@ class AnnotationsGatewayController extends Controller
 {
 	
 	const FEEDBACK_MESSAGE_NOT_OWNER = "Not the rightful owner";
-	const FEEDBACK_MESSAGE_NOT_EXIST_MEDIA = "Media does not exist";
+	const FEEDBACK_MESSAGE_NOT_EXIST_MEDIA = "Annotation does not exist";
 	const FEEDBACK_MESSAGE_NOT_EXIST_USER = "User does not exist";
 	
 	/**
@@ -101,9 +101,49 @@ class AnnotationsGatewayController extends Controller
 		$em->persist ( $newAnnotation );
 		$em->flush ();
 		$return = array (
-				'responseCode' => 200
+				'responseCode' => 200,
+				'annotation' =>JSEntities::getAnnotationObject($newAnnotation)
 		);
 	
+		$return = json_encode($return); // json encode the array
+		return new Response($return, 200, array (
+				'Content-Type' => 'application/json'
+		));
+	}
+	
+	public function deleteAnnotationAction(Request $request, $annotationId)
+	{
+		if (! $this->container->get('image_annotator.authentication_manager')->isAuthenticated($request))
+		{
+			return $this->redirect($this->generateUrl('fos_user_security_login'));
+		}
+		if (! $request->isXmlHttpRequest())
+			throw new BadRequestHttpException('Only Ajax POST calls accepted');
+		$user = $this->getUser();
+		$userManager = $this->container->get ( 'fos_user.user_manager' );
+		$userObject = $userManager->findUserByUsername ( $user->getUsername () );
+		if ($userObject == null) {
+			throw new NotFoundHttpException ( "This user does not exist" );
+		}
+		
+		$em = $this->get('doctrine')->getManager();
+		$annotation = $em->getRepository('ImageAnnotatorBundle:Annotation')->find($annotationId);
+		if ($annotation !== null)
+		{
+				$em->remove($annotation);
+				$em->flush();
+				$return = array (
+						'responseCode' => 200,
+						'feedback' => 'Successfully removed annotation!'
+				);
+		}
+		else
+		{
+			$return = array (
+					'responseCode' => 400,
+					'feedback' => AnnotationsGatewayController::FEEDBACK_MESSAGE_NOT_EXIST_MEDIA
+			);
+		}
 		$return = json_encode($return); // json encode the array
 		return new Response($return, 200, array (
 				'Content-Type' => 'application/json'
