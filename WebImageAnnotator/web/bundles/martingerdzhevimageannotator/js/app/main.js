@@ -9,6 +9,9 @@ define(function(require) {
     ImageAnnotator.Core = {};
     ImageAnnotator.Core.MediaChooser = require('core/mediaChooser');
     ImageAnnotator.Core.MediaManager = require('core/mediaManager');
+    ImageAnnotator.Core.Functions = require('core/functions');
+    ImageAnnotator.Core.Annotation = require('core/annotation');
+
 
     window.ImageAnnotator = ImageAnnotator;
 

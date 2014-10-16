@@ -81,7 +81,8 @@ class AnnotationsGatewayController extends Controller
 		{
 			throw new NotFoundHttpException ( "This Image does not exist" );
 		}
-		$annotation = json_decode($request->get('annotation'));
+		$annotation = json_decode($request->get('annotation'), true);
+		$logger = $this->container->get ( 'logger' );
 		$annotationTypeId = $annotation['type'];
 		$annotationPolygon = $annotation['polygon'];
 		

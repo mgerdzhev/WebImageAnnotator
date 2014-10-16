@@ -78,6 +78,10 @@ assetic:
             inputs:
                 - %kernel.root_dir%/../vendor/sonata-project/jquery-bundle/Resources/public/jquery-ui-1.10.4.js
             output: js/jquery-ui.js
+        jquery_css:
+            inputs:
+                - %kernel.root_dir%/../vendor/sonata-project/jquery-bundle/Resources/public/themes/base/jquery.ui.accordion.css
+                - %kernel.root_dir%/../vendor/sonata-project/jquery-bundle/Resources/public/themes/base/jquery.ui.all.css
         bootstrap_dialog_js:
             inputs:
                 - %kernel.root_dir%/../bower_components/bootstrap3-dialog/src/js/bootstrap-dialog.js

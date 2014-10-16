@@ -1,4 +1,4 @@
-define([ 'core/annotation' ], function()
+define(function()
 {
     var Annotation = function()
     {

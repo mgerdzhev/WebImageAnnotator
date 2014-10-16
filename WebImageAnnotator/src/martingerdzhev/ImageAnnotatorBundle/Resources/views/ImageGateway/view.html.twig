@@ -10,8 +10,18 @@
     <script type="text/javascript">
         $(document).ready(function() {
             require(['main'], function() {
+        		var savedAnnotations = new Array();
+				{% for annotation in mediaFile.annotations %}
+					var annotation = new $ia.Core.Annotation();
+					annotation.setId({{ annotation.id }});
+					annotation.setType({{ annotation.type.id }});
+					annotation.polygon = {{ annotation.polygon|json_encode|raw }};
+					savedAnnotations.push(annotation);
+				{% endfor %}
                 var images = new $ia.Controller.Images();
-                var annotations = new $ia.Controller.Annotations();
+                var annotations = new $ia.Controller.Annotations({{ mediaFile.id }}, savedAnnotations);
+                
+                
                 annotations.setCanvasElement('ia-image-canvas');
                 annotations.bindUIEvents($ia.Controller.Annotations.Page.INDEX);
                 //FIXME context
@@ -30,6 +40,11 @@
                 {% include 'ImageAnnotatorBundle:Annotations:controlsForm.html.twig' with {'dataset':mediaFile.dataset} %}
             </div>
 {% endblock left_side_content %}
+{% block right_side_content %}
+            <div class="col-md-1">
+                {% include 'ImageAnnotatorBundle:Annotations:list.html.twig' %}
+            </div>
+{% endblock right_side_content %}
 {% block content %}
     <div class="col-lg-10">
        
@@ -37,8 +52,7 @@
             <div class="col-md-12">
                 <div id="preview"></div>
                 <div class="ia-media-preview">
-				    <div class="text-center ia-media-preview-title">
-				        <input type="text" id="mediaPreviewTitle" value="{{ mediaFile.title }}" />
+				    <div class="text-center alert" id="alert-text">
 				    </div>
 				
 				<div class="ia-image-container">

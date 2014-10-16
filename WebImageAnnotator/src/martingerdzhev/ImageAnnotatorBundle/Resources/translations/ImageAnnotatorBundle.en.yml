@@ -86,6 +86,8 @@ annotationGateway:
     deleteLink: "Delete"
     deleteConfirmMessage: "Are you sure you want to remove this image's annotations?"
     previewLink: "Preview"
+    list:
+      title: "Current Annotations"
 
 annotationType:
     addLabel: "Add new type"

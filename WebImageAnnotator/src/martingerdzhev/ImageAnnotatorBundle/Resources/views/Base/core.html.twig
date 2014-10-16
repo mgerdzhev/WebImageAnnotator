@@ -10,19 +10,19 @@
 
         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/bmatznerfontawesome/css/font-awesome.min.css') }}" />
 
-        <script src="{{ asset('js/jquery.js') }}"></script>
-        <script src="{{ asset('js/jquery-ui.js') }}"></script>
-
         {# <link rel="stylesheet" href="{{ asset('css/jquery-ui.min.css') }}"> #}
         <link rel="stylesheet" type="text/css" href="{{ asset('bundles/sonatajquery/themes/flick/jquery-ui-1.10.4.custom.css') }}">
 
+        <script src="{{ asset('bundles/sonatajquery/jquery-1.10.2.js') }}" type="text/javascript"></script>
+        
         <!--  FOS js routing script -->
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
         <!-- raphael javascript svg library -->
 		<script type="text/javascript" src="{{ asset('bundles/bmatznerraphael/js/raphael.min.js') }}"></script>
-		<script type="text/javascript" src="{{ asset('js/bootstrap-dialog.js') }}"></script>
-		<link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap-dialog.css') }}">
+		
+		<script src="{{ asset('js/bootstrap.js') }}"></script>
+        <script src="{{ asset('bundles/sonatajquery/jquery-ui-1.10.4.js') }}"></script>
 		
 		{{ require_js_initialize({'main' : 'main'}) }}
 
@@ -98,7 +98,7 @@
             </div>
         </div>
         {% block javascripts %}
-            <script src="{{ asset('js/bootstrap.js') }}"></script>
+           
         {% endblock javascripts %}
     </body>
     {% block outside_body %}

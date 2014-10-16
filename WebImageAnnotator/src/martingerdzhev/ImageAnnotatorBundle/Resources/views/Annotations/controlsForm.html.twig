@@ -15,7 +15,7 @@
 		<h5>{{ 'annotationType.types'|trans }}</h5>
 			<div class="btn-group btn-group-vertical" data-toggle="buttons-radio">
 			{% for annotationType in dataset.annotationTypes %}
-				<a class="btn btn-default" name="annotation-type-button" data-val="{{ annotationType.id }}" id="annotation-type-{{ annotationType.id }}-button" href="#" title="{{ 'annotationGateway.buttons.select'|trans({'%annotationType%':  annotationType.name}) }}">{{ annotationType.name }}</a>
+				<a class="btn btn-default" name="annotation-type-button" data-name="{{ annotationType.name }}" data-number="{{ loop.index0 }}" data-val="{{ annotationType.id }}" id="annotation-type-{{ annotationType.id }}-button" href="#" title="{{ 'annotationGateway.buttons.select'|trans({'%annotationType%':  annotationType.name}) }}">{{ loop.index0 }}: {{ annotationType.name }}</a>
 			{% endfor %}
 			</div>
 		</div>

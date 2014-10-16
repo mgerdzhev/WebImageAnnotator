@@ -1,18 +1,18 @@
-define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, MediaManager)
+define([ 'core/mediaChooser', 'core/mediaManager', 'core/functions' ], function(MediaChooser, MediaManager, Functions)
 {
     var Datasets = function()
     {
 	this.page = null;
 	this.dataset = null;
 
+	this.functions = new Functions();
 	this.bind__onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
 	this.bind__onSuccess = this._onSuccess.bind(this);
 	this.bind__onDialogClose = this._onDialogClose.bind(this);
 	this.bind_forwardFunction = this.forwardFunction.bind(this);
 	this.bind__onAnnotationTypeAddButtonClick = this._onAnnotationTypeAddButtonClick.bind(this);
-	this.bind__onAnnotationTypeDeleteButtonClick = this._onAnnotationTypeDeleteButtonClick.bind(this)
-
-    }
+	this.bind__onAnnotationTypeDeleteButtonClick = this._onAnnotationTypeDeleteButtonClick.bind(this);
+    };
 
     Datasets.TAG = "Datasets";
 
@@ -92,7 +92,7 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 	    datasetId : this.datasetId,
 	    type : 'remaining'
 	};
-	this.ajaxLoadPage(url, data, function(data)
+	this.functions.ajaxLoadPage(url, data, function(data)
 	{
 	    console.log("success");
 	    instance.element.html(data.page);
@@ -109,7 +109,7 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 		    datasetId : instance.datasetId,
 		    name : annotationName
 		};
-		instance.ajaxLoadPage(url, data, function(data)
+		instance.functions.ajaxLoadPage(url, data, function(data)
 		{
 
 		    if (data.responseCode == 400)
@@ -139,7 +139,7 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 		    datasetId : instance.datasetId,
 		    annotationTypeId : annotationChoice
 		};
-		instance.ajaxLoadPage(url, data, function(data)
+		instance.functions.ajaxLoadPage(url, data, function(data)
 		{
 
 		    if (data.responseCode == 400)
@@ -157,27 +157,6 @@ define([ 'core/mediaChooser', 'core/mediaManager' ], function(MediaChooser, Medi
 	{
 	    console.log("error");
 	})
-    }
-
-    Datasets.prototype.ajaxLoadPage = function(url, data, onSuccess, onError)
-    {
-	var request = {
-	    type : "POST",
-	    processData : false,
-	    contentType : false,
-	    url : url,
-	    data : data,
-	    success : (function(data, textStatus, jqXHR)
-	    {
-		onSuccess.call(this, data);
-	    }).bind(this),
-	    error : (function(jqXHR, textStatus, errorThrown)
-	    {
-		onError.call(this, errorThrown);
-
-	    }).bind(this)
-	};
-	$.ajax(request);
     }
 
     Datasets.prototype._onAnnotationTypeAddButtonClick = function(e)
