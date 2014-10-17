@@ -80,6 +80,8 @@ annotationGateway:
         removePolygon: "Remove an annotation"
         createDataset: "Create a new Dataset"
         select: "Create %annotationType% annotation"
+        next: "Next image"
+        previous: "Previous image"
     type:
         0: "Image"
     empty: "You have not made any annotations yet. Use the above buttons to make annotations."

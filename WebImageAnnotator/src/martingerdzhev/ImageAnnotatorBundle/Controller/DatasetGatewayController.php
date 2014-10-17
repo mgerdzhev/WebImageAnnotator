@@ -230,6 +230,7 @@ class DatasetGatewayController extends Controller
 			$em = $this->container->get ( 'doctrine' )->getManager ();
 			$annotations = $this->getDoctrine()->getRepository('ImageAnnotatorBundle:Dataset')->findAnnotationsOfType($dataset, $annotationType);
 			$dataset->removeAnnotationType($annotationType);
+			// Remove all annotations of this type
 			foreach ($annotations as $annotation)
 			{
 				$em->remove($annotation);

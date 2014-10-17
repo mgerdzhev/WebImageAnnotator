@@ -1,0 +1,18 @@
+/* line 1, sass/default.scss */
+.ia-default-intro {
+  margin-top: 100px;
+  min-height: 500px;
+}
+/* line 5, sass/default.scss */
+.ia-default-intro div.thumbnail {
+  height: 500px;
+}
+
+/* line 10, sass/default.scss */
+.ia-default-register > div {
+  background-color: #5a5a5a;
+  color: #fff;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-radius: 4px;
+}

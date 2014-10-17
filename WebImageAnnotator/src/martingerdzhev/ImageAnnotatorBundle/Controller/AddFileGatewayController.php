@@ -10,6 +10,7 @@ use martingerdzhev\ImageAnnotatorBundle\Entity\Image;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use martingerdzhev\ImageAnnotatorBundle\Filter\FileFilter;
 use martingerdzhev\ImageAnnotatorBundle\Form\Type\ImageMediaFormType;
+use martingerdzhev\ImageAnnotatorBundle\Form\Type\ImageMediaMultipleFormType;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -66,7 +67,7 @@ class AddFileGatewayController extends Controller {
 		return $response;
 	}
 	
-	public function addImageAction(Request $request, $url) {
+	public function addImageAction(Request $request) {
 		$user = $this->getUser ();
 		if (! $this->container->get ( 'image_annotator.authentication_manager' )->isAuthenticated ( $request )) {
 			return $this->redirect ( $this->generateUrl ( 'fos_user_security_login' ) );
@@ -114,11 +115,9 @@ class AddFileGatewayController extends Controller {
 					return new Response ( $response, 200, array (
 							'Content-Type' => 'application/json' 
 					) );
-				} else if ($url === null) {
+				} else  {
 					$response = new RedirectResponse ( $this->generateUrl ( 'image_annotator_annotations_list_images' ) );
-				} else {
-					$response = new RedirectResponse ( $url );
-				}
+				} 
 				return $response;
 			}
 // 			foreach ($form->getChildren() as $child)
@@ -147,4 +146,111 @@ class AddFileGatewayController extends Controller {
 		}
 		return $response;
 	}
+	
+	public function addImagesAction(Request $request) {
+		$user = $this->getUser ();
+		if (! $this->container->get ( 'image_annotator.authentication_manager' )->isAuthenticated ( $request )) {
+			return $this->redirect ( $this->generateUrl ( 'fos_user_security_login' ) );
+		}
+		$userManager = $this->container->get ( 'fos_user.user_manager' );
+		$userObject = $userManager->findUserByUsername ( $user->getUsername () );
+		if ($userObject == null) {
+			throw new NotFoundHttpException ( "This user does not exist" );
+		}
+		$imageMedia = array();
+	
+		$formFactory = $this->container->get ( 'form.factory' );
+	
+		$form = $formFactory->create ( new ImageMediaMultipleFormType (), $imageMedia, array () );
+	
+		$logger = $this->container->get('logger');
+		// 		if ($request->isXmlHttpRequest ()) {
+		// 			throw new BadRequestHttpException();
+		// 		}
+		if ('POST' === $request->getMethod ()) {
+			$form->bind ( $request );
+			$data = $form->getData();
+			$dataset = $data['dataset'];
+			$titles = $data['titles'];
+			$resources = $data['resource'];
+			
+// 			$logger->info($dataset->getId());
+			$logger->info(json_encode($data));
+			if ($form->isValid ()) {
+				$logger->info('Form is valid');
+				// flush object to database
+				$eventDispatcher = $this->container->get ( 'event_dispatcher' );
+				$em = $this->container->get ( 'doctrine' )->getManager ();
+				$images = array();
+				$logger->info(count($resources));
+				for ($i=0; $i<count($resources); $i++)
+				{
+					$image= new Image();
+					$image->setDataset($dataset);
+					$resource = $resources[$i];
+					$resource->setMedia($image);
+					$image->setResource($resource[$i]);
+					$image->setTitle($titles[$i]);
+					
+					$em->persist ( $image );
+					$images[] = $image;
+// 					$uploadedEvent = new UploadEvent ( $image );
+// 					$eventDispatcher->dispatch ( UploadEvent::EVENT_UPLOAD, $uploadedEvent );
+				}
+				$em->flush ();
+				foreach($images as $image)
+				{
+					$uploadedEvent = new UploadEvent ( $image );
+					$eventDispatcher->dispatch ( UploadEvent::EVENT_UPLOAD, $uploadedEvent );
+				}
+				
+	
+				$this->container->get ( 'session' )->getFlashBag ()->add ( 'media', 'Image file uploaded successfully!' );
+	
+				
+// 				$uploadedEvent = new UploadEvent ( $imageMedia );
+// 				$eventDispatcher->dispatch ( UploadEvent::EVENT_UPLOAD, $uploadedEvent );
+	
+				// $uploadedEvent->getResponse();
+				if ($request->isXmlHttpRequest ()) {
+					$response = array (
+							'page' => null,
+							'finished' => true,
+							'media' => JSEntities::getMediaObject ( $imageMedia )
+					);
+					$response = json_encode ( $response ); // json encode the array
+					return new Response ( $response, 200, array (
+							'Content-Type' => 'application/json'
+					) );
+				} else  {
+					$response = new RedirectResponse ( $this->generateUrl ( 'image_annotator_annotations_list_images' ) );
+				}
+				return $response;
+			}
+			// 			foreach ($form->getChildren() as $child)
+				// 			{
+			$logger->info("form is invalid");
+			$logger->info($form->getErrorsAsString());
+			// 			}
+				}
+	
+				// form not valid, show the basic form
+				if ($request->isXmlHttpRequest ()) {
+					$return = array (
+							'page' => null,
+							'finished' => false
+					);
+					$return = json_encode ( $return ); // json encode the array
+					$response = new Response ( $return, 400, array (
+							'Content-Type' => 'application/json'
+					) );
+				}
+				else {
+					$response = $this->render ( 'ImageAnnotatorBundle:AddFileGateway:' . 'addFile.html.twig', array (
+							'form' => $form->createView (),
+							'postUrl' => $this->generateUrl ( 'image_annotator_image_add_image' )
+					) );
+				}
+				return $response;
+		}
 }

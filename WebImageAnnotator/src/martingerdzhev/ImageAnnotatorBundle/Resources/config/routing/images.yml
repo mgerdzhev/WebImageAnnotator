@@ -5,7 +5,7 @@ image_annotator_image_gateway:
     expose: true
     
 image_annotator_image_preview:
-  pattern: /preview/{imageId}
+  pattern: /view/{imageId}
   defaults: { _controller: ImageAnnotatorBundle:ImageGateway:view }
   requirements:
     imageId: \d+
@@ -23,7 +23,13 @@ image_annotator_image_remove:
 
 image_annotator_image_add_image:
   pattern: /add
-  defaults: { _controller: ImageAnnotatorBundle:AddFileGateway:addImage, url: null }
+  defaults: { _controller: ImageAnnotatorBundle:AddFileGateway:addImage}
+  options:
+    expose: true
+
+image_annotator_image_add_images:
+  pattern: /add/multiple
+  defaults: { _controller: ImageAnnotatorBundle:AddFileGateway:addImages}
   options:
     expose: true
 

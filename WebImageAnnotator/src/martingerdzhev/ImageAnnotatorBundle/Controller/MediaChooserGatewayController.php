@@ -8,9 +8,12 @@ use Symfony\Component\Intl\Exception\NotImplementedException;
 
 use martingerdzhev\ImageAnnotatorBundle\Event\UploadEvent;
 use martingerdzhev\ImageAnnotatorBundle\Entity\Image;
+use martingerdzhev\ImageAnnotatorBundle\Entity\ResourceFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use martingerdzhev\ImageAnnotatorBundle\Filter\FileFilter;
 use martingerdzhev\ImageAnnotatorBundle\Form\Type\ImageMediaFormType;
+use martingerdzhev\ImageAnnotatorBundle\Form\Type\ImageMediaMultipleFormType;
+use martingerdzhev\ImageAnnotatorBundle\Form\Type\ImageResourceMultipleFileFormType;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Finder\Exception\AccessDeniedException;
@@ -72,10 +75,11 @@ class MediaChooserGatewayController extends Controller
 	}
 
     public static function getUploadForms(Controller $controller) {
-        $formImage = $controller->createForm(new ImageMediaFormType(), new Image(), array());
-
+//         $formImage = $controller->createForm(new ImageMediaFormType(), new Image(), array());
+		$formMultipleFiles = $controller->createForm(new ImageMediaMultipleFormType(), array(), array());
         return array(
-            $formImage->createView(),
+//             $formImage->createView(),
+        	$formMultipleFiles->createView()
         );
     }
 }

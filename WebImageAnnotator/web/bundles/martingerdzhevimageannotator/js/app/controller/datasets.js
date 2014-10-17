@@ -150,7 +150,10 @@ define(
 			    if (data.responseCode == 400)
 				console.log("Already exists");
 			    else
+			    {
+				instance.appendAnnotationType(data.annotationType);
 				console.log("Successfully added");
+			    }
 			    instance.element.dialog("close");
 			}, function(data)
 			{
@@ -260,7 +263,7 @@ define(
 		    console.log("error deleting annotation type");
 		});
 	    }
-	    
+
 	    Datasets.prototype.onDeleteButtonClick = function(e)
 	    {
 		e.preventDefault();

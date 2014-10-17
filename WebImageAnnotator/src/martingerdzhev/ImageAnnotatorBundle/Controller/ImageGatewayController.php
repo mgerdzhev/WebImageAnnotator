@@ -83,7 +83,7 @@ class ImageGatewayController extends Controller
 		$media = $em->getRepository('ImageAnnotatorBundle:Image')->find($imageId);
 		if ($media !== null)
 		{
-			if ($media->getOwner() != $user)
+			if ($media->getDataset()->getCreator() != $user)
 			{
 				$return = array (
 						'responseCode' => 400,
@@ -91,6 +91,11 @@ class ImageGatewayController extends Controller
 				);
 			}
 			else {
+				$annotations = $media->getAnnotations();
+				foreach ($annotations as $annotation)
+				{
+					$em->remove($annotation);
+				}
 				$em->remove($media);
 				$em->flush();
 				$return = array (
@@ -145,20 +150,38 @@ class ImageGatewayController extends Controller
 		if ($media !== null)
 		{
 			$responseURL = 'ImageAnnotatorBundle:ImageGateway:' . $prefix . 'view.html.twig';
+			$images = $media->getDataset()->getImages();
+			$previousImage = -1;
+			$nextImage = -1;
+			for ($i=0 ; $i<count($images); $i++)
+			{
+				if ($images[$i]->getId() == $media->getId())
+				{
+					if ($i>0)
+						$previousImage = $images[$i-1]->getId();
+					if ($i<count($images)-1)
+						$nextImage = $images[$i+1]->getId();
+					break;
+				}
+			}
 		}
 		else
 		{
 			throw new EntityNotFoundException("Cannot find media with that ID");
 		}
 		$response = $this->render($responseURL, array (
-				'mediaFile' => $media 
+				'mediaFile' => $media,
+				'previousImageId' => $previousImage,
+				'nextImageId' => $nextImage 
 		));
 		
 		if ($request->isXmlHttpRequest())
 		{
 			$return = array (
 					'page' => $response->getContent(),
-					'media' => JSEntities::getMediaObject($media) 
+					'media' => JSEntities::getMediaObject($media),
+					'previousImageId' => $previousImage,
+					'nextImageId' => $nextImage 
 			);
 			$return = json_encode($return); // json encode the array
 			$response = new Response($return, 200, array (

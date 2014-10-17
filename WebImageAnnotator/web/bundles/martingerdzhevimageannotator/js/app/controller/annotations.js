@@ -15,7 +15,6 @@ define(
 		this.bind__polygonMouseClickListener = this.polygonMouseClickListener.bind(this);
 		this.bind__polygonMouseMoveListener = this.polygonMouseMoveListener.bind(this);
 		this.isFirstPoint = true;
-		this.scale = 1;
 		this.imageDimensions = {};
 		this.tempLine = null;
 	    };
@@ -38,6 +37,9 @@ define(
 		this.imageDimensions.width = this.imageElement.width();
 		this.imageDimensions.height = this.imageElement.height();
 		this.canvas.setViewBox(0, 0, this.imageElement.width(), this.imageElement.height(), true);
+		this.ratio = this.imageElement.height()/this.imageElement.parent().height();
+		this.setZoomScale(1/this.ratio);
+		console.log(this.ratio);
 	    };
 
 	    /**
@@ -88,7 +90,7 @@ define(
 		    polygon.attr("fill", annotation.color);
 		    polygon.attr("fill-opacity", 0.1);
 		    polygon.attr("stroke", annotation.color);
-		    polygon.attr("stroke-width", 3);
+		    polygon.attr("stroke-width", 3*this.ratio);
 		    this.appendAnnotation(annotation);
 		}
 		this.setPolygonHoverStates();
@@ -193,6 +195,7 @@ define(
 		tableElement.append(row);
 		$('a.annotation-type-delete[data-val=' + annotation.getId() + ']').eq(0).on('click', function(e)
 		{
+		    e.preventDefault();
 		    instance.deleteAnnotation(annotation);
 		});
 		var polygon = this.canvas.getById(annotation.getPolygonId());
@@ -364,6 +367,8 @@ define(
 						    + ']').eq(0).data('name') + " saved successfully");
 		    annotation.setId(e.annotation.id);
 		    instance.appendAnnotation(annotation);
+		    if (!$("#annotation-polygon-button").hasClass('active'))
+			$("#annotation-polygon-button").click();
 		}, function(e)
 		{
 		    console.log("Annotation failed to save");
@@ -376,7 +381,7 @@ define(
 		});
 
 	    };
-
+	    
 	    Annotations.prototype.polygonMouseClickListener = function(e)
 	    {
 		if (this.needsSubmitting)
@@ -384,8 +389,8 @@ define(
 		console.log("click");
 		var offset = $(this.canvasElement).offset();
 		var coords = {
-		    x : Math.round((e.clientX - offset.left) / this.scale),
-		    y : Math.round((e.clientY - offset.top) / this.scale)
+		    x : Math.round((e.pageX - offset.left) / this.scale),
+		    y : Math.round((e.pageY - offset.top) / this.scale)
 		};
 
 		if (this.isFirstPoint)
@@ -400,7 +405,7 @@ define(
 		    annotation.setPolygonId(polygon.id);
 		    this.annotations.push(annotation);
 		    this.isFirstPoint = false;
-		    var circle = this.canvas.circle(coords.x, coords.y, 8);
+		    var circle = this.canvas.circle(coords.x, coords.y, 8*this.ratio);
 		    circle.click(function(e)
 		    {
 			instance.canvasElement.off("click", instance.bind__polygonMouseClickListener);
@@ -430,7 +435,7 @@ define(
 		    polygon.attr('path', polygon.attr('path') + "L" + coords.x + "," + coords.y);
 		    polygon.toBack();
 		    polygon.attr("stroke", annotation.color);
-		    polygon.attr("stroke-width", 3);
+		    polygon.attr("stroke-width", 3*this.ratio);
 
 		}
 	    }
@@ -441,8 +446,8 @@ define(
 		    return;
 		var offset = $(this.canvasElement).offset();
 		var coords = {
-		    x : Math.round((e.clientX - offset.left) / this.scale),
-		    y : Math.round((e.clientY - offset.top) / this.scale)
+		    x : Math.round((e.pageX - offset.left) / this.scale),
+		    y : Math.round((e.pageY - offset.top) / this.scale)
 		};
 
 		if (!this.isFirstPoint)
@@ -452,7 +457,7 @@ define(
 		    this.tempLine.attr('path', 'M' + lastPoint.x + ',' + lastPoint.y + 'L' + coords.x + "," + coords.y);
 		    this.tempLine.toBack();
 		    this.tempLine.attr("stroke", annotation.color);
-		    this.tempLine.attr("stroke-width", 3);
+		    this.tempLine.attr("stroke-width", 3*this.ratio);
 		}
 	    }
 
@@ -488,6 +493,7 @@ define(
 		else
 		{
 		    this.resetPolygonStates();
+		    this.setPolygonHoverStates();
 		}
 		console.log("Polygon Remove");
 	    };
@@ -499,21 +505,14 @@ define(
 		if (!$(button).is('a'))
 		    button = $(button).parent();
 		button = button.eq(0);
-		if (!button.hasClass('active'))
-		{
-		    this.resetPolygonStates();
-		    button.siblings().removeClass('active');
-		    button.addClass('active');
-		    button.effect('highlight');
-		    this.setZoomScale(this.scale + 0.1);
+		button.effect('highlight');
+		this.setZoomScale(this.scale + 0.1);
 
-		}
 		console.log("Zoom In");
 	    };
 
 	    Annotations.prototype.setZoomScale = function(scale)
 	    {
-		console.log(scale);
 		if (scale <= 0.001)
 		    return;
 		this.scale = scale;
@@ -530,14 +529,8 @@ define(
 		if (!$(button).is('a'))
 		    button = $(button).parent();
 		button = button.eq(0);
-		if (!button.hasClass('active'))
-		{
-		    button.addClass('active');
-		    this.resetPolygonStates();
-		    button.siblings().removeClass('active');
-		    button.effect('highlight');
-		    this.setZoomScale(this.scale - 0.1);
-		}
+		button.effect('highlight');
+		this.setZoomScale(this.scale - 0.1);
 		console.log("Zoom Out");
 	    };
 	    return Annotations;

@@ -1,0 +1,138 @@
+/* line 20, sass/base.scss */
+body {
+  padding-top: 85px;
+  padding-bottom: 40px;
+  /* background-color: #eeeeee; */
+}
+@media (max-width: 1200px) {
+  /* line 20, sass/base.scss */
+  body {
+    padding-top: 70px;
+  }
+}
+
+/* line 30, sass/base.scss */
+.ia-navbar-header {
+  float: none;
+}
+
+@media (max-width: 1200px) and (min-width: 768px) {
+  /* line 35, sass/base.scss */
+  .ia-navbar-header {
+    float: left;
+  }
+}
+/* line 40, sass/base.scss */
+.ia-navbar-logo {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  min-height: 70px;
+}
+
+/* line 46, sass/base.scss */
+.ia-navbar-top {
+  min-height: 70px;
+  color: white;
+  /* background-color: $eku-primary; */
+}
+
+/* line 52, sass/base.scss */
+.ia-navbar-nav-top > li > a {
+  padding-top: 21px;
+  padding-bottom: 21px;
+}
+
+/* line 57, sass/base.scss */
+.ia-navbar-right-top > li > a {
+  line-height: 2;
+}
+
+/* line 61, sass/base.scss */
+.ia-navbar-bottom {
+  min-height: 25px;
+  color: white;
+}
+
+/* line 66, sass/base.scss */
+.ia-copyright {
+  padding-top: 2.5px;
+  padding-bottom: 2.5px;
+}
+
+/* line 71, sass/base.scss */
+.ia-navbar-side {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  position: fixed;
+  top: 70px;
+  left: 0;
+  bottom: 25px;
+  background-color: #888888;
+}
+/* line 80, sass/base.scss */
+.ia-navbar-side a {
+  color: #000000;
+  font-size: 1.2em;
+}
+/* line 85, sass/base.scss */
+.ia-navbar-side div {
+  padding-bottom: 10px;
+}
+/* line 88, sass/base.scss */
+.ia-navbar-side div img {
+  max-width: 50px;
+  max-height: 50px;
+}
+@media (max-width: 1200px) {
+  /* line 71, sass/base.scss */
+  .ia-navbar-side {
+    position: relative;
+    top: 0;
+    right: 0;
+    bottom: inherit;
+    margin-bottom: 15px;
+  }
+  /* line 101, sass/base.scss */
+  .ia-navbar-side div {
+    padding-bottom: 0;
+    display: inline-block;
+  }
+}
+
+/* line 108, sass/base.scss */
+.ia-flash-message-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* line 113, sass/base.scss */
+.ia-separator-top, .ia-separator-bottom {
+  border-top: 1px solid #000000;
+}
+
+/* line 117, sass/base.scss */
+.ia-separator-bottom {
+  margin-top: 0;
+}
+
+/* line 123, sass/base.scss */
+.ia-date {
+  color: #aaa;
+  font-size: 0.9em;
+}
+
+/* line 128, sass/base.scss */
+.ia-avatar {
+  max-height: 150px;
+}
+
+/* line 133, sass/base.scss */
+.ia-table > thead {
+  background-color: white;
+}
+
+/* line 138, sass/base.scss */
+.ui-dialog.ia-popup-dialog {
+  position: fixed !important;
+  z-index: 5000;
+}
