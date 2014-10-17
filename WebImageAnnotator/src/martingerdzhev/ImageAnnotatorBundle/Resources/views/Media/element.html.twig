@@ -15,6 +15,6 @@ _Thread:thumbnail.html.twig
 {% block media %}
     {# mediatype 0 = image 1 = video 2 = audio 9 = other #}
         {% block mediaimagetype %}
-            <img class="center-block ia-media-img" src="{{ asset(mediaFile.getResource.getWebPath) }}" alt="{{ mediaFile.title }}" title="{{ mediaFile.title }}" />
+            <img class="ia-media-img" src="{{ asset(mediaFile.getResource.getWebPath) }}" alt="{{ mediaFile.title }}" title="{{ mediaFile.title }}" />
         {% endblock mediaimagetype %}
 {% endblock media %}
