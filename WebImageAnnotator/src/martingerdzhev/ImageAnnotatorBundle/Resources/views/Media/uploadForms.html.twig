@@ -1,7 +1,6 @@
 <div id="uploadForms" style="display: none;">
-    {% for form in uploadForms %}
-        {{ form_start(form) }}
-        {{ form_widget(form) }}
-        {{ form_end(form) }}
-    {% endfor %}
+        {{ form_start(uploadForms) }}
+        {{ form_widget(uploadForms.resource.file, {attr: {'name': 'file[]'}}) }}
+        {{ form_widget(uploadForms) }}
+        {{ form_end(uploadForms) }}
 </div>

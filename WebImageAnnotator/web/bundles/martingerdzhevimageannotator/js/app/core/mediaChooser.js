@@ -68,6 +68,7 @@ define([ 'core/mediaManager' ], function(MediaManager)
 	var datasetId = formRootElement.find("#image_annotator_image_media_dataset");
 	datasetId.val(this.datasetId);
 	var titlePrototype = title.data('prototype');
+	resourceFile.attr('name', resourceFile.attr('name')+'[]');
 
 	resourceFile.on("change", (function(e)
 	{
@@ -76,11 +77,10 @@ define([ 'core/mediaManager' ], function(MediaManager)
 		return;
 	    }
 	    title.empty();
-	    console.log(resourceFile.get(0).files);
 	    for (var i = 0; i < resourceFile.get(0).files.length; i++)
 	    {
 		var newTitle = titlePrototype.replace(/__name__/g,i);
-		newTitle = newTitle.replace(/input type/g,'input value="'+MediaChooser._cleanFileNameNoExt(resourceFile.get(0).files[0].name)+'" type')
+		newTitle = newTitle.replace(/input type/g,'input value="'+MediaChooser._cleanFileNameNoExt(resourceFile.get(0).files[i].name)+'" type');
 		newTitle = title.append(newTitle);
 		
 //		console.log(newTitle);
@@ -91,7 +91,6 @@ define([ 'core/mediaManager' ], function(MediaManager)
 	    //
 	    // $("#uploadingFileTitle" + this.postSuffix).html(title.val());
 	    // $("#chooseFile" + this.postSuffix).hide();
-
 	    this.loadNextPage({
 		url : Routing.generate("image_annotator_image_add_images"),
 		method : "POST",

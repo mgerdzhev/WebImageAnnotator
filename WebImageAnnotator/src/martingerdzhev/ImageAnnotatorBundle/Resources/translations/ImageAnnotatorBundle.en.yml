@@ -117,7 +117,7 @@ imageGateway:
     add:
         title: "Select from My Files"
     buttons:
-        upload: "Upload a new image"
+        upload: "Upload images"
         google: "Search images from google"
         flickr: "Search images from flickr"
         createDataset: "Create a new Dataset"

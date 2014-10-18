@@ -100,7 +100,32 @@
 {% block outside_body %}
     {{ parent() }}
 
-
+	<script type="text/html" id="image-row">
+									<tr>
+                                        <!-- tools -->
+                                        <td>
+                                            <div class="text-center">
+                                                <a class="btn btn-danger btn-xs delete-button"
+                                                   href="#"
+                                                   data-val="__image_id__">
+                                                    <i class="fa fa-trash-o"></i> {{ 'imageGateway.deleteLink'|trans }}
+                                                </a>
+                                                <a class="btn btn-default btn-xs preview-button"
+                                                   href="__preview_path__">
+                                                    <i class="fa fa-edit"></i> {{ 'imageGateway.viewLink'|trans }}
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <!-- name -->
+                                        <td>__image_title__</td>
+                                        <!-- created -->
+                                        <td>__image_date__</td>
+                                        <!-- size -->
+                                        <td>
+                                                0 
+                                        </td>
+                                    </tr>
+	</script>
     {% include 'ImageAnnotatorBundle:Media:uploadForms.html.twig' %}
 {% endblock outside_body %}
 

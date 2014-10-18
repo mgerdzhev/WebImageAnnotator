@@ -78,7 +78,7 @@ define(
 		console.log("%s: %s", Datasets.TAG, "_bindUIEventsIndex");
 
 		this.element = $("#annotation-type-chooser");
-
+	        
 		$("#annotation-type-add").on("click", this.bind__onAnnotationTypeAddButtonClick);
 		$(".annotation-type-delete").on("click", this.bind__onAnnotationTypeDeleteButtonClick);
 	    };
@@ -305,6 +305,7 @@ define(
 		switch (this.page)
 		{
 		case Datasets.Page.INDEX:
+		    console.log(e.media);
 		    this._addMediaRow(e.media); // FIXME pagination makes this impractical
 		    break;
 		case Datasets.Page.PREVIEW:

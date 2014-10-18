@@ -13,10 +13,7 @@ class ImageResourceMultipleFileFormType extends AbstractType
 {
 	public function buildForm(FormBuilderInterface $builder, array $options)
 	{
-		$imageConstraint = new Image();
-		$imageConstraint->mimeTypes = array('image/jpeg', 'image/gif', 'image/png');
-		$imageConstraint->maxSize = '10M';
-		$builder->add('file', 'file', array('constraints'=>array($imageConstraint), 'attr'=>array('accept'=>'image/jpeg,image/gif,image/png','multiple'=>true)));
+		$builder->add('file', 'file', array('attr'=>array('accept'=>'image/jpeg,image/gif,image/png','multiple'=>true)));
 		
 	}
 	

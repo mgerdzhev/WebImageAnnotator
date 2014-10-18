@@ -27,6 +27,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Filesystem\Exception\IOException;
 use martingerdzhev\ImageAnnotatorBundle\Model\JSEntities;
+use Doctrine\Common\Util\Debug;
 
 class AddFileGatewayController extends Controller {
 	
@@ -167,56 +168,63 @@ class AddFileGatewayController extends Controller {
 		// 		if ($request->isXmlHttpRequest ()) {
 		// 			throw new BadRequestHttpException();
 		// 		}
+// 		Debug::dump($request->files->get('image_annotator_image_media')['resource']['file']);
 		if ('POST' === $request->getMethod ()) {
 			$form->bind ( $request );
+// 			Debug::dump($request->files->get('image_annotator_image_media')['resource']['file']);
 			$data = $form->getData();
 			$dataset = $data['dataset'];
 			$titles = $data['titles'];
-			$resources = $data['resource'];
-			
+			$resources = $request->files->get('image_annotator_image_media')['resource']['file'];
+// 			Debug::dump($resources);
+// 			Debug::dump($titles);
+// 			Debug::dump($request->files->get('image_annotator_image_media'));
 // 			$logger->info($dataset->getId());
-			$logger->info(json_encode($data));
 			if ($form->isValid ()) {
-				$logger->info('Form is valid');
+				$logger->info('Form isvalid');
 				// flush object to database
 				$eventDispatcher = $this->container->get ( 'event_dispatcher' );
 				$em = $this->container->get ( 'doctrine' )->getManager ();
 				$images = array();
-				$logger->info(count($resources));
-				for ($i=0; $i<count($resources); $i++)
+				$files = $resources;
+				for ($i=0; $i<count($files); $i++)
 				{
 					$image= new Image();
 					$image->setDataset($dataset);
-					$resource = $resources[$i];
+					$resource = new ResourceFile();
+					$resource->setFile($files[$i]);
 					$resource->setMedia($image);
-					$image->setResource($resource[$i]);
+					$image->setResource($resource);
 					$image->setTitle($titles[$i]);
 					
+					$em->persist($resource);
 					$em->persist ( $image );
+					
 					$images[] = $image;
 // 					$uploadedEvent = new UploadEvent ( $image );
 // 					$eventDispatcher->dispatch ( UploadEvent::EVENT_UPLOAD, $uploadedEvent );
 				}
 				$em->flush ();
+				$jsImages = array();
 				foreach($images as $image)
 				{
 					$uploadedEvent = new UploadEvent ( $image );
 					$eventDispatcher->dispatch ( UploadEvent::EVENT_UPLOAD, $uploadedEvent );
+					$jsImages[] = JSEntities::getMediaObject ( $image );
 				}
 				
 	
-				$this->container->get ( 'session' )->getFlashBag ()->add ( 'media', 'Image file uploaded successfully!' );
+// 				$this->container->get ( 'session' )->getFlashBag ()->add ( 'media', 'Image file uploaded successfully!' );
 	
 				
 // 				$uploadedEvent = new UploadEvent ( $imageMedia );
 // 				$eventDispatcher->dispatch ( UploadEvent::EVENT_UPLOAD, $uploadedEvent );
-	
 				// $uploadedEvent->getResponse();
 				if ($request->isXmlHttpRequest ()) {
 					$response = array (
 							'page' => null,
 							'finished' => true,
-							'media' => JSEntities::getMediaObject ( $imageMedia )
+							'media' => $jsImages
 					);
 					$response = json_encode ( $response ); // json encode the array
 					return new Response ( $response, 200, array (
