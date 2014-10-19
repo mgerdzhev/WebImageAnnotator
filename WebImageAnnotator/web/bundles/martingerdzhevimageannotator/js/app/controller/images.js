@@ -3,7 +3,6 @@ define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaM
         this.page = null;
         this.mediaChooser = null;
         this.mediaManager = new MediaManager();
-        this.forwardButton = "<button class='forwardButton'></button>";
         this.datasetId = null;
 
         this.bind__onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
@@ -141,10 +140,7 @@ define(['core/mediaChooser', 'core/mediaManager'], function(MediaChooser, MediaM
         switch (this.page) {
             case Images.Page.INDEX:
                 console.log("Image successfully uploaded"); 
-                for (var i=0; i<e.media.length; i++)
-                {
-                    this.addRow(e.media[i]);
-                }
+                this.addRow(e.media);
                 break;
             case Images.Page.PREVIEW:
                 console.log("Done previewing");

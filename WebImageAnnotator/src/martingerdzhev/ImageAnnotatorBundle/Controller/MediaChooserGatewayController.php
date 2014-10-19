@@ -66,12 +66,12 @@ class MediaChooserGatewayController extends Controller {
 		return $response;
 	}
 	public static function getUploadForms(Controller $controller) {
-		// $formImage = $controller->createForm(new ImageMediaFormType(), new Image(), array());
-		$formMultipleFiles = $controller->createForm ( new ImageMediaMultipleFormType (), array (), array () );
-		// return array(
-		// // $formImage->createView(),
+		$formImage = $controller->createForm(new ImageMediaFormType(), new Image(), array());
+// 		$formMultipleFiles = $controller->createForm ( new ImageMediaMultipleFormType (), array (), array () );
+		return array(
+		$formImage->createView(),
 		// $formMultipleFiles->createView()
-		// );
+		);
 		return $formMultipleFiles->createView ();
 	}
 }

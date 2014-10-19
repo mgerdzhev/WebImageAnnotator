@@ -369,7 +369,7 @@ class DatasetGatewayController extends Controller
 		$resourceFiles = $paginator->paginate(
 				$dataset->getImages(),
 				$this->get('request')->query->get('page', 1), /*page number*/
-				25 /*limit per page*/
+				20 /*limit per page*/
 				);
 		$response = $this->render($responseURL, array (
 				'dataset' => $dataset,

@@ -17,13 +17,14 @@ _Thread:view.html.twig
 <div class="row" id="chooseFile">
 	<div class="col-md-12">
 		<div class="form-group">
-			<a class="btn btn-primary" id="annotate-dataset" href="#"><i class="fa fa-edit"></i> {{ 'imageGateway.buttons.annotateDataset'|trans }}</a>
+			<a class="btn btn-primary" id="annotate-dataset" href="{{ path('image_annotator_dataset_annotate', {'datasetId': dataset.id}) }}"><i class="fa fa-edit"></i> {{ 'imageGateway.buttons.annotateDataset'|trans }}</a>
 			<a class="btn btn-primary" id="upload-image-link" href="#"><i class="fa fa-upload"></i> {{ 'imageGateway.buttons.upload'|trans }}</a>
 			<a class="btn btn-primary" id="search-images-google-link" href="#"><i class="fa fa-google"></i> {{ 'imageGateway.buttons.google'|trans }}</a>
 			<a class="btn btn-primary" id="search-images-flickr-link" href="#"><i class="fa fa-flickr"></i> {{ 'imageGateway.buttons.flickr'|trans }}</a>
 		</div>
 	</div>
 </div>
+<div class="row" id="uploadNumber" style="display:none" data-current="0" data-total="0"></div>
 <div class="row" id="uploadProgress" style="display: none;">
     <div class="col-md-12">
         <div class="form-group">

@@ -11,7 +11,6 @@ define(
 		this.bind__onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
 		this.bind__onSuccess = this._onSuccess.bind(this);
 		this.bind__onDialogClose = this._onDialogClose.bind(this);
-		this.bind_forwardFunction = this.forwardFunction.bind(this);
 		this.bind__onAnnotationTypeAddButtonClick = this._onAnnotationTypeAddButtonClick.bind(this);
 		this.bind__onAnnotationTypeDeleteButtonClick = this._onAnnotationTypeDeleteButtonClick.bind(this);
 	    };
@@ -325,22 +324,6 @@ define(
 		    this._updateMediaRow(e.media);
 		    break;
 		}
-	    };
-
-	    Datasets.prototype.forwardFunction = function()
-	    {
-		console.log("%s: %s", Datasets.TAG, "forwardFunction");
-
-		this.mediaChooser.destroyVideoRecorder();
-
-		this.mediaChooser.previewMedia({
-		    type : MediaChooser.TYPE_RECORD_VIDEO,
-		    mediaUrl : Routing.generate('imdc_myfiles_preview', {
-			mediaId : this.mediaChooser.media.id
-		    }),
-		    mediaId : this.mediaChooser.media.id,
-		    recording : true
-		});
 	    };
 
 	    return Datasets;
