@@ -56,10 +56,39 @@ image_annotator_dataset_annotate:
     datasetId: \d+
   options:
     expose: true
+    
+image_annotator_dataset_export:
+  pattern: /{datasetId}/export
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:export }
+  requirements:
+    datasetId: \d+
+  options:
+    expose: true
 
 image_annotator_dataset_create:
   pattern: /create
   defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:create }
+  options:
+    expose: true
+    
+image_annotator_dataset_request_download_images:
+  pattern: /{datasetId}/download
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:requestDownloadImages }
+  requirements:
+    datasetId: \d+
+  options:
+    expose: true
+
+image_annotator_dataset_check_download_status:
+  pattern: /check
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:checkDownloadStatus }
+
+  options:
+    expose: true    
+        
+image_annotator_dataset_download_images:
+  pattern: /download
+  defaults: { _controller: ImageAnnotatorBundle:DatasetGateway:downloadImages }
   options:
     expose: true
 

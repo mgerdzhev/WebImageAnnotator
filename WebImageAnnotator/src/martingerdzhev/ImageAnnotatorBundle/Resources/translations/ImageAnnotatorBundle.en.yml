@@ -122,6 +122,8 @@ imageGateway:
         flickr: "Search images from flickr"
         createDataset: "Create a new Dataset"
         annotateDataset: "Annotate dataset"
+        exportDataset: "Export Dataset"
+        downloadImages: "Download images"
     type:
         0: "Image"
     empty: "You have not added any images yet. Use the above buttons to add images."

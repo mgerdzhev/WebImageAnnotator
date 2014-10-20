@@ -8,16 +8,23 @@ define(
 		this.dataset = null;
 
 		this.functions = new Functions();
-		this.bind__onDeleteButtonClick = this.onDeleteButtonClick.bind(this);
+		this.bind__onDeleteButtonClick = this.onDeleteButtonClick
+			.bind(this);
 		this.bind__onSuccess = this._onSuccess.bind(this);
 		this.bind__onDialogClose = this._onDialogClose.bind(this);
-		this.bind__onAnnotationTypeAddButtonClick = this._onAnnotationTypeAddButtonClick.bind(this);
-		this.bind__onAnnotationTypeDeleteButtonClick = this._onAnnotationTypeDeleteButtonClick.bind(this);
+		this.bind__onAnnotationTypeAddButtonClick = this._onAnnotationTypeAddButtonClick
+			.bind(this);
+		this.bind__onAnnotationTypeDeleteButtonClick = this._onAnnotationTypeDeleteButtonClick
+			.bind(this);
+
+		this.bind__onDownloadImagesButtonClick = this._onDownloadImagesButtonClick
+			.bind(this);
 	    };
 
 	    Datasets.TAG = "Datasets";
 
-	    Datasets.Page = {
+	    Datasets.Page =
+	    {
 		INDEX : 0,
 		BROWSE : 1
 	    };
@@ -47,7 +54,8 @@ define(
 	     */
 	    Datasets.prototype.bindUIEvents = function(page)
 	    {
-		console.log("%s: %s- page=%d", Datasets.TAG, "bindUIEvents", page);
+		console.log("%s: %s- page=%d", Datasets.TAG, "bindUIEvents",
+			page);
 
 		this.page = page;
 
@@ -68,8 +76,10 @@ define(
 
 		this.element = $("#annotation-type-chooser");
 
-		$("#annotation-type-add").on("click", this.bind__onAnnotationTypeAddButtonClick);
-		$(".annotation-type-delete").on("click", this.bind__onAnnotationTypeDeleteButtonClick);
+		$("#annotation-type-add").on("click",
+			this.bind__onAnnotationTypeAddButtonClick);
+		$(".annotation-type-delete").on("click",
+			this.bind__onAnnotationTypeDeleteButtonClick);
 	    };
 
 	    Datasets.prototype._bindUIEventsBrowse = function()
@@ -77,100 +87,215 @@ define(
 		console.log("%s: %s", Datasets.TAG, "_bindUIEventsIndex");
 
 		this.element = $("#annotation-type-chooser");
-	        
-		$("#annotation-type-add").on("click", this.bind__onAnnotationTypeAddButtonClick);
-		$(".annotation-type-delete").on("click", this.bind__onAnnotationTypeDeleteButtonClick);
+
+		$("#annotation-type-add").on("click",
+			this.bind__onAnnotationTypeAddButtonClick);
+		$(".annotation-type-delete").on("click",
+			this.bind__onAnnotationTypeDeleteButtonClick);
+		$("#download-images-link").on("click",
+			this.bind__onDownloadImagesButtonClick);
+	    };
+
+	    Datasets.prototype._onDownloadImagesButtonClick = function(e)
+	    {
+		console.log("Download images clicked");
+		e.preventDefault();
+		var url = Routing.generate(
+			'image_annotator_dataset_request_download_images',
+			{
+			    'datasetId' : this.datasetId
+			});
+		var data =
+		{
+		    datasetId : this.datasetId
+		};
+		var instance = this;
+		if (!instance.timeout)
+		{
+		    instance.functions
+			    .ajaxLoadPage(
+				    url,
+				    data,
+				    function(data)
+				    {
+					var feedback = data.feedback;
+					console.log("Feedback: "+feedback);
+					instance.timeout = setInterval(function()
+					{
+					    var url = Routing
+						    .generate('image_annotator_dataset_check_download_status');
+					    var data = {};
+					    instance.functions
+						    .ajaxLoadPage(
+							    url,
+							    data,
+							    function(data)
+							    {
+								if (data.status == true)
+								{
+								    clearInterval(instance.timeout);
+								    instance.timeout = null;
+								    window.location.href = Routing
+									    .generate('image_annotator_dataset_download_images');
+								}
+								else
+								{
+								    console
+									    .log("still zipping...");
+								}
+							    },
+							    function(error)
+							    {
+								console
+									.log("error status");
+							    });
+					}, 2000);
+				    }, function(error)
+				    {
+					console.log("error request download")
+				    });
+		}
 	    };
 
 	    Datasets.prototype.showAnnotationTypeChooser = function()
 	    {
 		var instance = this;
-		var url = Routing.generate('image_annotator_dataset_annotation_types_show', {
-		    datasetId : this.datasetId,
-		    type : 'remaining'
-		});
-		var data = {
+		var url = Routing.generate(
+			'image_annotator_dataset_annotation_types_show',
+			{
+			    datasetId : this.datasetId,
+			    type : 'remaining'
+			});
+		var data =
+		{
 		    datasetId : this.datasetId,
 		    type : 'remaining'
 		};
-		this.functions.ajaxLoadPage(url, data, function(data)
-		{
-		    console.log("success");
-		    instance.element.html(data.page);
+		this.functions
+			.ajaxLoadPage(
+				url,
+				data,
+				function(data)
+				{
+				    console.log("success");
+				    instance.element.html(data.page);
 
-		    // Add event listeners to the buttons
-		    $("#annotation-type-add-to-dataset").on("click", function(e)
-		    {
-			var annotationName = $('#annotaion-type-name').val();
-			var url = Routing.generate('image_annotator_dataset_annotation_types_create', {
-			    datasetId : instance.datasetId,
-			    name : annotationName
-			});
-			var data = {
-			    datasetId : instance.datasetId,
-			    name : annotationName
-			};
-			instance.functions.ajaxLoadPage(url, data, function(data)
-			{
+				    // Add event listeners to the buttons
+				    $("#annotation-type-add-to-dataset")
+					    .on(
+						    "click",
+						    function(e)
+						    {
+							var annotationName = $(
+								'#annotaion-type-name')
+								.val();
+							var url = Routing
+								.generate(
+									'image_annotator_dataset_annotation_types_create',
+									{
+									    datasetId : instance.datasetId,
+									    name : annotationName
+									});
+							var data =
+							{
+							    datasetId : instance.datasetId,
+							    name : annotationName
+							};
+							instance.functions
+								.ajaxLoadPage(
+									url,
+									data,
+									function(
+										data)
+									{
 
-			    if (data.responseCode == 400)
-				console.log("Already exists");
-			    else
-			    {
-				instance.appendAnnotationType(data.annotationType);
-				console.log("Successfully added");
-			    }
-			    instance.element.dialog("close");
-			}, function(data)
-			{
-			    console.log("Error adding");
-			});
+									    if (data.responseCode == 400)
+										console
+											.log("Already exists");
+									    else
+									    {
+										instance
+											.appendAnnotationType(data.annotationType);
+										console
+											.log("Successfully added");
+									    }
+									    instance.element
+										    .dialog("close");
+									},
+									function(
+										data)
+									{
+									    console
+										    .log("Error adding");
+									});
 
-		    });
+						    });
 
-		    $("#annotation-type-choose").on("click", function(e)
-		    {
-			var annotationChoice = $('#annotation-type-choice').val();
-			if (annotationChoice == null)
-			{
-			    return;
-			}
-			var url = Routing.generate('image_annotator_dataset_annotation_types_add', {
-			    datasetId : instance.datasetId,
-			    annotationTypeId : annotationChoice
-			});
-			var data = {
-			    datasetId : instance.datasetId,
-			    annotationTypeId : annotationChoice
-			};
-			instance.functions.ajaxLoadPage(url, data, function(data)
-			{
+				    $("#annotation-type-choose")
+					    .on(
+						    "click",
+						    function(e)
+						    {
+							var annotationChoice = $(
+								'#annotation-type-choice')
+								.val();
+							if (annotationChoice == null)
+							{
+							    return;
+							}
+							var url = Routing
+								.generate(
+									'image_annotator_dataset_annotation_types_add',
+									{
+									    datasetId : instance.datasetId,
+									    annotationTypeId : annotationChoice
+									});
+							var data =
+							{
+							    datasetId : instance.datasetId,
+							    annotationTypeId : annotationChoice
+							};
+							instance.functions
+								.ajaxLoadPage(
+									url,
+									data,
+									function(
+										data)
+									{
 
-			    if (data.responseCode == 400)
-				console.log("Already exists");
-			    else
-			    {
-				instance.appendAnnotationType(data.annotationType);
-				console.log("Successfully added");
-			    }
-			    instance.element.dialog("close");
-			}, function(data)
-			{
-			    console.log("Error adding");
-			});
+									    if (data.responseCode == 400)
+										console
+											.log("Already exists");
+									    else
+									    {
+										instance
+											.appendAnnotationType(data.annotationType);
+										console
+											.log("Successfully added");
+									    }
+									    instance.element
+										    .dialog("close");
+									},
+									function(
+										data)
+									{
+									    console
+										    .log("Error adding");
+									});
 
-		    });
-		}, function(e)
-		{
-		    console.log("error");
-		})
+						    });
+				}, function(e)
+				{
+				    console.log("error");
+				})
 	    }
 
 	    Datasets.prototype._onAnnotationTypeAddButtonClick = function(e)
 	    {
 		console.log("Add clicked");
 
-		this.element.dialog({
+		this.element.dialog(
+		{
 		    autoOpen : false,
 		    resizable : false,
 		    modal : true,
@@ -179,28 +304,34 @@ define(
 		    dialogClass : "ia-popup-dialog",
 		    open : (function(event, ui)
 		    {
-			console.log("%s: %s: %s", MediaChooser.TAG, "_popUp", "open");
+			console.log("%s: %s: %s", MediaChooser.TAG, "_popUp",
+				"open");
 
-			// $(".ui-dialog-titlebar-close", this.parentNode).hide();
+			// $(".ui-dialog-titlebar-close",
+			// this.parentNode).hide();
 			this.showAnnotationTypeChooser();
 		    }).bind(this),
 		    create : function(event, ui)
 		    {
-			console.log("%s: %s: %s", MediaChooser.TAG, "_popUp", "create");
+			console.log("%s: %s: %s", MediaChooser.TAG, "_popUp",
+				"create");
 
 			// $(event.target).parent().css('position', 'relative');
 		    },
 		    close : (function(event, ui)
 		    {
-			console.log("%s: %s: %s", MediaChooser.TAG, "_popUp", "close");
+			console.log("%s: %s: %s", MediaChooser.TAG, "_popUp",
+				"close");
 
-			// $(".ui-dialog-titlebar-close", this.parentNode).hide();
+			// $(".ui-dialog-titlebar-close",
+			// this.parentNode).hide();
 			this.element.html("");
 		    }).bind(this),
 		    show : "blind",
 		    hide : "blind",
 		    minWidth : 740,
-		    position : {
+		    position :
+		    {
 			at : "top",
 			my : "top"
 		    },
@@ -225,22 +356,28 @@ define(
 		var col1 = '<td><div class="text-center"><a class="btn btn-danger btn-xs annotation-type-delete" href="#" data-val="'
 			+ annotationType.id
 			+ '"> <i class="fa fa-trash-o"></i>'
-			+ $('.hide[data-val=annotation-type-delete-text]').eq(0).html() + '</a></div></td>';
+			+ $('.hide[data-val=annotation-type-delete-text]')
+				.eq(0).html() + '</a></div></td>';
 		var col2 = '<td>' + annotationType.name + '</td>';
 		row.html(col1 + col2);
 		tableElement.append(row);
-		$('a.annotation-type-delete[data-val=' + annotationType.id + ']').eq(0).on('click',
+		$(
+			'a.annotation-type-delete[data-val='
+				+ annotationType.id + ']').eq(0).on('click',
 			this.bind__onAnnotationTypeDeleteButtonClick);
 	    };
 
 	    Datasets.prototype.deleteAnnotationType = function(annotationTypeId)
 	    {
 		var instance = this;
-		var url = Routing.generate('image_annotator_dataset_annotation_types_remove', {
-		    annotationTypeId : annotationTypeId,
-		    datasetId : this.datasetId
-		});
-		var data = {
+		var url = Routing.generate(
+			'image_annotator_dataset_annotation_types_remove',
+			{
+			    annotationTypeId : annotationTypeId,
+			    datasetId : this.datasetId
+			});
+		var data =
+		{
 		    'annotationTypeId' : annotationTypeId,
 		    'datasetId' : this.datasetId
 		};
@@ -248,8 +385,10 @@ define(
 		{
 		    if (data.responseCode == 200)
 		    {
-			$('a.annotation-type-delete[data-val=' + annotationTypeId + ']').eq(0).parent().parent()
-				.parent().remove();
+			$(
+				'a.annotation-type-delete[data-val='
+					+ annotationTypeId + ']').eq(0)
+				.parent().parent().parent().remove();
 			console.log("Deleted annotation type");
 		    }
 		    else
@@ -269,32 +408,40 @@ define(
 
 		var file = $(e.target);
 
-		$(this.mediaManager).one(MediaManager.EVENT_DELETE_SUCCESS, function()
-		{
-		    file.parent().parent().parent().remove();
-		});
-		$(this.mediaManager).one(MediaManager.EVENT_DELETE_ERROR, function(error, e)
-		{
-		    if (e.status == 500)
-		    {
-			alert(e.statusText);
-		    }
-		    else
-		    {
-			alert('Error: ' + error);
-		    }
-		});
+		$(this.mediaManager).one(MediaManager.EVENT_DELETE_SUCCESS,
+			function()
+			{
+			    file.parent().parent().parent().remove();
+			});
+		$(this.mediaManager).one(MediaManager.EVENT_DELETE_ERROR,
+			function(error, e)
+			{
+			    if (e.status == 500)
+			    {
+				alert(e.statusText);
+			    }
+			    else
+			    {
+				alert('Error: ' + error);
+			    }
+			});
 
-		return this.mediaManager.deleteMedia(file.data("val"), $("#mediaDeleteConfirmMessage").html());
+		return this.mediaManager.deleteMedia(file.data("val"), $(
+			"#mediaDeleteConfirmMessage").html());
 
 		/*
-		 * var response = confirm($("#mediaDeleteConfirmMessage").html()); if (!response) { return false; } var
-		 * file = $(e.target); var address = file.data("url");
+		 * var response =
+		 * confirm($("#mediaDeleteConfirmMessage").html()); if
+		 * (!response) { return false; } var file = $(e.target); var
+		 * address = file.data("url");
 		 * 
-		 * $.ajax({ url: address, type: "POST", contentType: "application/x-www-form-urlencoded", data: {
-		 * mediaId: file.data("val") }, success: function(data) { if (data.responseCode == 200) {
-		 * file.parent().parent().remove(); } else if (data.responseCode == 400) { // bad request alert('Error: ' +
-		 * data.feedback); } else { alert('An unexpected error occured'); } }, error: function(request) {
+		 * $.ajax({ url: address, type: "POST", contentType:
+		 * "application/x-www-form-urlencoded", data: { mediaId:
+		 * file.data("val") }, success: function(data) { if
+		 * (data.responseCode == 200) { file.parent().parent().remove(); }
+		 * else if (data.responseCode == 400) { // bad request
+		 * alert('Error: ' + data.feedback); } else { alert('An
+		 * unexpected error occured'); } }, error: function(request) {
 		 * console.log(request.statusText); } });
 		 */
 	    };
@@ -305,7 +452,8 @@ define(
 		{
 		case Datasets.Page.INDEX:
 		    console.log(e.media);
-		    this._addMediaRow(e.media); // FIXME pagination makes this impractical
+		    this._addMediaRow(e.media); // FIXME pagination makes this
+		    // impractical
 		    break;
 		case Datasets.Page.PREVIEW:
 		    console.log("Done previewing");
