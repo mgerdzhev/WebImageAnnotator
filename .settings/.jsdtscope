@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="js/|**/bower_components/*|js/app/controller/|**/node_modules/*|js/app/lib/|js/app/core/|**/*.min.js|js/app/" kind="src" path="js_image_annotator"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|app/controller/|app/|app/lib/|app/core/|**/*.min.js" kind="src" path="js_image_annotator/js"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|controller/|lib/|core/|**/*.min.js" kind="src" path="js_image_annotator/js/app"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js_image_annotator/js/app/controller"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js_image_annotator/js/app/core"/>
+	<classpathentry excluding="**/bower_components/*|**/node_modules/*|**/*.min.js" kind="src" path="js_image_annotator/js/app/lib"/>
+	<classpathentry kind="con" path="org.eclipse.wst.jsdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
