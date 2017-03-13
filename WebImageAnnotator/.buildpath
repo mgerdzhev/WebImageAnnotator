@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<buildpath>
-	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
-	<buildpathentry excluding="bin/|app/|bower_components/|node_modules/|vendor/|web/css/|web/js/|web/uploads/|web/bundles/bmatznerfontawesome/|web/bundles/bmatznerraphael/|web/bundles/fosjsrouting/|web/bundles/framework/|web/bundles/sensiodistribution/|web/bundles/sonatajquery/" kind="src" path=""/>
-</buildpath>

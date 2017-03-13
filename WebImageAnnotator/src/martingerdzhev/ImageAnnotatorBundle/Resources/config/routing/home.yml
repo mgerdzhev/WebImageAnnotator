@@ -1,3 +1,0 @@
-image_annotator_user_home:
-    path:     /
-    defaults: { _controller: ImageAnnotatorBundle:Home:index }
