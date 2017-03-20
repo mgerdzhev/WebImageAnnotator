@@ -84,7 +84,7 @@
 					style="font-family: monospace;" readonly></textarea>
 			</div>
 			<div>
-				<input id="reset_button" type="reset" />
+				<input  class="btn btn-danger" id="reset_button" type="reset" />
 			</div>
 		</div>
 
@@ -106,6 +106,10 @@
 
 					annotations.setCanvasElement('ia-image-canvas');
 					annotations.bindUIEvents();
+
+					$("#reset_button").click(function(e) {
+						annotations.clear_all();
+					});
 
 				});
 	</script>

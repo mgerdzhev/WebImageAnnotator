@@ -530,13 +530,8 @@
 				var circle = this.canvas.getById("initialCircle");
 				circle.remove()
 				instance.tempLine.remove();
-//				this.resetPolygonStates();
-//				this.setPolygonHoverStates();
 				instance.isFirstPoint = true;
 			}
-
-			// polygon.attr("stroke", annotation.color);
-			// polygon.attr("stroke-width", 3 * this.ratio);
 
 			console.log("Polygon Remove last point");
 		};
@@ -577,6 +572,16 @@
 			this.setZoomScale(this.scale - 0.1);
 			console.log("Zoom Out");
 		};
+		
+		Annotations.prototype.clear_all = function(e) {
+			var total = this.annotations.length;
+			for (var iterator = 0; iterator < total; iterator++) {
+				var annotation = this.annotations[0];
+				this.deleteAnnotation(annotation)
+			}
+			this.currentId = 0;
+		    return this.onchange(this.annotations);
+		    };
 		return Annotations;
 	})();
 }).call(this);
