@@ -5,7 +5,6 @@
 			this.polygon = new Array();
 			this.type = null;
 			this.id = null;
-			this.polygonId = null;
 		}
 
 		Annotation.prototype.addPoint = function(x, y) {
@@ -37,14 +36,6 @@
 
 		Annotation.prototype.getPolygon = function() {
 			return this.polygon;
-		};
-
-		Annotation.prototype.getPolygonId = function() {
-			return this.polygonId;
-		};
-
-		Annotation.prototype.setPolygonId = function(id) {
-			this.polygonId = id;
 		};
 
 		Annotation.prototype.setType = function(type) {
@@ -85,6 +76,9 @@
 					.bind(this);
 			this.bind__onRemovePolygonButtonClick = this.onRemovePolygonButtonClick
 					.bind(this);
+			this.bind__onRemoveLastPointButtonClick = this.onRemoveLastPointButtonClick
+					.bind(this);
+
 			this.bind__onZoomInButtonClick = this.onZoomInButtonClick
 					.bind(this);
 			this.bind__onZoomOutButtonClick = this.onZoomOutButtonClick
@@ -131,6 +125,8 @@
 					this.bind__onPolygonButtonClick);
 			$("#annotation-remove-polygon-button").on("click",
 					this.bind__onRemovePolygonButtonClick);
+			$("#annotation-remove-last-point-button").on("click",
+					this.bind__onRemoveLastPointButtonClick);
 			$("#annotation-zoom-in-button").on("click",
 					this.bind__onZoomInButtonClick);
 			$("#annotation-zoom-out-button").on("click",
@@ -150,7 +146,7 @@
 				var polygon = this.canvas.path(polygonString);
 				polygon.id = this.currentId;
 				this.currentId++;
-				annotation.setPolygonId(polygon.id);
+				annotation.setId(polygon.id);
 				polygon.attr("fill", annotation.color);
 				polygon.attr("fill-opacity", 0.1);
 				polygon.attr("stroke", annotation.color);
@@ -158,6 +154,12 @@
 				this.appendAnnotation(annotation);
 			}
 			this.setPolygonHoverStates();
+
+			$(document).keyup(function(e) {
+				if (e.keyCode == 27) { // escape key maps to keycode `27`
+					$("#annotation-remove-last-point-button").click();
+				}
+			});
 
 			$(document).keypress(
 					function(e) {
@@ -204,7 +206,7 @@
 									$('#alert-text').addClass('alert-info');
 									$('#alert-text')
 											.html(
-													"Current annotation type is: "
+													"Annotating : "
 															+ $(
 																	'a[name=annotation-type-button][data-val='
 																			+ instance.currentAnnotationType
@@ -261,13 +263,13 @@
 						e.preventDefault();
 						instance.deleteAnnotation(annotation);
 					});
-			var polygon = this.canvas.getById(annotation.getPolygonId());
+			var polygon = this.canvas.getById(annotation.getId());
 			$(polygon).data('annotation', annotation);
 		};
 
 		Annotations.prototype.setAnnotationHighlighted = function(annotation,
 				highlighted) {
-			var polygon = this.canvas.getById(annotation.getPolygonId());
+			var polygon = this.canvas.getById(annotation.getId());
 			var tableElement = $('.ia-annotation-table tbody');
 			var row = tableElement.children(
 					'[data-val=' + annotation.getId() + ']').eq(0);
@@ -285,8 +287,7 @@
 			var index = $.inArray(annotation, instance.annotations);
 			if (index != -1) {
 				instance.annotations.splice(index, 1);
-				var polygon = instance.canvas
-						.getById(annotation.getPolygonId());
+				var polygon = instance.canvas.getById(annotation.getId());
 				polygon.unmouseout();
 				polygon.unmouseover();
 				polygon.unclick();
@@ -307,13 +308,12 @@
 				button = $(button).parent();
 			button = button.eq(0);
 			if (!button.hasClass('active')) {
-				console.log("Not active polygonButton");
+				// console.log("Not active polygonButton");
 				this.clearAlertMessage();
 				this.resetPolygonStates();
 				$('#alert-text').addClass('alert-info');
 				$('#alert-text').html(
-						"Current annotation type is: "
-												+ this.currentAnnotationType);
+						"Currently annotating: " + this.currentAnnotationType);
 				this.canvasElement.css('cursor', 'crosshair');
 				button.siblings().removeClass('active');
 				this.canvasElement.on("click",
@@ -333,8 +333,7 @@
 					this.bind__polygonMouseMoveListener);
 			this.canvasElement.css('cursor', '');
 			for (i in this.annotations) {
-				var polygon = this.canvas.getById(this.annotations[i]
-						.getPolygonId());
+				var polygon = this.canvas.getById(this.annotations[i].getId());
 				polygon.attr('cursor', '');
 				polygon.unclick();
 				polygon.unmouseover();
@@ -344,8 +343,7 @@
 
 		Annotations.prototype.setPolygonHoverStates = function() {
 			for (i in this.annotations) {
-				var polygon = this.canvas.getById(this.annotations[i]
-						.getPolygonId());
+				var polygon = this.canvas.getById(this.annotations[i].getId());
 				polygon.attr('cursor', 'pointer');
 				var instance = this;
 				polygon.mouseover(function() {
@@ -389,7 +387,7 @@
 		Annotations.prototype.polygonMouseClickListener = function(e) {
 			if (this.needsSubmitting)
 				return;
-			console.log("click");
+			// console.log("click");
 			var offset = $(this.canvasElement).offset();
 			var coords = {
 				x : Math.round((e.pageX - offset.left) / this.scale),
@@ -403,17 +401,18 @@
 
 				var polygon = this.canvas.path("M" + coords.x + "," + coords.y);
 				polygon.id = this.currentId;
-				console.log(polygon.id);
+				// console.log(polygon.id);
 				this.currentId++;
 				this.tempLine = this.canvas.path("M" + coords.x + ","
 						+ coords.y);
 				var annotation = new Annotation();
 				annotation.addPoint(coords.x, coords.y);
-				annotation.setPolygonId(polygon.id);
+				annotation.setId(polygon.id);
 				this.annotations.push(annotation);
 				this.isFirstPoint = false;
 				var circle = this.canvas.circle(coords.x, coords.y,
 						8 * this.ratio);
+				circle.id = "initialCircle";
 				circle.click(function(e) {
 					e.stopPropagation();
 					instance.canvasElement.off("click",
@@ -421,8 +420,7 @@
 					instance.canvasElement.off("mousemove",
 							instance.bind__polygonMouseMoveListener);
 					instance.tempLine.remove();
-					var polygon = instance.canvas.getById(annotation
-							.getPolygonId());
+					var polygon = instance.canvas.getById(annotation.getId());
 					polygon.attr('path', polygon.attr('path') + 'Z');
 					polygon.attr("fill", annotation.color);
 					polygon.attr("fill-opacity", 0.1);
@@ -431,15 +429,15 @@
 					instance.needsSubmitting = true;
 					instance.submitLastAnnoatation();
 
-					$("#annotation-polygon-button").click();
 					instance.isFirstPoint = true;
+					$("#annotation-polygon-button").click();
 
 				});
 				circle.attr("fill", "#FFFFFF");
 				circle.attr("stroke", "#FF0000");
 			} else {
 				var annotation = this.annotations[this.annotations.length - 1];
-				var polygon = this.canvas.getById(annotation.getPolygonId());
+				var polygon = this.canvas.getById(annotation.getId());
 				annotation.addPoint(coords.x, coords.y);
 				polygon.attr('path', polygon.attr('path') + "L" + coords.x
 						+ "," + coords.y);
@@ -480,15 +478,18 @@
 				button = $(button).parent();
 			button = button.eq(0);
 			if (!button.hasClass('active')) {
+				this.clearAlertMessage();
+				$('#alert-text').addClass('alert-info');
+				$('#alert-text').html("Select annotation to delete");
 				button.siblings().removeClass('active');
-				button.addClass('active');
+				// button.addClass('active');
 				this.resetPolygonStates();
 				this.setPolygonHoverStates();
 				this.canvasElement.css('cursor', 'no-drop');
 				for (i in this.annotations) {
 					var annotation = this.annotations[i];
 					var polygon = this.canvas.getById(this.annotations[i]
-							.getPolygonId());
+							.getId());
 					polygon.attr('cursor', 'pointer');
 					polygon.click(function() {
 						var annotation = $(this).data('annotation');
@@ -502,6 +503,42 @@
 				this.setPolygonHoverStates();
 			}
 			console.log("Polygon Remove");
+		};
+		Annotations.prototype.onRemoveLastPointButtonClick = function(e) {
+			var instance = this;
+			e.preventDefault();
+			var button = $(e.target);
+			if (!$(button).is('a'))
+				button = $(button).parent();
+			button = button.eq(0);
+			button.effect('highlight');
+			if (!$("#annotation-polygon-button").hasClass('active')) {
+				return;
+			}
+			var circle = this.canvas.getById("initialCircle");
+			if (circle == null) {
+				return;
+			}
+			var annotation = this.annotations[this.annotations.length - 1];
+			var polygon = this.canvas.getById(annotation.getId());
+			annotation.removeLastPoint();
+			if (polygon.attr('path').length > 1) {
+				var lastElement = polygon.attr('path').pop();
+				polygon.attr('path', polygon.attr('path'));
+			} else {
+				instance.deleteAnnotation(annotation);
+				var circle = this.canvas.getById("initialCircle");
+				circle.remove()
+				instance.tempLine.remove();
+//				this.resetPolygonStates();
+//				this.setPolygonHoverStates();
+				instance.isFirstPoint = true;
+			}
+
+			// polygon.attr("stroke", annotation.color);
+			// polygon.attr("stroke-width", 3 * this.ratio);
+
+			console.log("Polygon Remove last point");
 		};
 
 		Annotations.prototype.onZoomInButtonClick = function(e) {

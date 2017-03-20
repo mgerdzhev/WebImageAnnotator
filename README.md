@@ -1,4 +1,4 @@
 WebImageAnnotator
 =================
 
-Project that can be used to annotate/label images 
+A JS based image annotator with polygons.
