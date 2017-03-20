@@ -23,19 +23,6 @@
 <link rel="stylesheet" href="css/image_annotator.css">
 </head>
 <body>
-
-	<!-- 	<h1>Bounding box annotator demo</h1>
-	<div id="bbox_annotator" style="display: inline-block"></div>
-	<div style="display: inline-block; vertical-align: top;">
-		<div>
-			<textarea id="annotation_data" name="annotation" rows="30" cols="50"
-				style="font-family: monospace;" readonly></textarea>
-		</div>
-		<div>
-			<input id="reset_button" type="reset" />
-		</div>
-	</div>
- -->
 	<div class="col-lg-7">
 		<div class="row" id="annotation-controls">
 			<div class="col-md-12">
@@ -43,24 +30,24 @@
 					<div class="row">
 						<div class="btn-group btn-group" data-toggle="buttons-radio">
 							<a class="btn btn-default" name="annotation-control-button"
-								id="annotation-polygon-button" href="#" title="polygon"><i
+								id="annotation-polygon-button" href="#" title="polygon (p)"><i
 								class="fa fa-share-alt"></i></a> <a class="btn btn-default"
 								name="annotation-control-button"
 								id="annotation-remove-polygon-button" href="#"
-								title="remove polygon"><i class="fa fa-eraser"></i></a>
+								title="remove polygon (d)"><i class="fa fa-eraser"></i></a>
 						</div>
 						<div class="btn">
 							<a class="btn btn-default" name="annotation-control-button"
 								id="annotation-remove-last-point-button" href="#"
-								title="remove last point"><i class="fa fa-arrow-left"></i></a>
+								title="remove last point(ESC)"><i class="fa fa-arrow-left"></i></a>
 						</div>
 
 						<div class="btn-group btn-group">
 							<a class="btn btn-default" name="annotation-control-button"
-								id="annotation-zoom-in-button" href="#" title="zoom in"><i
+								id="annotation-zoom-in-button" href="#" title="zoom in (+)"><i
 								class="fa fa-search-plus"></i></a> <a class="btn btn-default"
 								name="annotation-control-button" id="annotation-zoom-out-button"
-								href="#" title="zoom out"><i class="fa fa-search-minus"></i></a>
+								href="#" title="zoom out (-)"><i class="fa fa-search-minus"></i></a>
 						</div>
 					</div>
 					<div class="row">

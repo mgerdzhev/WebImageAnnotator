@@ -1,65 +1,4 @@
 
-/* line 108, sass/base.scss */
-.ia-flash-message-container {
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-/* line 113, sass/base.scss */
-.ia-separator-top, .ia-separator-bottom {
-  border-top: 1px solid #000000;
-}
-
-/* line 117, sass/base.scss */
-.ia-separator-bottom {
-  margin-top: 0;
-}
-
-/* line 123, sass/base.scss */
-.ia-date {
-  color: #aaa;
-  font-size: 0.9em;
-}
-
-/* line 128, sass/base.scss */
-.ia-avatar {
-  max-height: 150px;
-}
-
-/* line 133, sass/base.scss */
-.ia-table > thead, .ia-myFiles-table > thead {
-  background-color: white;
-}
-
-/* line 138, sass/base.scss */
-.ui-dialog.ia-popup-dialog {
-  position: fixed !important;
-  z-index: 5000;
-}
-
-/* line 1, sass/default.scss */
-.ia-default-intro {
-  margin-top: 100px;
-  min-height: 500px;
-}
-/* line 5, sass/default.scss */
-.ia-default-intro div.thumbnail {
-  height: 500px;
-}
-
-/* line 10, sass/default.scss */
-.ia-default-register > div {
-  background-color: #5a5a5a;
-  color: #fff;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  border-radius: 4px;
-}
-
-/* line 5, sass/media.scss */
-.ia-media-video, .ia-media-audio {
-  width: 100%;
-}
 
 /* line 1, sass/images.scss */
 #ia-image-canvas {
@@ -87,9 +26,4 @@
   overflow: auto;
   max-height: 768px;
   padding: 0px;
-}
-
-/* line 5, sass/annotations.scss */
-.ia-media-video, .ia-media-audio {
-  width: 100%;
 }
