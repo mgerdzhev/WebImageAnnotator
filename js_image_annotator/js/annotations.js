@@ -5,6 +5,7 @@
 			this.polygon = new Array();
 			this.type = null;
 			this.id = null;
+			this.isClosed = false;
 		}
 
 		Annotation.prototype.addPoint = function(x, y) {
@@ -319,6 +320,11 @@
 				this.canvasElement.on("click",
 						this.bind__polygonMouseClickListener);
 				button.effect('highlight');
+				var annotation = this.annotations[this.annotations.length - 1];
+				if (annotation != null && !annotation.isClosed) {
+					this.canvasElement.on("mousemove",
+							this.bind__polygonMouseMoveListener);
+				}
 			} else {
 				this.resetPolygonStates();
 				this.setPolygonHoverStates();
@@ -378,6 +384,7 @@
 
 			var annotation = this.annotations[this.annotations.length - 1];
 			annotation.type = this.currentAnnotationType;
+			annotation.isClosed = true;
 			instance.appendAnnotation(annotation);
 
 			this.onchange(this.annotations);
@@ -413,6 +420,17 @@
 				var circle = this.canvas.circle(coords.x, coords.y,
 						8 * this.ratio);
 				circle.id = "initialCircle";
+				circle.hover(function() {
+					circle.animate({
+						fill : 'rgb(255,0,0)',
+						opacity : 1
+					}, 100, 'elastic')
+				}, function() {
+					circle.animate({
+						fill : 'rgb(255,255,255)',
+						opacity : 1
+					}, 100, 'elastic');
+				});
 				circle.click(function(e) {
 					e.stopPropagation();
 					instance.canvasElement.off("click",
@@ -572,7 +590,7 @@
 			this.setZoomScale(this.scale - 0.1);
 			console.log("Zoom Out");
 		};
-		
+
 		Annotations.prototype.clear_all = function(e) {
 			var total = this.annotations.length;
 			for (var iterator = 0; iterator < total; iterator++) {
@@ -580,8 +598,8 @@
 				this.deleteAnnotation(annotation)
 			}
 			this.currentId = 0;
-		    return this.onchange(this.annotations);
-		    };
+			return this.onchange(this.annotations);
+		};
 		return Annotations;
 	})();
 }).call(this);

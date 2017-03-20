@@ -40,15 +40,40 @@
 		<div class="row" id="annotation-controls">
 			<div class="col-md-12">
 				<div class="col-md-12">
-					<div id="preview"></div>
-					<div class="ia-media-preview">
-						<div class="text-center alert" id="alert-text"></div>
-
-						<div class="ia-image-container">
-							<div id="ia-image-canvas"></div>
-							<img class="ia-media-img" src="test.jpeg" alt="test" title="test" />
+					<div class="row">
+						<div class="btn-group btn-group" data-toggle="buttons-radio">
+							<a class="btn btn-default" name="annotation-control-button"
+								id="annotation-polygon-button" href="#" title="polygon"><i
+								class="fa fa-share-alt"></i></a> <a class="btn btn-default"
+								name="annotation-control-button"
+								id="annotation-remove-polygon-button" href="#"
+								title="remove polygon"><i class="fa fa-eraser"></i></a>
+						</div>
+						<div class="btn">
+							<a class="btn btn-default" name="annotation-control-button"
+								id="annotation-remove-last-point-button" href="#"
+								title="remove last point"><i class="fa fa-arrow-left"></i></a>
 						</div>
 
+						<div class="btn-group btn-group">
+							<a class="btn btn-default" name="annotation-control-button"
+								id="annotation-zoom-in-button" href="#" title="zoom in"><i
+								class="fa fa-search-plus"></i></a> <a class="btn btn-default"
+								name="annotation-control-button" id="annotation-zoom-out-button"
+								href="#" title="zoom out"><i class="fa fa-search-minus"></i></a>
+						</div>
+					</div>
+					<div class="row">
+						<div id="preview"></div>
+						<div class="ia-media-preview">
+
+							<div class="ia-image-container">
+								<div id="ia-image-canvas"></div>
+								<img class="ia-media-img" src="test.jpeg" alt="test"
+									title="test" />
+							</div>
+
+						</div>
 					</div>
 				</div>
 			</div>
@@ -56,27 +81,7 @@
 	</div>
 	<div class="col-lg-3">
 		<div class="row">
-			<div class="btn-group btn-group" data-toggle="buttons-radio">
-				<a class="btn btn-default" name="annotation-control-button"
-					id="annotation-polygon-button" href="#" title="polygon"><i
-					class="fa fa-share-alt"></i></a> <a class="btn btn-default"
-					name="annotation-control-button"
-					id="annotation-remove-polygon-button" href="#"
-					title="remove polygon"><i class="fa fa-eraser"></i></a>
-			</div>
-			<div class="btn">
-				<a class="btn btn-default" name="annotation-control-button"
-					id="annotation-remove-last-point-button" href="#"
-					title="remove last point"><i class="fa fa-arrow-left"></i></a>
-			</div>
-
-			<div class="btn-group btn-group" data-toggle="buttons-radio">
-				<a class="btn btn-default" name="annotation-control-button"
-					id="annotation-zoom-in-button" href="#" title="zoom in"><i
-					class="fa fa-search-plus"></i></a> <a class="btn btn-default"
-					name="annotation-control-button" id="annotation-zoom-out-button"
-					href="#" title="zoom out"><i class="fa fa-search-minus"></i></a>
-			</div>
+			<div class="text-center alert" id="alert-text"></div>
 		</div>
 		<div class="row" style="display: inline-block; vertical-align: top;">
 			<div>
@@ -84,7 +89,7 @@
 					style="font-family: monospace;" readonly></textarea>
 			</div>
 			<div>
-				<input  class="btn btn-danger" id="reset_button" type="reset" />
+				<input class="btn btn-danger" id="reset_button" type="reset" />
 			</div>
 		</div>
 
@@ -113,27 +118,5 @@
 
 				});
 	</script>
-	<!-- <script type="text/javascript">
-		$(document).ready(
-				function() {
-					// Initialize the bounding-box annotator.
-					var annotator = new BBoxAnnotator({
-						url : "test.jpeg",
-						input_method : 'fixed', // Can be one of ['text', 'select', 'fixed']
-						labels : "object",
-						onchange : function(entries) {
-							// Input the text area on change. Use "hidden" input tag unless debugging.
-							// <input id="annotation_data" name="annotation_data" type="hidden" />
-							// $("#annotation_data").val(JSON.stringify(entries))
-							$("#annotation_data").text(
-									JSON.stringify(entries, null, "  "));
-						}
-					});
-					// Initialize the reset button.
-					$("#reset_button").click(function(e) {
-						annotator.clear_all();
-					})
-				});
-	</script> -->
 </body>
 </html>
